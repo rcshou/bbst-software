@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project2Excel — Bluebonnet Studios</title>
+  <meta name="description" content="Convert Microsoft Project .mpp files into editable Excel workbooks — Gantt view, task data, resources, assignments and relations — without a Project licence." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Apply the stored theme before first paint so the page never flashes. */
+    (function(){try{var t=localStorage.getItem("bbst-theme");
+    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <svg class="mark" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
+          <rect class="stem" x="6.3" y="7" width="1.4" height="9" rx="0.7" />
+          <circle class="petal" cx="7" cy="3.6" r="3.6" />
+          <circle class="spot" cx="7" cy="2.6" r="1.15" />
+        </svg>
+        Bluebonnet Studios
+      </a>
+      <div class="topbar-right">
+        <nav class="mainnav" aria-label="Primary">
+          <a href="index.html">Catalog</a>
+          <a href="about.html">About</a>
+          <a href="index.html#access">Access</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 1.5A6.5 6.5 0 0 1 8 14.5Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="page-head">
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow"><a href="business-tools.html">Business Tools</a></p>
+        <h1>Project2Excel</h1>
+        <div class="head-meta">
+          <span class="chip is-private">Private release</span>
+          <span class="ver">Version 1.0.2 &middot; Windows · macOS</span>
+        </div>
+        <p>Opens a Microsoft Project <code>.mpp</code> file and writes a real Excel workbook — a drawn Gantt chart, the task data behind it, resources, assignments and relationships — on a machine that has never had Project installed.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Categories">
+      <h2>Categories</h2>
+      <a href="index.html">All tools <em>10</em></a>
+      <a href="business-tools.html" class="is-active">Business <em>3</em></a>
+      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
+      <a href="geoscience-tools.html">Geoscience <em>3</em></a>
+      <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
+    </nav>
+    <main class="content" id="main">
+      <div class="tool-body">
+        <div class="prose">
+<h2>What it produces</h2>
+<p>One workbook, with the schedule split across the sheets you would otherwise build by hand:</p>
+<ul>
+  <li><strong>Gantt View</strong> — task hierarchy, durations, dates, progress and resources, with calendar-aware shading for nonworking days, milestone markers, critical-task highlighting, and thin FS/SS/FF/SF dependency connectors drawn behind the bars.</li>
+  <li><strong>Task Data</strong> — the filterable source data, with real task IDs, readable dependency notation, and baseline, actual, constraint and calendar fields.</li>
+  <li><strong>Resources</strong> — the project&rsquo;s resource catalog with rate, calendar and contact fields.</li>
+  <li><strong>Assignments</strong> — task-to-resource assignments with resolved names, units, work and cost.</li>
+  <li><strong>Relations</strong> — one row per relationship, with endpoint IDs and names, type, lag and lag units.</li>
+</ul>
+
+<h2>Why it exists</h2>
+<div class="compare">
+  <p class="compare-label">Instead of</p>
+  <p><strong>Buying a Project licence for someone who only needs to read the schedule.</strong> Most people who receive an .mpp file need to look at it, filter it, and paste part of it into a report. That is a spreadsheet job, and it should not require the authoring tool.</p>
+  <p><strong>Uploading the schedule to a web converter.</strong> Project plans carry budgets, staffing and delivery dates. This runs entirely on your machine, with a bundled MPXJ reader and its own Java runtime, so nothing leaves the desktop.</p>
+</div>
+
+<h2>How it runs</h2>
+<p>There is a desktop application for Windows and macOS, and a command-line interface that performs the same conversion, so a batch of plans can be converted on a schedule rather than by hand. Gantt output scale is configurable, and packaging is standalone: an installer on Windows, an app bundle on macOS, reader and runtime included.</p>
+<p>The version in the project manifest is the single source of truth. The About dialog and the CLI&rsquo;s version flag both read it back, so the number the application reports is the number that was built.</p>
+        </div>
+
+        <div class="tool-side">
+        <div class="aside-dock">
+        <aside class="aside">
+          <h2>At a glance</h2>
+          <dl>
+            <div><dt>Version</dt><dd>1.0.2</dd></div>
+            <div><dt>Status</dt><dd>Private release</dd></div>
+            <div><dt>Platform</dt><dd>Windows · macOS</dd></div>
+            <div><dt>Category</dt><dd><a href="business-tools.html">Business</a></dd></div>
+            <div><dt>License</dt><dd>Apache-2.0</dd></div>
+            <div><dt>Copyright</dt><dd>Bluebonnet Studios</dd></div>
+            <div><dt>Updated</dt><dd>2026-08-29</dd></div>
+          </dl>
+          <div class="aside-act">
+            <a class="btn" href="index.html#access">Request</a>
+            <p>Built and versioned, distributed on request rather than published.</p>
+            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Project2Excel">Ask about Project2Excel</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+          </div>
+        </aside>
+        </div>
+      <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <section>
+        <p class="section-label">More in Business Tools</p>
+      <div class="tablewrap">
+        <table class="roster">
+          <thead>
+            <tr>
+              <th scope="col">Tool</th>
+              <th scope="col">Version</th>
+              <th scope="col">Platform</th>
+              <th scope="col">Status</th>
+              <th scope="col"><span class="visually-hidden">Availability</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="tool"><a href="project2excel.html">Project2Excel</a><small>Microsoft Project files into editable Excel workbooks</small></td>
+              <td class="num" data-label="Version">1.0.2</td>
+              <td class="num" data-label="Platform">Windows · macOS</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="pdf-classifier.html">PDF Classifier</a><small>Routes PDFs by text-layer quality before anyone pays for OCR</small></td>
+              <td class="num" data-label="Version">1.0.2</td>
+              <td class="num" data-label="Platform">Windows</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="markdown-renderer.html">Markdown Renderer</a><small>Markdown preview, linting and export with real tables and math</small></td>
+              <td class="num" data-label="Version">1.9.6</td>
+              <td class="num" data-label="Platform">Windows · macOS</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </section>
+    </main>
+  </div>
+  <footer class="site-foot">
+    <div class="site-foot-inner">
+      <span>Bluebonnet Studios</span>
+      <span>Catalog updated 2026-08-29 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+    </div>
+  </footer>
+  <script src="theme.js"></script>
+</body>
+</html>

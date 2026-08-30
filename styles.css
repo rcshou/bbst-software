@@ -1,0 +1,642 @@
+/* ============================================================
+   Bluebonnet Studios — software catalog
+   "Instrument Panel": the site looks like the software.
+   Technical shell, category rail, dense roster table.
+
+   The palette is taken from Lupinus texensis directly:
+
+     blue    royal-cobalt petals, the single accent
+     cream   the white-to-yellow banner spot and unopened buds, the light ground
+     keel    the near-black blue in the deepest petals, used as ink
+     grass   the vivid green it grows in — available, positive, present
+     bud     the yellow-green of a raceme not yet open — not finished yet
+     banner  the magenta a banner spot turns after the flower is pollinated —
+             visited, spoken for, handed out on request
+
+   Both themes are defined at token level only. No component below the token
+   blocks references a colour literal, so a palette change is a token edit.
+   ============================================================ */
+
+/* ---------- light (default) -------------------------------- */
+:root{
+  color-scheme: light;
+
+  --bg:#F3F2E7;            /* sun-bleached paper, tinted toward the buds */
+  --panel:#FCFBF4;         /* banner-spot white */
+  --panel-hover:#EBEADA;
+  --panel-raised:#E5E3D1;
+  --line:#DEDCCA;
+  --line-strong:#C7C4AE;
+
+  --ink:#10163A;           /* the keel: near-black blue */
+  --dim:#4E5570;
+  --dimmer:#868CA4;
+
+  --blue:#1E3FB8;          /* petal */
+  --blue-line:rgba(30,63,184,.34);
+  --blue-wash:rgba(30,63,184,.09);
+
+  --grass:#2A6E22;
+  --grass-line:rgba(42,110,34,.34);
+  --grass-wash:rgba(42,110,34,.09);
+
+  --bud:#7A5C00;
+  --bud-line:rgba(122,92,0,.34);
+  --bud-wash:rgba(122,92,0,.09);
+
+  --banner:#B0246E;
+  --banner-line:rgba(176,36,110,.32);
+  --banner-wash:rgba(176,36,110,.08);
+
+  --spot:#FCFBF4;          /* the pale banner spot on the mark */
+  --shadow:0 1px 3px rgba(16,22,58,.045), 0 8px 24px rgba(16,22,58,.045);
+
+  --display:"Newsreader", Georgia, "Times New Roman", serif;
+  --ui:"Archivo", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius:7px;
+  --radius-sm:5px;
+
+  --page:1180px;
+  --gutter:26px;
+}
+
+/* ---------- dark ------------------------------------------- */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+
+    --bg:#0C1020;          /* the field after dusk */
+    --panel:#131A2E;
+    --panel-hover:#171F35;
+    --panel-raised:#1B2440;
+    --line:#212940;
+    --line-strong:#2E395C;
+
+    --ink:#E7EAF6;
+    --dim:#9AA3C0;
+    --dimmer:#6D7699;
+
+    --blue:#6E8CFF;
+    --blue-line:rgba(110,140,255,.36);
+    --blue-wash:rgba(110,140,255,.13);
+
+    --grass:#6FCC4E;
+    --grass-line:rgba(111,204,78,.36);
+    --grass-wash:rgba(111,204,78,.12);
+
+    --bud:#DFC24A;
+    --bud-line:rgba(223,194,74,.36);
+    --bud-wash:rgba(223,194,74,.12);
+
+    --banner:#F06BA8;
+    --banner-line:rgba(240,107,168,.36);
+    --banner-wash:rgba(240,107,168,.12);
+
+    --spot:#E6E3CE;
+    --shadow:0 1px 3px rgba(0,0,0,.30);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+
+  --bg:#0C1020;
+  --panel:#131A2E;
+  --panel-hover:#171F35;
+  --panel-raised:#1B2440;
+  --line:#212940;
+  --line-strong:#2E395C;
+
+  --ink:#E7EAF6;
+  --dim:#9AA3C0;
+  --dimmer:#6D7699;
+
+  --blue:#6E8CFF;
+  --blue-line:rgba(110,140,255,.36);
+  --blue-wash:rgba(110,140,255,.13);
+
+  --grass:#6FCC4E;
+  --grass-line:rgba(111,204,78,.36);
+  --grass-wash:rgba(111,204,78,.12);
+
+  --bud:#DFC24A;
+  --bud-line:rgba(223,194,74,.36);
+  --bud-wash:rgba(223,194,74,.12);
+
+  --banner:#F06BA8;
+  --banner-line:rgba(240,107,168,.36);
+  --banner-wash:rgba(240,107,168,.12);
+
+  --spot:#E6E3CE;
+  --shadow:0 1px 3px rgba(0,0,0,.30);
+}
+
+/* ---------- base ------------------------------------------- */
+/* Type has three jobs and three faces. Newsreader speaks — headings, ledes,
+   section labels. Archivo runs the interface. JetBrains Mono is reserved for
+   data that lines up in a column: versions, platforms, counts, dates. Mono is
+   notation here, not decoration, which is why the labels no longer shout. */
+*{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--ui);
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+a{ color:var(--blue); }
+
+:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:3px;
+  border-radius:var(--radius-sm);
+}
+
+.skip{
+  position:absolute; left:-9999px; top:0; z-index:10;
+  background:var(--blue); color:var(--panel);
+  padding:10px 16px; font-weight:600; border-radius:0 0 var(--radius-sm) 0;
+}
+.skip:focus{ left:0; }
+
+.visually-hidden{
+  position:absolute; width:1px; height:1px; margin:-1px;
+  padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{ scroll-behavior:auto; }
+  *{ animation:none !important; transition:none !important; }
+}
+
+/* ---------- top bar ---------------------------------------- */
+.topbar{
+  border-bottom:1px solid var(--line);
+  background:var(--panel);
+}
+.topbar-inner{
+  max-width:var(--page); margin:0 auto; padding:0 var(--gutter);
+  min-height:52px;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+}
+.brand{
+  display:flex; align-items:center; gap:11px;
+  font-family:var(--display); font-size:17px; font-weight:500; letter-spacing:0;
+  color:var(--ink); text-decoration:none; white-space:nowrap;
+}
+/* the mark: a cobalt petal with its pale banner spot, on a grass stem */
+.brand .mark{ flex:none; display:block; }
+.brand .mark .stem{ fill:var(--grass); }
+.brand .mark .petal{ fill:var(--blue); }
+.brand .mark .spot{ fill:var(--spot); }
+
+.topbar-right{ display:flex; align-items:center; gap:10px; }
+
+.mainnav{ display:flex; gap:2px; flex-wrap:wrap; }
+.mainnav a{
+  font-family:var(--ui); font-size:13px; font-weight:400; letter-spacing:.005em;
+  color:var(--dim); text-decoration:none;
+  padding:6px 12px; border-radius:var(--radius-sm);
+  transition:color .22s ease, background .22s ease;
+}
+.mainnav a:hover{ color:var(--ink); background:var(--panel-hover); }
+.mainnav a[aria-current="page"]{ color:var(--blue); background:var(--blue-wash); }
+
+.theme-toggle{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:30px; height:30px; padding:0;
+  background:transparent; border:1px solid var(--line); border-radius:999px;
+  color:var(--dim); cursor:pointer;
+  transition:color .22s ease, border-color .22s ease, background .22s ease;
+}
+.theme-toggle:hover{ color:var(--ink); border-color:var(--line-strong); background:var(--panel-hover); }
+.theme-toggle svg{ width:15px; height:15px; display:block; }
+
+/* ---------- page head -------------------------------------- */
+.page-head{ border-bottom:1px solid var(--line); }
+.page-head-inner{
+  max-width:var(--page); margin:0 auto; padding:44px var(--gutter) 30px;
+  display:grid; grid-template-columns:minmax(0,1fr) auto; gap:44px; align-items:end;
+}
+.eyebrow{
+  font-family:var(--display); font-style:italic; font-size:15px;
+  letter-spacing:0; text-transform:none; color:var(--blue);
+  margin:0 0 12px;
+}
+.eyebrow a{ color:inherit; text-decoration:none; }
+.eyebrow a:hover{ text-decoration:underline; text-underline-offset:3px; }
+.page-head h1{
+  font-family:var(--display); font-weight:400;
+  font-size:clamp(31px, 4.6vw, 45px); line-height:1.08; letter-spacing:-.012em;
+  margin:0 0 14px; max-width:19ch; text-wrap:balance;
+}
+.page-head h1 .hl{ color:var(--blue); font-style:italic; }
+.page-head p{
+  margin:0; color:var(--dim); font-size:15px; line-height:1.68; max-width:58ch;
+}
+.head-meta{
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin:0 0 14px;
+}
+.head-meta .ver{
+  font-family:var(--mono); font-size:12px; color:var(--dim);
+  font-variant-numeric:tabular-nums;
+}
+
+.stats{
+  display:flex; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.stats div{
+  padding:12px 20px; border-right:1px solid var(--line); background:var(--panel);
+}
+.stats div:last-child{ border-right:0; }
+.stats b{
+  display:block; font-family:var(--mono); font-size:22px; font-weight:500;
+  line-height:1.1; color:var(--ink); font-variant-numeric:tabular-nums;
+}
+.stats span{
+  font-family:var(--ui); font-size:11.5px; font-weight:400;
+  letter-spacing:.01em; text-transform:none; color:var(--dim);
+}
+
+/* ---------- layout: rail + content ------------------------- */
+.layout{
+  max-width:var(--page); margin:0 auto;
+  display:grid; grid-template-columns:186px minmax(0,1fr);
+}
+.rail{ border-right:1px solid var(--line); padding:22px 0 40px; }
+.rail h2{
+  font-family:var(--display); font-style:italic; font-size:14px; font-weight:400;
+  letter-spacing:0; text-transform:none; color:var(--dim);
+  margin:0 0 10px; padding:0 22px 0 var(--gutter);
+}
+.rail h2 + h2{ margin-top:22px; }
+.rail a{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:8px 22px 8px calc(var(--gutter) - 2px);
+  color:var(--dim); text-decoration:none; font-size:13.5px;
+  border-left:2px solid transparent;
+  transition:color .22s ease, background .22s ease, border-color .22s ease;
+}
+.rail a:hover{ color:var(--ink); background:var(--panel-hover); }
+.rail a[aria-current="page"],
+.rail a.is-active{
+  color:var(--ink); border-left-color:var(--blue); background:var(--panel-hover);
+}
+.rail a em{
+  font-style:normal; font-family:var(--mono); font-size:11px;
+  color:var(--dimmer); font-variant-numeric:tabular-nums;
+}
+.rail .rail-note{
+  margin:22px var(--gutter) 0; padding-top:16px; border-top:1px solid var(--line);
+  font-family:var(--display); font-size:13px; font-style:italic;
+  line-height:1.6; color:var(--dimmer);
+}
+
+.content{ padding:22px var(--gutter) 48px; min-width:0; }
+.content > section + section{ margin-top:40px; }
+
+.section-label{
+  font-family:var(--display); font-style:italic; font-size:15px; font-weight:400;
+  letter-spacing:0; text-transform:none; color:var(--dim);
+  margin:0 0 14px;
+}
+
+/* ---------- roster table ----------------------------------- */
+.tablewrap{ overflow-x:auto; }
+
+table.roster{ width:100%; border-collapse:collapse; font-size:14px; }
+.roster th{
+  text-align:left; font-family:var(--ui); font-weight:500; font-size:11.5px;
+  letter-spacing:.01em; text-transform:none; color:var(--dim);
+  padding:0 14px 9px 0; border-bottom:1px solid var(--line-strong); white-space:nowrap;
+}
+.roster td{
+  padding:12px 14px 12px 0; border-bottom:1px solid var(--line); vertical-align:baseline;
+}
+.roster tbody tr{ transition:background .22s ease; }
+.roster tbody tr:hover{ background:var(--panel-hover); }
+
+.roster .tool{
+  font-family:var(--display); font-weight:500; font-size:16px;
+  color:var(--ink); letter-spacing:0;
+}
+.roster .tool a{ color:inherit; text-decoration:none; }
+.roster .tool a:hover{ color:var(--blue); }
+.roster .tool small{
+  display:block; font-family:var(--ui); font-weight:400; font-size:12.5px;
+  color:var(--dim); letter-spacing:0; margin-top:3px; line-height:1.5;
+}
+.roster .num{
+  font-family:var(--mono); font-size:12px; color:var(--dim);
+  font-variant-numeric:tabular-nums; white-space:nowrap;
+}
+
+/* Status chips carry a colour, a dot and a word, so they never rely on colour
+   alone. The four colours are the flower's own life cycle: grass for what is
+   growing and available, bud yellow for what has not opened yet, the magenta
+   of a pollinated banner spot for what has been visited and is handed out on
+   request, and no colour at all for what has not started. */
+.chip{
+  display:inline-flex; align-items:center; gap:7px;
+  font-family:var(--ui); font-size:11.5px; font-weight:500;
+  letter-spacing:.005em; text-transform:none;
+  padding:3px 11px 4px; border-radius:999px; border:1px solid; white-space:nowrap;
+}
+.chip::before{ content:""; width:5px; height:5px; border-radius:50%; background:currentColor; flex:none; }
+.chip.is-released{ color:var(--grass); border-color:var(--grass-line); background:var(--grass-wash); }
+.chip.is-beta{ color:var(--bud); border-color:var(--bud-line); background:var(--bud-wash); }
+.chip.is-private{ color:var(--banner); border-color:var(--banner-line); background:var(--banner-wash); }
+.chip.is-dev{ color:var(--dim); border-color:var(--line-strong); background:var(--panel-raised); }
+
+.btn{
+  display:inline-block; font-family:var(--ui); font-size:12.5px; font-weight:500;
+  letter-spacing:.005em; text-transform:none; white-space:nowrap;
+  color:var(--blue); text-decoration:none;
+  border:1px solid var(--blue-line); padding:5px 14px 6px; border-radius:999px;
+  background:transparent;
+  transition:background .22s ease, border-color .22s ease, color .22s ease;
+}
+.btn:hover{ background:var(--blue-wash); border-color:var(--blue); }
+.btn[aria-disabled="true"]{ color:var(--dimmer); border-color:var(--line); pointer-events:none; }
+
+/* ---------- tool cards on category pages ------------------- */
+.details{ display:grid; gap:16px; }
+.detail{
+  border:1px solid var(--line); border-radius:var(--radius); background:var(--panel);
+  padding:20px 22px 0; box-shadow:var(--shadow);
+}
+.detail-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:16px;
+  flex-wrap:wrap; margin-bottom:8px;
+}
+.detail h3{
+  font-family:var(--display); font-size:21px; font-weight:500;
+  letter-spacing:-.005em; margin:0;
+}
+.detail h3 a{ color:var(--ink); text-decoration:none; }
+.detail h3 a:hover{ color:var(--blue); }
+.detail > p{ margin:0 0 14px; font-size:14.5px; color:var(--dim); line-height:1.68; max-width:64ch; }
+.detail ul{ margin:0 0 18px; padding-left:18px; font-size:14px; color:var(--dim); }
+.detail li{ margin-bottom:6px; }
+.detail li::marker{ color:var(--grass); }
+.detail dl.facts{
+  display:grid; grid-template-columns:repeat(4, minmax(0,1fr));
+  margin:0 -22px; border-top:1px solid var(--line);
+}
+.detail dl.facts > div{ padding:11px 16px; border-right:1px solid var(--line); min-width:0; }
+.detail dl.facts > div:last-child{ border-right:0; }
+.detail dt{
+  font-family:var(--ui); font-size:11px; font-weight:400; letter-spacing:.01em;
+  text-transform:none; color:var(--dimmer); margin:0 0 4px;
+}
+.detail dd{
+  margin:0; font-family:var(--mono); font-size:12px; color:var(--ink);
+  font-variant-numeric:tabular-nums;
+}
+
+/* ---------- long-form prose (tool and about pages) --------- */
+.prose{ max-width:68ch; }
+.prose h2{
+  font-family:var(--display); font-size:25px; font-weight:400; letter-spacing:-.008em;
+  margin:38px 0 14px; padding-bottom:10px; border-bottom:1px solid var(--line);
+}
+.prose h2:first-child{ margin-top:0; }
+.prose h3{
+  font-family:var(--display); font-size:18px; font-weight:600;
+  margin:26px 0 8px; letter-spacing:-.005em;
+}
+.prose p{ margin:0 0 15px; font-size:15px; line-height:1.72; color:var(--dim); }
+.prose p strong{ color:var(--ink); font-weight:600; }
+.prose ul{ margin:0 0 18px; padding-left:20px; font-size:14.5px; color:var(--dim); }
+.prose li{ margin-bottom:9px; line-height:1.68; }
+.prose li::marker{ color:var(--grass); }
+.prose li strong{ color:var(--ink); font-weight:600; }
+.prose a{ color:var(--blue); }
+
+/* the "instead of" comparison block — why this rather than the usual thing */
+.compare{
+  border:1px solid var(--line); border-left:3px solid var(--grass);
+  background:var(--panel); border-radius:var(--radius);
+  padding:18px 20px; margin:0 0 20px;
+}
+.compare p{ margin:0; font-size:14.5px; line-height:1.7; color:var(--dim); }
+.compare p + p{ margin-top:11px; }
+.compare .compare-label{
+  font-family:var(--display); font-style:italic; font-size:14px;
+  letter-spacing:0; text-transform:none; color:var(--grass); margin:0 0 9px;
+}
+
+/* ---------- tool page: prose + fact aside ------------------ */
+.tool-body{
+  display:grid; grid-template-columns:minmax(0,1fr) 264px; gap:44px;
+  /* stretch, not start: the side column must be as tall as the prose so the
+     sticky panel has somewhere to travel that is not on top of the art */
+  align-items:stretch;
+}
+.aside{
+  position:sticky; top:22px;
+  border:1px solid var(--line); border-radius:var(--radius); background:var(--panel);
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.aside h2{
+  font-family:var(--display); font-style:italic; font-size:15px; font-weight:400;
+  letter-spacing:0; text-transform:none; color:var(--dim);
+  margin:0; padding:13px 18px; border-bottom:1px solid var(--line);
+}
+.aside dl{ margin:0; }
+.aside dl > div{
+  display:flex; justify-content:space-between; align-items:baseline; gap:14px;
+  padding:10px 18px; border-bottom:1px solid var(--line);
+}
+.aside dt{
+  font-family:var(--ui); font-size:12px; font-weight:400; letter-spacing:.01em;
+  text-transform:none; color:var(--dimmer); flex:none;
+}
+.aside dd{
+  margin:0; font-family:var(--mono); font-size:12px; color:var(--ink);
+  text-align:right; font-variant-numeric:tabular-nums; min-width:0; word-break:break-word;
+}
+.aside .aside-act{ padding:16px 18px; }
+.aside .aside-act .btn{ display:block; text-align:center; }
+.aside .aside-act p{
+  margin:11px 0 0; font-family:var(--display); font-size:13px; font-style:italic;
+  line-height:1.6; color:var(--dimmer);
+}
+
+/* ---------- access panel + status legend ------------------- */
+.access-box{
+  border:1px solid var(--line); border-radius:var(--radius); background:var(--panel);
+  padding:20px 22px 0; box-shadow:var(--shadow); overflow:hidden;
+}
+.access-box p{ margin:0 0 16px; font-size:14.5px; color:var(--dim); line-height:1.68; max-width:64ch; }
+.access-box p strong{ color:var(--ink); font-weight:600; }
+
+/* contact and Q&A routes, shown above the status legend */
+.routes{
+  display:grid; grid-template-columns:repeat(3, minmax(0,1fr));
+  margin:0 -22px; border-top:1px solid var(--line);
+}
+.routes > div{
+  padding:18px 18px 20px; border-right:1px solid var(--line);
+  min-width:0; display:flex; flex-direction:column; align-items:flex-start;
+}
+.routes > div:last-child{ border-right:0; }
+.routes h3{
+  font-family:var(--display); font-size:18px; font-weight:500;
+  letter-spacing:-.005em; margin:0 0 7px; color:var(--ink);
+}
+.routes p{ margin:0 0 14px; font-size:13.5px; line-height:1.6; color:var(--dim); }
+.routes .btn{ margin-top:auto; }
+
+.legend{
+  display:grid; grid-template-columns:repeat(4, minmax(0,1fr));
+  margin:0 -22px; border-top:1px solid var(--line);
+}
+.legend > div{ padding:14px 16px; border-right:1px solid var(--line); min-width:0; }
+.legend > div:last-child{ border-right:0; }
+.legend dt{ margin:0 0 7px; }
+.legend dd{ margin:0; font-size:12.5px; line-height:1.55; color:var(--dim); }
+
+/* ---------- footer ----------------------------------------- */
+.site-foot{ border-top:1px solid var(--line); background:var(--panel); }
+.site-foot-inner{
+  max-width:var(--page); margin:0 auto; padding:16px var(--gutter);
+  display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  font-family:var(--display); font-size:13.5px; font-style:italic;
+  letter-spacing:0; text-transform:none; color:var(--dim);
+}
+.site-foot a{ color:var(--dim); text-decoration:none; }
+.site-foot a:hover{ color:var(--ink); text-decoration:underline; text-underline-offset:3px; }
+
+/* ---------- responsive ------------------------------------- */
+@media (max-width:1000px){
+  .tool-body{ grid-template-columns:1fr; gap:28px; }
+  .aside{ position:static; }
+}
+@media (max-width:900px){
+  .page-head-inner{ grid-template-columns:1fr; gap:26px; align-items:start; }
+  .stats{ align-self:start; }
+}
+@media (max-width:820px){
+  .layout{ grid-template-columns:1fr; }
+  .rail{
+    border-right:0; border-bottom:1px solid var(--line);
+    padding:14px 0 12px;
+    display:flex; align-items:center; gap:6px;
+    overflow-x:auto; -webkit-overflow-scrolling:touch;
+  }
+  .rail h2{ margin:0; padding:0 4px 0 var(--gutter); white-space:nowrap; }
+  .rail h2 + h2{ margin-top:0; }
+  .rail a{
+    border-left:0; border-bottom:2px solid transparent;
+    padding:6px 13px; border-radius:999px; background:var(--panel);
+    white-space:nowrap; flex:none;
+  }
+  .rail a[aria-current="page"],
+  .rail a.is-active{ border-bottom-color:var(--blue); background:var(--blue-wash); color:var(--ink); }
+  .rail .rail-note{ display:none; }
+  .detail dl.facts{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .detail dl.facts > div:nth-child(2){ border-right:0; }
+  .detail dl.facts > div:nth-child(-n+2){ border-bottom:1px solid var(--line); }
+  .routes{ grid-template-columns:1fr; }
+  .routes > div{ border-right:0; border-bottom:1px solid var(--line); }
+  .routes > div:last-child{ border-bottom:0; }
+  .legend{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+  .legend > div:nth-child(2){ border-right:0; }
+  .legend > div:nth-child(-n+2){ border-bottom:1px solid var(--line); }
+}
+@media (max-width:660px){
+  .roster thead{
+    position:absolute; width:1px; height:1px; overflow:hidden;
+    clip:rect(0 0 0 0); white-space:nowrap;
+  }
+  .roster tbody tr{ display:block; padding:16px 0; border-bottom:1px solid var(--line); }
+  .roster tbody tr:hover{ background:transparent; }
+  .roster td{ display:flex; align-items:baseline; gap:12px; padding:3px 0; border-bottom:0; }
+  .roster td::before{
+    content:attr(data-label); flex:0 0 76px;
+    font-family:var(--ui); font-size:11.5px; letter-spacing:.01em; text-transform:none;
+    color:var(--dimmer); line-height:1.8;
+  }
+  .roster td.tool{ display:block; margin-bottom:10px; }
+  .roster td.tool::before{ content:none; }
+  .roster td.tool small{ max-width:52ch; }
+  .roster td.act{ margin-top:8px; }
+}
+@media (max-width:520px){
+  :root{ --gutter:18px; }
+  .stats div{ padding:10px 14px; }
+  .stats b{ font-size:19px; }
+  .legend{ grid-template-columns:1fr; }
+  .legend > div{ border-right:0; border-bottom:1px solid var(--line); }
+  .legend > div:last-child{ border-bottom:0; }
+}
+
+/* the per-tool question link in the aside */
+.aside-ask{
+  margin:10px 0 0; padding-top:11px; border-top:1px solid var(--line);
+  font-family:var(--display); font-size:13px; font-style:italic;
+  line-height:1.6; color:var(--dimmer);
+}
+.aside-ask a{ color:var(--blue); text-decoration:none; }
+.aside-ask a:hover{ text-decoration:underline; text-underline-offset:3px; }
+
+/* ---------- page art --------------------------------------- */
+/* One ornament per page, placed by its shape. Every one is decorative:
+   empty alt, aria-hidden, and never carrying information the text does not.
+   Images are RGBA, so they sit on either theme's ground unaltered. */
+.art{ pointer-events:none; }
+.art img{ display:block; max-width:100%; height:auto; }
+
+/* the arch that crowns the home page */
+.art-crown{
+  max-width:var(--page); margin:0 auto; padding:26px var(--gutter) 0;
+}
+.art-crown img{
+  width:100%; max-width:640px; margin:0 auto; opacity:.92;
+}
+
+/* the garland that closes a page */
+.art-tail{
+  padding:36px var(--gutter) 4px;
+  display:flex; justify-content:center;
+}
+.art-tail img{ width:100%; max-width:430px; opacity:.85; }
+
+/* the stem that runs down a tool page's aside column */
+.tool-side{ display:flex; flex-direction:column; min-width:0; }
+/* The panel is sticky within the dock, and the dock stops where the ornament
+   begins — so the panel can follow the reader down the prose without ever
+   travelling over the art below it. */
+.aside-dock{ flex:1 0 auto; }
+.art-column{ flex:none; padding:28px 0 0; display:flex; justify-content:center; }
+.art-column img{ width:100%; max-width:190px; opacity:.8; }
+
+@media (max-width:1000px){
+  /* the aside stacks under the prose here, so the tall stem has no margin
+     to live in; hiding it also stops the download on narrow screens */
+  .art-column{ display:none; }
+}
+@media (max-width:660px){
+  .art-crown{ padding-top:18px; }
+  .art-crown img{ max-width:420px; }
+  .art-tail{ padding-top:26px; }
+  .art-tail img{ max-width:300px; }
+}
+
+/* tables inside long-form prose (the privacy policy's network summary) */
+.prose table{ width:100%; border-collapse:collapse; font-size:14px; margin:0 0 20px; }
+.prose th{
+  text-align:left; font-family:var(--ui); font-weight:500; font-size:12px;
+  color:var(--dim); padding:0 14px 9px 0; border-bottom:1px solid var(--line-strong);
+}
+.prose td{ padding:10px 14px 10px 0; border-bottom:1px solid var(--line); color:var(--dim); vertical-align:top; }
+.prose td strong{ color:var(--ink); font-weight:600; }

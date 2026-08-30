@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy — Bluebonnet Studios</title>
+  <meta name="description" content="How Bluebonnet Studios software handles your data: what stays on your device, what touches a network, and what the publisher receives." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Apply the stored theme before first paint so the page never flashes. */
+    (function(){try{var t=localStorage.getItem("bbst-theme");
+    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <svg class="mark" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
+          <rect class="stem" x="6.3" y="7" width="1.4" height="9" rx="0.7" />
+          <circle class="petal" cx="7" cy="3.6" r="3.6" />
+          <circle class="spot" cx="7" cy="2.6" r="1.15" />
+        </svg>
+        Bluebonnet Studios
+      </a>
+      <div class="topbar-right">
+        <nav class="mainnav" aria-label="Primary">
+          <a href="index.html">Catalog</a>
+          <a href="about.html">About</a>
+          <a href="index.html#access">Access</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 1.5A6.5 6.5 0 0 1 8 14.5Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="page-head">
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow">Privacy policy</p>
+        <h1>What stays on your machine, <span class="hl">and what does not.</span></h1>
+        <p>Effective 30 August 2026. This policy covers every application listed in this
+           catalog and this website itself.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Categories">
+      <h2>Categories</h2>
+      <a href="index.html">All tools <em>10</em></a>
+      <a href="business-tools.html">Business <em>3</em></a>
+      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
+      <a href="geoscience-tools.html">Geoscience <em>3</em></a>
+      <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
+    </nav>
+    <main class="content" id="main">
+      <div class="prose">
+        <h2>Summary</h2>
+        <p>Bluebonnet Studios software has <strong>no user accounts, no sign-in, no advertising,
+           no analytics and no telemetry.</strong> The publisher receives nothing from any
+           application. Your documents, photographs and data are read on your own device and are
+           never uploaded.</p>
+        <p><strong>No application in this catalog uses your location.</strong> None of them asks
+           your device where you are, and none contains any code capable of it. Where coordinates
+           appear at all, they are values already stored inside the files you chose to process —
+           the position a camera recorded in a photograph, or the survey geometry inside a seismic
+           file — never a reading of where you are.</p>
+        <p>Four of the ten applications do contact a network, for reasons named below. None of
+           them sends your file contents anywhere, and each is listed rather than glossed over.</p>
+
+        <h2>What each application does with the network</h2>
+        <table>
+          <thead><tr><th>Application</th><th>Network use</th></tr></thead>
+          <tbody>
+            <tr><td>Project2Excel</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Markdown Renderer</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Similars and Photo Statistics</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Restore Missing Photos</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Cassandra Risking</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>PDF Classifier</td><td>Checks for application updates only</td></tr>
+            <tr><td>Geocrawler</td><td>Checks for application updates only</td></tr>
+            <tr><td>SEG-Y Coordinate Security</td><td>Optional map tiles, off until you enable them</td></tr>
+            <tr><td>Location Caption Assistant</td><td>Looks up place names for coordinates already stored in your photographs</td></tr>
+            <tr><td>Bakmil Metro Schedule</td><td>A website; loads and caches its own timetable</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Information stored on your device</h2>
+        <p>Applications store their own settings, and most keep a rotating local diagnostic log.
+           <strong>Log entries can include the file paths of documents you open and files you
+           create</strong>, because that is what makes a fault report usable. Document contents
+           are not written to logs. All of it stays on your device, none of it is accessible to
+           the publisher, and you can delete it at any time — the application recreates what it
+           needs on next launch.</p>
+        <h2 id="project2excel">Project2Excel</h2>
+        <p>This section is the policy for the Microsoft Store listing of Project2Excel.</p>
+        <p>Project2Excel converts Microsoft Project <code>.mpp</code> files that you select into
+           Excel <code>.xlsx</code> workbooks. Reading and conversion happen entirely on your
+           device, using components bundled inside the application. <strong>It makes no network
+           requests and can be used with networking disabled.</strong> Nothing you open, convert
+           or save is sent anywhere.</p>
+        <p>It stores the following locally, none of which leaves your device or is accessible to
+           the publisher:</p>
+        <ul>
+          <li><strong>Settings</strong> — your export preferences and the folders last used for opening and saving, in the application's per-user application data location.</li>
+          <li><strong>Diagnostic log</strong> — a rotating local log of roughly 1&nbsp;MB across up to five files, recording events such as when an export started and finished, how many tasks were exported, and any warnings. <strong>These entries include the file paths of the project files you convert and the workbooks you create.</strong> Task notes from your project files are deliberately excluded.</li>
+          <li><strong>Temporary files</strong> — while reading a project file the application writes a temporary file to your system temporary folder and deletes it once conversion completes.</li>
+          <li><strong>Output files</strong> — the workbooks it creates are written only where you choose.</li>
+        </ul>
+        <p>You can delete the settings file and the logs at any time. In the Microsoft Store
+           version these files live in the application's own per-user package data folder and are
+           removed when you uninstall it.</p>
+        <p>The application bundles open-source components, including the MPXJ project-file
+           library, a Java runtime, the Qt framework and OpenPyXL. They execute locally and
+           transmit nothing. The Microsoft Store handles distribution, installation and updates
+           under Microsoft's own privacy practices; the publisher receives only the aggregate
+           acquisition statistics the Store provides.</p>
+
+        <h2>The four applications that contact a network</h2>
+        <h3>PDF Classifier and Geocrawler — update checks</h3>
+        <p>Both can check whether a newer version exists, against a local network share first and
+           a public release channel second. The check sends nothing about you or your documents.
+           A downloaded package is never executed before its checksum has been verified, and
+           nothing installs without your explicit confirmation.</p>
+
+        <h3>SEG-Y Coordinate Security — optional map tiles</h3>
+        <p>The geometry view can draw a background map using public OpenStreetMap tiles.
+           <strong>This is off until you enable it in Settings</strong> and authorise it for the
+           current view. When enabled, the tile server receives the map areas you look at, which
+           necessarily indicates the region your survey covers. A bundled offline basemap outline
+           is available as an alternative that needs no network at all.</p>
+
+        <h3>Location Caption Assistant — place names for coordinates in your photographs</h3>
+        <p><strong>This plug-in does not use your location, and no application in this catalog
+           does.</strong> None of them asks your device where you are, and none contains any code
+           capable of it.</p>
+        <p>What it works with is a coordinate <em>inside the data you chose to process</em>. When
+           a camera or phone records a photograph it can store the position where the picture was
+           taken in the file itself. For photographs you have selected in Lightroom, the plug-in
+           reads that stored coordinate from the catalog and asks two public OpenStreetMap
+           services — Nominatim and Overpass — what landmarks exist at that position, so it can
+           suggest "Bayon Temple" rather than "Siem Reap". It is the same act as typing a
+           coordinate into a map search, on data already in your own files.</p>
+        <p>Your photographs are never uploaded — only the coordinate. Nearby photographs are
+           grouped so each area is looked up once rather than once per photograph. Requests
+           identify the plug-in and the studio's contact address, as those services' usage
+           policies require. Nominatim and Overpass are operated by the OpenStreetMap Foundation
+           under their own privacy terms. Nothing is written to your catalog until you approve
+           each suggestion, and photographs with no stored coordinate are skipped entirely.</p>
+
+        <h2>This website</h2>
+        <p>This site sets no cookies and runs no analytics. Three things are worth naming:</p>
+        <ul>
+          <li><strong>Fonts</strong> are loaded from Google Fonts, so Google receives your IP address and browser details when a page loads.</li>
+          <li><strong>Hosting</strong> is GitHub Pages, so GitHub receives the same request information.</li>
+          <li><strong>Your theme choice</strong> is remembered in your browser's local storage under <code>bbst-theme</code>. It never leaves your browser, and clearing site data removes it.</li>
+        </ul>
+
+        <h2>Information the publisher receives</h2>
+        <p><strong>None.</strong> No usage data, no crash reports, no file contents, no file names.
+           If you email support or open a GitHub discussion or issue, the publisher receives
+           whatever you put in it — a GitHub discussion is public and visible to anyone.</p>
+
+        <h2>Children</h2>
+        <p>These are general-purpose professional tools. They do not knowingly collect information
+           from anyone, including children.</p>
+
+        <h2>Changes to this policy</h2>
+        <p>A revised version will be published at this address with an updated effective date.</p>
+
+        <h2>Contact</h2>
+        <p>Questions about this policy: <a href="mailto:dev@bbst.us">dev@bbst.us</a></p>
+      </div>
+      <div class="art art-tail"><img src="assets/bluebonnet-footer.png" width="860" height="391" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+    </main>
+  </div>
+  <footer class="site-foot">
+    <div class="site-foot-inner">
+      <span>Bluebonnet Studios</span>
+      <span>Catalog updated 2026-08-29 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+    </div>
+  </footer>
+  <script src="theme.js"></script>
+</body>
+</html>

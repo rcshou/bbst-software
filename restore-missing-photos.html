@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restore Missing Photos — Bluebonnet Studios</title>
+  <meta name="description" content="A Lightroom Classic plugin that finds files matching photos the catalog reports as missing and puts them back where the catalog expects them." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Apply the stored theme before first paint so the page never flashes. */
+    (function(){try{var t=localStorage.getItem("bbst-theme");
+    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <svg class="mark" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
+          <rect class="stem" x="6.3" y="7" width="1.4" height="9" rx="0.7" />
+          <circle class="petal" cx="7" cy="3.6" r="3.6" />
+          <circle class="spot" cx="7" cy="2.6" r="1.15" />
+        </svg>
+        Bluebonnet Studios
+      </a>
+      <div class="topbar-right">
+        <nav class="mainnav" aria-label="Primary">
+          <a href="index.html">Catalog</a>
+          <a href="about.html">About</a>
+          <a href="index.html#access">Access</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 1.5A6.5 6.5 0 0 1 8 14.5Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="page-head">
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow"><a href="lightroom-plugins.html">Lightroom Plugins</a></p>
+        <h1>Restore Missing Photos</h1>
+        <div class="head-meta">
+          <span class="chip is-private">Private release</span>
+          <span class="ver">Version 1.22.0 &middot; Plugin</span>
+        </div>
+        <p>Lightroom marks a photo as missing when the file moves out from under it. This searches the folders you point it at for files matching those photos and puts them back at the paths the catalog still expects.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Categories">
+      <h2>Categories</h2>
+      <a href="index.html">All tools <em>10</em></a>
+      <a href="business-tools.html">Business <em>3</em></a>
+      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="lightroom-plugins.html" class="is-active">Lightroom <em>3</em></a>
+      <a href="geoscience-tools.html">Geoscience <em>3</em></a>
+      <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
+    </nav>
+    <main class="content" id="main">
+      <div class="tool-body">
+        <div class="prose">
+<h2>The situation</h2>
+<p>Lightroom records where every photograph lives. Move the files with anything other than
+   Lightroom — a backup restore, a drive swap, a tidy-up in Finder or Explorer — and the catalog
+   still holds all your edits, collections and ratings, pointing at paths that no longer exist.
+   The thumbnails stay; the photographs are gone.</p>
+
+<h2>What it does</h2>
+<p>Searches one or more source folders for files whose names match the photographs the catalog
+   currently reports as missing, then optionally copies the matches back to the exact paths the
+   catalog still expects. The catalog is never rewritten to chase the files; the files are
+   returned to where the catalog already believes they are, so every edit and collection stays
+   attached.</p>
+<div class="compare">
+  <p class="compare-label">Instead of</p>
+  <p><strong>Reconnecting folders by hand, one at a time.</strong> Lightroom&rsquo;s own reconnect
+     works, and works well, when the missing photographs sit together in one moved folder. It is
+     painful when a few thousand files scattered across a restored backup need matching
+     individually — which is exactly the case this exists for.</p>
+</div>
+
+<h2>Controls</h2>
+<ul>
+  <li><strong>List missed photo locations</strong> — starts the recovery workflow from the current selection.</li>
+  <li><strong>Duplicate handling</strong> — settable from the plugin&rsquo;s own menu without opening the Plug-in Manager, because it is the setting you actually change mid-run.</li>
+  <li><strong>In-app help</strong> — available both from the menu and from the Plug-in Manager entry.</li>
+</ul>
+<p>Built against Lightroom SDK 12 with a declared minimum of SDK 10.</p>
+        </div>
+
+        <div class="tool-side">
+        <div class="aside-dock">
+        <aside class="aside">
+          <h2>At a glance</h2>
+          <dl>
+            <div><dt>Version</dt><dd>1.22.0</dd></div>
+            <div><dt>Status</dt><dd>Private release</dd></div>
+            <div><dt>Platform</dt><dd>Plugin</dd></div>
+            <div><dt>Category</dt><dd><a href="lightroom-plugins.html">Lightroom</a></dd></div>
+            <div><dt>License</dt><dd>Not stated</dd></div>
+            <div><dt>Copyright</dt><dd>Bluebonnet Studios</dd></div>
+            <div><dt>Updated</dt><dd>2026-08-29</dd></div>
+          </dl>
+          <div class="aside-act">
+            <a class="btn" href="index.html#access">Request</a>
+            <p>Built and versioned, distributed on request rather than published.</p>
+            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Restore%20Missing%20Photos">Ask about Restore Missing Photos</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+          </div>
+        </aside>
+        </div>
+      <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <section>
+        <p class="section-label">More in Lightroom Plugins</p>
+      <div class="tablewrap">
+        <table class="roster">
+          <thead>
+            <tr>
+              <th scope="col">Tool</th>
+              <th scope="col">Version</th>
+              <th scope="col">Platform</th>
+              <th scope="col">Status</th>
+              <th scope="col"><span class="visually-hidden">Availability</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="tool"><a href="similars-and-statistics.html">Similars and Photo Statistics</a><small>Groups visually similar photos, reports file-type statistics, and repairs wrong capture dates</small></td>
+              <td class="num" data-label="Version">1.8.1</td>
+              <td class="num" data-label="Platform">Plugin · macOS</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="restore-missing-photos.html">Restore Missing Photos</a><small>Puts files that Lightroom reports as missing back where the catalog expects them</small></td>
+              <td class="num" data-label="Version">1.22.0</td>
+              <td class="num" data-label="Platform">Plugin</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="location-caption.html">Location Caption Assistant</a><small>Suggests the landmark a GPS-tagged photo was actually taken at</small></td>
+              <td class="num" data-label="Version">0.1.10</td>
+              <td class="num" data-label="Platform">Plugin</td>
+              <td data-label="Status"><span class="chip is-beta">Beta</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Download</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </section>
+    </main>
+  </div>
+  <footer class="site-foot">
+    <div class="site-foot-inner">
+      <span>Bluebonnet Studios</span>
+      <span>Catalog updated 2026-08-29 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+    </div>
+  </footer>
+  <script src="theme.js"></script>
+</body>
+</html>

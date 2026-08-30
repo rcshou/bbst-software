@@ -1,0 +1,6 @@
+# Git was converting checked-out files to CRLF, which broke CATALOG.txt parsing
+# (every last field carried a trailing carriage return) and leaves shell scripts
+# with line endings bash can choke on. Normalise everything to LF in the working
+# tree; the site is served as-is and every consumer here is LF-native.
+* text=auto eol=lf
+*.png binary

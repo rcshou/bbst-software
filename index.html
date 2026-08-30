@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bluebonnet Studios — Software Catalog</title>
+  <meta name="description" content="Desktop tools for document workflows, OCR routing, Lightroom catalogs and subsurface data, each listed with its version, platform and availability." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Apply the stored theme before first paint so the page never flashes. */
+    (function(){try{var t=localStorage.getItem("bbst-theme");
+    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <svg class="mark" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
+          <rect class="stem" x="6.3" y="7" width="1.4" height="9" rx="0.7" />
+          <circle class="petal" cx="7" cy="3.6" r="3.6" />
+          <circle class="spot" cx="7" cy="2.6" r="1.15" />
+        </svg>
+        Bluebonnet Studios
+      </a>
+      <div class="topbar-right">
+        <nav class="mainnav" aria-label="Primary">
+          <a href="index.html" aria-current="page">Catalog</a>
+          <a href="about.html">About</a>
+          <a href="index.html#access">Access</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 1.5A6.5 6.5 0 0 1 8 14.5Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="page-head">
+      <div class="art art-crown"><img src="assets/bluebonnet-header.png" width="1280" height="435" alt="" aria-hidden="true" decoding="async" /></div>
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow">Software catalog</p>
+        <h1>Desktop tools that do <span class="hl">one job</span> properly.</h1>
+        <p>10 applications for document workflows, OCR routing, Lightroom catalogs and
+           subsurface data. Each one is listed with its version, platform and availability, so you
+           can see what exists, what is finished, and what you can actually get hold of.</p>
+      </div>
+      <div class="stats">
+        <div><b>10</b><span>Tools</span></div>
+        <div><b>4</b><span>Categories</span></div>
+        <div><b>8</b><span>Private releases</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Categories">
+      <h2>Categories</h2>
+      <a href="index.html" aria-current="page">All tools <em>10</em></a>
+      <a href="business-tools.html">Business <em>3</em></a>
+      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
+      <a href="geoscience-tools.html">Geoscience <em>3</em></a>
+      <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
+    </nav>
+    <main class="content" id="main">
+      <section>
+        <p class="section-label">All tools</p>
+      <div class="tablewrap">
+        <table class="roster">
+          <thead>
+            <tr>
+              <th scope="col">Tool</th>
+              <th scope="col">Category</th>
+              <th scope="col">Version</th>
+              <th scope="col">Platform</th>
+              <th scope="col">Status</th>
+              <th scope="col"><span class="visually-hidden">Availability</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="tool"><a href="project2excel.html">Project2Excel</a><small>Microsoft Project files into editable Excel workbooks</small></td>
+              <td class="num" data-label="Category">Business</td>
+              <td class="num" data-label="Version">1.0.2</td>
+              <td class="num" data-label="Platform">Windows · macOS</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="pdf-classifier.html">PDF Classifier</a><small>Routes PDFs by text-layer quality before anyone pays for OCR</small></td>
+              <td class="num" data-label="Category">Business</td>
+              <td class="num" data-label="Version">1.0.2</td>
+              <td class="num" data-label="Platform">Windows</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="markdown-renderer.html">Markdown Renderer</a><small>Markdown preview, linting and export with real tables and math</small></td>
+              <td class="num" data-label="Category">Business</td>
+              <td class="num" data-label="Version">1.9.6</td>
+              <td class="num" data-label="Platform">Windows · macOS</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="bakmil-metro.html">Bakmil Metro Schedule</a><small>Next-departure times for the Bakmil metro shuttle in Baku</small></td>
+              <td class="num" data-label="Category">Web Apps</td>
+              <td class="num" data-label="Version">—</td>
+              <td class="num" data-label="Platform">Web</td>
+              <td data-label="Status"><span class="chip is-released">Released</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="#access">Download</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="similars-and-statistics.html">Similars and Photo Statistics</a><small>Groups visually similar photos, reports file-type statistics, and repairs wrong capture dates</small></td>
+              <td class="num" data-label="Category">Lightroom</td>
+              <td class="num" data-label="Version">1.8.1</td>
+              <td class="num" data-label="Platform">Plugin · macOS</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="restore-missing-photos.html">Restore Missing Photos</a><small>Puts files that Lightroom reports as missing back where the catalog expects them</small></td>
+              <td class="num" data-label="Category">Lightroom</td>
+              <td class="num" data-label="Version">1.22.0</td>
+              <td class="num" data-label="Platform">Plugin</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="location-caption.html">Location Caption Assistant</a><small>Suggests the landmark a GPS-tagged photo was actually taken at</small></td>
+              <td class="num" data-label="Category">Lightroom</td>
+              <td class="num" data-label="Version">0.1.10</td>
+              <td class="num" data-label="Platform">Plugin</td>
+              <td data-label="Status"><span class="chip is-beta">Beta</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="#access">Download</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="geocrawler.html">Geocrawler</a><small>Audits a subsurface data repository and tells you what is in it</small></td>
+              <td class="num" data-label="Category">Geoscience</td>
+              <td class="num" data-label="Version">2.19.1</td>
+              <td class="num" data-label="Platform">Windows</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="segy-coordinate-security.html">SEG-Y Coordinate Security</a><small>Share seismic data without giving away where it was shot</small></td>
+              <td class="num" data-label="Category">Geoscience</td>
+              <td class="num" data-label="Version">0.16.1</td>
+              <td class="num" data-label="Platform">Windows</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="cassandra-risking.html">Cassandra Risking</a><small>New risking app</small></td>
+              <td class="num" data-label="Category">Geoscience</td>
+              <td class="num" data-label="Version">0.4.3</td>
+              <td class="num" data-label="Platform">Windows</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="#access">Request</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </section>
+      <section id="access">
+        <p class="section-label">Access and releases</p>
+        <div class="access-box">
+          <p>Bluebonnet Studios builds and releases from private repositories. This catalog is the
+             public record: it publishes each tool&rsquo;s version, platform and availability, while the
+             binaries themselves ship through their own channels. <strong>Nothing here is a
+             subscription, and nothing here phones home.</strong></p>
+          <p>Questions are answered in the open. Ask on GitHub Discussions and the answer stays
+             searchable for whoever asks the same thing next; email is there for release requests
+             and anything that should not be public.</p>
+          <div class="routes">
+            <div>
+              <h3>Ask a question</h3>
+              <p>Public Q&amp;A on GitHub Discussions — how a tool works, whether it fits, what it
+                 does not do. Answers get marked, so the thread stays useful.</p>
+              <a class="btn" href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a">Start a discussion</a>
+            </div>
+            <div>
+              <h3>Report a problem</h3>
+              <p>Something in this catalog wrong, a broken link, or a defect in a tool you have a
+                 build of. Issue forms will route it.</p>
+              <a class="btn" href="https://github.com/rcshou/bbst-software/issues/new/choose">Open an issue</a>
+            </div>
+            <div>
+              <h3>Request a release</h3>
+              <p>For a private release, or to hear when a tool reaches general availability. Use
+                 email if the request itself should stay private.</p>
+              <a class="btn" href="mailto:dev@bbst.us">dev@bbst.us</a>
+            </div>
+          </div>
+          <dl class="legend">
+            <div>
+              <dt><span class="chip is-released">Released</span></dt>
+              <dd>Generally available. A version number and a download are published here.</dd>
+            </div>
+            <div>
+              <dt><span class="chip is-beta">Beta</span></dt>
+              <dd>Feature-complete and usable, still collecting reports before general release.</dd>
+            </div>
+            <div>
+              <dt><span class="chip is-private">Private release</span></dt>
+              <dd>Built, versioned and in daily use. Distributed on request rather than published.</dd>
+            </div>
+            <div>
+              <dt><span class="chip is-dev">In development</span></dt>
+              <dd>Being built. Described here so you know it exists, with nothing to hand out yet.</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer class="site-foot">
+    <div class="site-foot-inner">
+      <span>Bluebonnet Studios</span>
+      <span>Catalog updated 2026-08-29 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+    </div>
+  </footer>
+  <script src="theme.js"></script>
+</body>
+</html>

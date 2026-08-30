@@ -1,0 +1,9 @@
+# Routes people to the right place before they open a blank issue.
+blank_issues_enabled: false
+contact_links:
+  - name: Ask a question
+    url: https://github.com/rcshou/bbst-software/discussions/new?category=q-a
+    about: How a tool works, whether it fits your workflow, what it does not do. Answers are marked and stay searchable.
+  - name: Request a private release
+    url: mailto:dev@bbst.us
+    about: Ask about a build that is distributed on request, or to hear when a tool reaches general availability.

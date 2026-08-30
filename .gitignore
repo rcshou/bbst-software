@@ -1,0 +1,5 @@
+# Private catalog notes: names unreleased projects, must not be published.
+CATALOG-private.txt
+
+# Local virtual environment for the image tooling (Pillow).
+.venv/

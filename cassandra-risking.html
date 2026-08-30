@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cassandra Risking — Bluebonnet Studios</title>
+  <meta name="description" content="Prospect risking with the evidence attached: chance-of-success calculations that keep a snapshot of what they were based on." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Apply the stored theme before first paint so the page never flashes. */
+    (function(){try{var t=localStorage.getItem("bbst-theme");
+    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <svg class="mark" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
+          <rect class="stem" x="6.3" y="7" width="1.4" height="9" rx="0.7" />
+          <circle class="petal" cx="7" cy="3.6" r="3.6" />
+          <circle class="spot" cx="7" cy="2.6" r="1.15" />
+        </svg>
+        Bluebonnet Studios
+      </a>
+      <div class="topbar-right">
+        <nav class="mainnav" aria-label="Primary">
+          <a href="index.html">Catalog</a>
+          <a href="about.html">About</a>
+          <a href="index.html#access">Access</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 1.5A6.5 6.5 0 0 1 8 14.5Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="page-head">
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow"><a href="geoscience-tools.html">Geoscience Tools</a></p>
+        <h1>Cassandra Risking</h1>
+        <div class="head-meta">
+          <span class="chip is-private">Private release</span>
+          <span class="ver">Version 0.4.3 &middot; Windows</span>
+        </div>
+        <p>Calculates prospect chance of success and keeps a snapshot of the evidence each number was based on, so a risking decision can still be explained months later.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Categories">
+      <h2>Categories</h2>
+      <a href="index.html">All tools <em>10</em></a>
+      <a href="business-tools.html">Business <em>3</em></a>
+      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
+      <a href="geoscience-tools.html" class="is-active">Geoscience <em>3</em></a>
+      <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
+    </nav>
+    <main class="content" id="main">
+      <div class="tool-body">
+        <div class="prose">
+<h2>What it does</h2>
+<p>Calculates prospect chance of success, and keeps the evidence. Each calculation stores a snapshot of the inputs and the supporting material it was based on, linked to the scenarios and hypotheses it came from, in a local database with an audited schema.</p>
+
+<h2>Why the evidence matters</h2>
+<div class="compare">
+  <p class="compare-label">Instead of</p>
+  <p><strong>A spreadsheet that produces a number and forgets why.</strong> Risking numbers get quoted in decisions months after they are calculated, by people who were not in the room. A figure whose basis cannot be reconstructed cannot be defended, revised or audited — so the evidence snapshot travels with the result rather than living in someone&rsquo;s memory.</p>
+</div>
+
+<h2>Shape of the tool</h2>
+<ul>
+  <li>Scenario and hypothesis structure, with evidence attached at the point it is used.</li>
+  <li>Calculation results stored with their evidence snapshots rather than recomputed on demand.</li>
+  <li>A local database that migrates its own schema forward, including index backfill for existing databases.</li>
+  <li>A generated HTML guide built from the same source as the application.</li>
+  <li>Packaged as a standalone Windows build.</li>
+</ul>
+
+<h2>Status</h2>
+<p>Versioned and in active development, currently on the 0.5 series. It is listed as a private release: built and usable, distributed on request rather than published.</p>
+        </div>
+
+        <div class="tool-side">
+        <div class="aside-dock">
+        <aside class="aside">
+          <h2>At a glance</h2>
+          <dl>
+            <div><dt>Version</dt><dd>0.4.3</dd></div>
+            <div><dt>Status</dt><dd>Private release</dd></div>
+            <div><dt>Platform</dt><dd>Windows</dd></div>
+            <div><dt>Category</dt><dd><a href="geoscience-tools.html">Geoscience</a></dd></div>
+            <div><dt>License</dt><dd>Not stated</dd></div>
+            <div><dt>Copyright</dt><dd>Bluebonnet Studios</dd></div>
+            <div><dt>Updated</dt><dd>2026-08-29</dd></div>
+          </dl>
+          <div class="aside-act">
+            <a class="btn" href="index.html#access">Request</a>
+            <p>Built and versioned, distributed on request rather than published.</p>
+            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Cassandra%20Risking">Ask about Cassandra Risking</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+          </div>
+        </aside>
+        </div>
+      <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <section>
+        <p class="section-label">More in Geoscience Tools</p>
+      <div class="tablewrap">
+        <table class="roster">
+          <thead>
+            <tr>
+              <th scope="col">Tool</th>
+              <th scope="col">Version</th>
+              <th scope="col">Platform</th>
+              <th scope="col">Status</th>
+              <th scope="col"><span class="visually-hidden">Availability</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="tool"><a href="geocrawler.html">Geocrawler</a><small>Audits a subsurface data repository and tells you what is in it</small></td>
+              <td class="num" data-label="Version">2.19.1</td>
+              <td class="num" data-label="Platform">Windows</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="segy-coordinate-security.html">SEG-Y Coordinate Security</a><small>Share seismic data without giving away where it was shot</small></td>
+              <td class="num" data-label="Version">0.16.1</td>
+              <td class="num" data-label="Platform">Windows</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="cassandra-risking.html">Cassandra Risking</a><small>New risking app</small></td>
+              <td class="num" data-label="Version">0.4.3</td>
+              <td class="num" data-label="Platform">Windows</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </section>
+    </main>
+  </div>
+  <footer class="site-foot">
+    <div class="site-foot-inner">
+      <span>Bluebonnet Studios</span>
+      <span>Catalog updated 2026-08-29 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+    </div>
+  </footer>
+  <script src="theme.js"></script>
+</body>
+</html>

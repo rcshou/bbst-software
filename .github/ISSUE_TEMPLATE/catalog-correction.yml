@@ -1,0 +1,44 @@
+name: Catalog correction
+description: Something on dev.bbst.us is wrong, out of date, or broken.
+title: "Catalog: "
+labels: ["catalog"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For questions about a tool, use
+        [Discussions](https://github.com/rcshou/bbst-software/discussions/new?category=q-a)
+        instead — this form is for the catalog site itself.
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: Which page, as a URL or a filename.
+      placeholder: https://dev.bbst.us/project2excel.html
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of problem
+      options:
+        - Wrong version, platform or status
+        - Wrong or misleading description
+        - Broken link
+        - Rendering or layout problem
+        - Accessibility problem
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: What is wrong, and what it should say
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and OS
+      description: Only needed for a rendering or accessibility problem.
+      placeholder: Firefox 141, Windows 11

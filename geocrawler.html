@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geocrawler — Bluebonnet Studios</title>
+  <meta name="description" content="Audit a subsurface data repository: catalog SEG-Y and LAS files, read their headers, detect coordinate systems, and find duplicates." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Apply the stored theme before first paint so the page never flashes. */
+    (function(){try{var t=localStorage.getItem("bbst-theme");
+    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <svg class="mark" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
+          <rect class="stem" x="6.3" y="7" width="1.4" height="9" rx="0.7" />
+          <circle class="petal" cx="7" cy="3.6" r="3.6" />
+          <circle class="spot" cx="7" cy="2.6" r="1.15" />
+        </svg>
+        Bluebonnet Studios
+      </a>
+      <div class="topbar-right">
+        <nav class="mainnav" aria-label="Primary">
+          <a href="index.html">Catalog</a>
+          <a href="about.html">About</a>
+          <a href="index.html#access">Access</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 1.5A6.5 6.5 0 0 1 8 14.5Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="page-head">
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow"><a href="geoscience-tools.html">Geoscience Tools</a></p>
+        <h1>Geocrawler</h1>
+        <div class="head-meta">
+          <span class="chip is-private">Private release</span>
+          <span class="ver">Version 2.19.1 &middot; Windows</span>
+        </div>
+        <p>Crawls a folder tree of subsurface data and tells you what is in it: which files are seismic, which are well logs, what their headers claim, which are duplicates, and which claims should not be trusted.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Categories">
+      <h2>Categories</h2>
+      <a href="index.html">All tools <em>10</em></a>
+      <a href="business-tools.html">Business <em>3</em></a>
+      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
+      <a href="geoscience-tools.html" class="is-active">Geoscience <em>3</em></a>
+      <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
+    </nav>
+    <main class="content" id="main">
+      <div class="tool-body">
+        <div class="prose">
+<h2>What it does</h2>
+<p>Exploration data repositories grow by accretion. Geocrawler walks a folder tree and turns it into a catalog you can reason about:</p>
+<ul>
+  <li><strong>Catalogs</strong> seismic, well-log and related subsurface files by type.</li>
+  <li><strong>Reads headers</strong> — SEG-Y binary and textual headers, LAS well logs, and survey metadata.</li>
+  <li><strong>Detects coordinate reference systems</strong>, EPSG codes and project context from what the headers actually say.</li>
+  <li><strong>Finds duplicates</strong>, both individual files and folder-level duplicate content.</li>
+  <li><strong>Reports</strong> to Excel for stakeholder review and Markdown for quick documentation, from a PySide6 interface where results can be reviewed before export.</li>
+</ul>
+
+<h2>Honest about what it cannot know</h2>
+<div class="compare">
+  <p class="compare-label">Instead of</p>
+  <p><strong>Reporting a confident guess as a fact.</strong> Header-derived coordinate systems are labelled &ldquo;CRS from headers&rdquo; and flagged as unverified, because zone numbers are especially unreliable on older surveys. A CRS inferred from trace coordinates is tagged as inferred, so it is never mistaken for a header declaration. Where a zone label is genuinely ambiguous — the classic case where a legacy Gauss-Kr&uuml;ger zone survives a conversion and looks like a UTM zone — it is surfaced as an ambiguity rather than resolved by coin flip.</p>
+</div>
+<p>The same care applies to 2D/3D classification. A quick scan of the first traces can call a real 3D volume &ldquo;2D&rdquo; when a single inline runs longer than the sample, so a full-scan action validates candidate axis bytes against a whole-file geometry builder before committing to an answer.</p>
+
+<h2>Why it matters day to day</h2>
+<p>It replaces manual folder inspection with automated discovery, speeds up quality checks with metadata validation and duplicate detection, keeps catalogs consistent across projects, and makes a handoff reviewable — because the report goes with the data.</p>
+
+        </div>
+
+        <div class="tool-side">
+        <div class="aside-dock">
+        <aside class="aside">
+          <h2>At a glance</h2>
+          <dl>
+            <div><dt>Version</dt><dd>2.19.1</dd></div>
+            <div><dt>Status</dt><dd>Private release</dd></div>
+            <div><dt>Platform</dt><dd>Windows</dd></div>
+            <div><dt>Category</dt><dd><a href="geoscience-tools.html">Geoscience</a></dd></div>
+            <div><dt>License</dt><dd>Apache-2.0</dd></div>
+            <div><dt>Copyright</dt><dd>Bluebonnet Studios</dd></div>
+            <div><dt>Updated</dt><dd>2026-08-29</dd></div>
+          </dl>
+          <div class="aside-act">
+            <a class="btn" href="index.html#access">Request</a>
+            <p>Built and versioned, distributed on request rather than published.</p>
+            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Geocrawler">Ask about Geocrawler</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+          </div>
+        </aside>
+        </div>
+      <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <section>
+        <p class="section-label">More in Geoscience Tools</p>
+      <div class="tablewrap">
+        <table class="roster">
+          <thead>
+            <tr>
+              <th scope="col">Tool</th>
+              <th scope="col">Version</th>
+              <th scope="col">Platform</th>
+              <th scope="col">Status</th>
+              <th scope="col"><span class="visually-hidden">Availability</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="tool"><a href="geocrawler.html">Geocrawler</a><small>Audits a subsurface data repository and tells you what is in it</small></td>
+              <td class="num" data-label="Version">2.19.1</td>
+              <td class="num" data-label="Platform">Windows</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="segy-coordinate-security.html">SEG-Y Coordinate Security</a><small>Share seismic data without giving away where it was shot</small></td>
+              <td class="num" data-label="Version">0.16.1</td>
+              <td class="num" data-label="Platform">Windows</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="cassandra-risking.html">Cassandra Risking</a><small>New risking app</small></td>
+              <td class="num" data-label="Version">0.4.3</td>
+              <td class="num" data-label="Platform">Windows</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </section>
+    </main>
+  </div>
+  <footer class="site-foot">
+    <div class="site-foot-inner">
+      <span>Bluebonnet Studios</span>
+      <span>Catalog updated 2026-08-29 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+    </div>
+  </footer>
+  <script src="theme.js"></script>
+</body>
+</html>

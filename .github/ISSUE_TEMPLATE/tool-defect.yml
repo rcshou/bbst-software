@@ -1,0 +1,71 @@
+name: Tool defect
+description: Something is wrong in a build you already have.
+title: "Defect: "
+labels: ["defect"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this only if you have a build in hand. To ask whether something is
+        supposed to work a certain way, use
+        [Discussions](https://github.com/rcshou/bbst-software/discussions/new?category=q-a).
+        Please do not paste licence keys, credentials, or client data.
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Tool
+      options:
+        - Project2Excel
+        - PDF Classifier
+        - Markdown Renderer
+        - Bakmil Metro Schedule
+        - Similars and Photo Statistics
+        - Restore Missing Photos
+        - Location Caption Assistant
+        - Geocrawler
+        - SEG-Y Coordinate Security
+        - Cassandra Risking
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Shown in Help > About, or by the command line version flag.
+      placeholder: 1.0.2
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Operating system
+      placeholder: Windows 11 24H2
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected to happen
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead
+      description: Include the exact error text if there was one.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Most tools can export a diagnostic log from the Help menu. Redact paths you would rather not share.
+      render: text

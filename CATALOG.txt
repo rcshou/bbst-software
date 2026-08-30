@@ -1,0 +1,83 @@
+# =============================================================================
+# Bluebonnet Studios — catalog source
+#
+# THIS FILE DECIDES WHAT THE PUBLIC SITE LISTS. Nothing else does.
+#
+# It holds repository names and nothing that goes stale. Everything else —
+# display name, summary, category, platform, version, licence, status — is read
+# from the repository itself on GitHub, so the app is the source of truth for
+# its own catalog entry and this file never needs touching when a version bumps.
+#
+#   bash fetch-catalog.sh     pull current metadata from GitHub into the cache
+#   bash build.sh             regenerate the site from the cache
+#   bash build.sh --refresh   do both
+#
+# -----------------------------------------------------------------------------
+# ONE LINE PER APP
+#
+#   owner/repo   [slug]   [subpath]
+#
+# `slug` is optional and becomes <slug>.html. It is the one value that must NOT
+# float: changing it breaks every existing link to that page, so it is pinned
+# here rather than derived from a description someone might reword. Omit it and
+# the repository name is lowercased and used instead.
+#
+# `subpath` lists one app out of a repository that holds several — the Lightroom
+# plugin bundles. For a subpath entry the display name and version come from
+# that folder's Info.lua (LrPluginName and VERSION) and the summary from the
+# first sentence of its README, since a single repository description cannot
+# describe two different plugins. Category, platform and status still come from
+# the repository's topics, which both plugins share.
+# -----------------------------------------------------------------------------
+# WHAT EACH REPOSITORY MUST SET, ON GITHUB
+#
+#   Description    "Display Name — one line summary"
+#                  The part before the em dash becomes the name shown on the
+#                  site; the part after becomes the roster summary. With no
+#                  dash, the whole description is the summary and the repository
+#                  name is used as the display name.
+#
+#   Topics         bbst-business | bbst-webapps | bbst-lightroom | bbst-geoscience
+#                      the category page it appears on. Required.
+#
+#                  platform-windows | platform-macos | platform-linux |
+#                  platform-plugin | platform-library | platform-gpu
+#                      joined with a middle dot in the order listed above.
+#
+#                  bbst-released | bbst-beta | bbst-private | bbst-dev
+#                      optional status override. Without one, status is derived
+#                      from releases: a published release is "released", a
+#                      prerelease is "beta", and no release at all is "dev".
+#                      Set bbst-private on anything built but handed out only
+#                      on request, since GitHub cannot infer that.
+#
+#   Licence        Detected from the LICENSE file by GitHub. A repository with
+#                  no LICENSE shows "Not stated" rather than an assumed licence.
+#
+#   Releases       The latest release tag becomes the version, with any leading
+#                  "v" stripped. No release means no version is shown.
+#
+# Long-form page copy — the lede and the body sections — stays in this repo, in
+# `tool_lede` and `tool_prose` in build.sh, keyed by slug. It is written for a
+# public audience and is not a README, so it does not come from the app repo.
+# The build warns about any app listed here that has no page copy yet.
+# =============================================================================
+
+
+rcshou/Project2Excel        project2excel
+rcshou/PDF_classifier       pdf-classifier
+rcshou/md-reader_tauri      markdown-renderer
+rcshou/Bakmill_PWA          bakmil-metro
+rcshou/LIghtroom_plugins    similars-and-statistics   twoPlugins.lrplugin
+rcshou/LIghtroom_plugins    restore-missing-photos    MissPhotos.lrplugin
+rcshou/LR_location_caption  location-caption
+rcshou/geocrawler_ps        geocrawler
+rcshou/seis_coord           segy-coordinate-security
+rcshou/cassandraV2          cassandra-risking
+
+
+# =============================================================================
+# Workspaces that are deliberately not listed are tracked outside this
+# repository, in the studio's private notes. This file records what the public
+# catalog publishes; it is not an inventory of everything that exists.
+# =============================================================================

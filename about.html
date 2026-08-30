@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Bluebonnet Studios</title>
+  <meta name="description" content="Bluebonnet Studios builds small, precise desktop tools for document workflows, photo catalogs and subsurface data." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Apply the stored theme before first paint so the page never flashes. */
+    (function(){try{var t=localStorage.getItem("bbst-theme");
+    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <svg class="mark" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
+          <rect class="stem" x="6.3" y="7" width="1.4" height="9" rx="0.7" />
+          <circle class="petal" cx="7" cy="3.6" r="3.6" />
+          <circle class="spot" cx="7" cy="2.6" r="1.15" />
+        </svg>
+        Bluebonnet Studios
+      </a>
+      <div class="topbar-right">
+        <nav class="mainnav" aria-label="Primary">
+          <a href="index.html">Catalog</a>
+          <a href="about.html" aria-current="page">About</a>
+          <a href="index.html#access">Access</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 1.5A6.5 6.5 0 0 1 8 14.5Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="page-head">
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow">About</p>
+        <h1>A small studio that builds <span class="hl">specific tools.</span></h1>
+        <p>Bluebonnet Studios builds desktop software for people whose work is stuck between
+           applications: a schedule trapped in the tool that authored it, a folder of PDFs that
+           may or may not be readable, a photo catalog with twenty years of accumulated mess, a
+           seismic dataset that has to leave the building without giving away where it came from.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Categories">
+      <h2>Categories</h2>
+      <a href="index.html">All tools <em>10</em></a>
+      <a href="business-tools.html">Business <em>3</em></a>
+      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
+      <a href="geoscience-tools.html">Geoscience <em>3</em></a>
+      <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
+    </nav>
+    <main class="content" id="main">
+      <div class="prose">
+        <h2>How the tools are built</h2>
+        <p>Every application in this catalog is a native desktop program — mostly PySide6 on
+           Windows and macOS, one built on Tauri, two as Lightroom plugins. They open fast, they
+           work offline, and they keep their data on your machine.</p>
+        <ul>
+          <li><strong>Nothing phones home.</strong> No telemetry, no account, no licence server.
+              Where a tool touches the network at all — a map tile, an update check — it is off
+              until you turn it on, and it says so.</li>
+          <li><strong>One version number per application</strong>, held in a single source and read
+              back at runtime, so the number in the About dialog is the number that was built.</li>
+          <li><strong>Uncertainty is reported, not resolved.</strong> Several of these tools work on
+              data where a confident wrong answer is worse than a flagged ambiguity, and they are
+              written that way on purpose.</li>
+          <li><strong>Long operations show progress and can be cancelled</strong>, and batch runs end
+              with real totals rather than a cheerful summary.</li>
+        </ul>
+
+        <h2>Releases and updates</h2>
+        <p>The applications share a common update mechanism that checks a local network share first
+           and a public release channel second. A package is never executed before its checksum has
+           been verified, and nothing installs without explicit confirmation. No credentials are
+           embedded in any shipped application.</p>
+        <p>This site is the public record of what exists. Binaries themselves stay in private
+           distribution — see <a href="index.html#access">Access and releases</a> for what each
+           status means and how to ask about a build.</p>
+
+        <h2>Licensing</h2>
+        <p>Most of the catalog is released under the Apache License 2.0, copyright Bluebonnet
+           Studios. Each tool page states the licence that applies to it. Where a licence has not
+           been declared yet, the page says &ldquo;Not stated&rdquo; rather than implying one.</p>
+
+        <h2>Where the name comes from</h2>
+        <p>Lupinus texensis, the Texas bluebonnet: royal-cobalt petals, a pale banner spot that
+           turns magenta once the flower has been pollinated, yellow-green buds at the top of the
+           raceme that have not opened yet, and vivid grass underneath. That is the whole palette
+           this site is built from, and the reason the mark is a flower on a stem rather than a
+           logotype.</p>
+        <p>The status colours come from the same place, and mean what the flower means: grass for
+           what is available, bud yellow for what has not opened, the pollinated magenta for what
+           has been handed out on request, and no colour at all for what has not started.</p>
+      </div>
+      <div class="art art-tail"><img src="assets/bluebonnet-footer.png" width="860" height="391" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+    </main>
+  </div>
+  <footer class="site-foot">
+    <div class="site-foot-inner">
+      <span>Bluebonnet Studios</span>
+      <span>Catalog updated 2026-08-29 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+    </div>
+  </footer>
+  <script src="theme.js"></script>
+</body>
+</html>

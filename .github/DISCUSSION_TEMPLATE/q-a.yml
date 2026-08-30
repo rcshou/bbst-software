@@ -1,0 +1,39 @@
+title: "Question: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Questions are answered in the open so the answer stays searchable for
+        whoever asks next. If your question involves client data or anything that
+        should stay private, email dev@bbst.us instead.
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Which tool
+      options:
+        - Project2Excel
+        - PDF Classifier
+        - Markdown Renderer
+        - Bakmil Metro Schedule
+        - Similars and Photo Statistics
+        - Restore Missing Photos
+        - Location Caption Assistant
+        - Geocrawler
+        - SEG-Y Coordinate Security
+        - Cassandra Risking
+        - The catalog site itself
+        - Not sure yet
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: What you are trying to do
+      description: The workflow behind the question. It usually changes the answer.

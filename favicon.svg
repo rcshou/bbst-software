@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <!-- The studio mark: a cobalt bluebonnet petal with its pale banner spot,
+       on a grass stem. Colours are the site's own tokens, held literal here
+       because a favicon is rendered outside the page and inherits nothing. -->
+  <rect x="7.1" y="7.4" width="1.8" height="8.6" rx="0.9" fill="#2A6E22"/>
+  <circle cx="8" cy="5" r="4.6" fill="#2E4BC8"/>
+  <circle cx="8" cy="3.7" r="1.5" fill="#F3F2E7"/>
+</svg>

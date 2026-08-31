@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Markdown Renderer — Bluebonnet Studios</title>
-  <meta name="description" content="A desktop Markdown viewer with accurate tables, KaTeX maths, Mermaid diagrams, linting, cleanup and self-contained HTML export." />
+  <meta name="description" content="A desktop Markdown viewer with accurate tables, KaTeX maths, a full portability check, non-destructive cleanup and self-contained HTML export." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -49,11 +49,12 @@
       <div>
         <p class="eyebrow"><a href="business-tools.html">Business Tools</a></p>
         <h1>Markdown Renderer</h1>
+        <p class="subtitle">See what your Markdown will look like everywhere else</p>
         <div class="head-meta">
           <span class="chip is-private">Private release</span>
           <span class="ver">Version 1.9.6 &middot; Windows · macOS</span>
         </div>
-        <p>A Markdown viewer that renders what you will actually publish — real tables, KaTeX maths, Mermaid diagrams, GFM alerts — and will tell you which parts of your document are likely to break somewhere else.</p>
+        <p>A Markdown viewer that renders what you will actually publish — real tables, KaTeX maths, GFM alerts — and then tells you which parts of your document are likely to break somewhere else.</p>
       </div>
     </div>
   </div>
@@ -61,9 +62,9 @@
   <div class="layout">
     <nav class="rail" aria-label="Categories">
       <h2>Categories</h2>
-      <a href="index.html">All tools <em>10</em></a>
+      <a href="index.html">All tools <em>11</em></a>
       <a href="business-tools.html" class="is-active">Business <em>3</em></a>
-      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
       <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
       <a href="geoscience-tools.html">Geoscience <em>3</em></a>
       <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
@@ -71,33 +72,43 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>What it renders</h2>
+<h2>What it is for</h2>
+<p>Markdown is portable in theory and inconsistent in practice. A document that looks right in one editor loses its tables in a wiki, drops its footnotes on a static site, or renders its maths as literal dollar signs somewhere else. The usual way to discover this is to publish and find out.</p>
+<p>Markdown Renderer is a viewer that shows the document accurately, and then goes a step further: it examines the source and reports what is likely to break elsewhere, and why. The aim is not just to display the output, but to explain the difference between what you wrote and what another renderer will make of it.</p>
+
+<h2>Reading a document</h2>
+<p>Full Markdown rendering through markdown-it-py, with intelligent table handling — Auto, Markdown or HTML render modes, and per-table diagnostics explaining which was chosen and why. KaTeX renders both inline and display maths. A sidebar table of contents scrolls to any heading, live search highlights matches as you type, zoom runs from 50 to 200% and persists between sessions, and local images resolve properly. Parser profiles — Strict, GFM, Document — change how the backend actually parses, not merely how it complains.</p>
+
+<h2>The full check</h2>
+<p>Beyond preview, the app can audit a document for the things that make Markdown travel badly:</p>
 <ul>
-  <li><strong>Tables</strong> with Auto, Markdown and HTML render modes, and per-table diagnostics explaining which mode was chosen and why.</li>
-  <li><strong>Maths</strong> via KaTeX for inline and display expressions — while leaving currency amounts in prose alone, which is the failure everyone has met.</li>
-  <li><strong>Mermaid diagrams</strong>, drawn in the preview and in HTML exports; a diagram that cannot be drawn keeps its source visible rather than vanishing.</li>
-  <li><strong>Callouts</strong> — GFM alerts, admonitions and container blocks, with their severity label and styling.</li>
-  <li><strong>Syntax highlighting</strong> for the common language families and diffs, with unknown languages shown as plain text instead of guessed at.</li>
-  <li><strong>Abbreviations</strong>, expanding defined terms into tooltips throughout the document.</li>
+  <li><strong>Flavor and portability</strong> — superscripts, footnotes, task lists, strikethrough, definition lists, admonitions, custom heading IDs, TeX-style maths delimiters.</li>
+  <li><strong>Structure</strong> — multiple H1s, repeated heading text, skipped heading levels, heading markers missing their space.</li>
+  <li><strong>Lists</strong> — suspicious indentation, mixed markers, missing spaces, and Unicode bullets that look like lists but are not.</li>
+  <li><strong>Links and footnotes</strong> — missing, duplicate and unused definitions; malformed inline link and image syntax.</li>
+  <li><strong>Code and malformed source</strong> — unclosed fences, and the other cases where one broken block quietly swallows the rest of the file.</li>
+  <li><strong>Tables</strong> — raw HTML tables, suspicious pipe structure, and tables complex enough to require HTML rather than a portable pipe form.</li>
+  <li><strong>Encoding and copied text</strong> — invisible Unicode characters and the wrapping patterns that PDF, OCR, email and chat-copy workflows leave behind.</li>
 </ul>
 
-<h2>Beyond preview</h2>
-<p>The document can be linted for renderer-specific syntax, malformed Markdown, portability risks and likely fixes. A separate non-destructive cleanup pass applies safe corrections and optional issue-driven fixes, with a summary in the lower pane and a saveable cleanup log. Parser profiles — Strict, GFM and Document — change actual backend parsing and diagnostics, not merely the preview.</p>
+<h2>Cleanup that does not overwrite anything</h2>
+<p>Cleanup runs in two layers. A safe pass always runs, reparsing the document and writing it back in a consistent layout for headings, lists, blocks and tables. On top of that, a conservative set of optional fixes maps directly to diagnostics the check already reported — heading markers missing a space, list markers missing a space, fake Unicode bullets, invisible spacing characters.</p>
+<p>Crucially, cleanup does not touch the file on disk. It updates the preview and the in-memory document so you can read the result first, with a summary in the lower pane and a saveable cleanup log. If you want to keep it, you export it. If cleanup or repair changes exist only in memory, the app asks before you open another document or quit.</p>
 
-<h2>Why it exists</h2>
+<h2>Guardrails</h2>
+<p>Large documents raise a warning, expensive automatic resource checks are skipped, and files above the safe open limit are blocked rather than allowed to hang the window. Raw HTML in the source is sanitized before both preview and HTML export, so a document from somewhere else cannot execute anything.</p>
+
+<h2>What it does not do</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>An editor preview that quietly disagrees with your publishing target.</strong> A pane that renders your tables one way and your pipeline another is worse than no preview at all. This one reports what it did to each table and why, and can lint the document for the constructs that travel badly.</p>
-  <p><strong>A browser tab and a copy-paste workflow.</strong> Export produces a single self-contained HTML file with maths already rendered, and printing goes through the system dialog, so Print to PDF behaves the way it does everywhere else.</p>
+  <p><strong>Being a Markdown editor.</strong> There is a source edit mode with formatting buttons and save-back, but the app is built around reading and checking a document rather than authoring one from scratch.</p>
+  <p><strong>Guessing silently.</strong> Where a table or a construct is ambiguous, the diagnostics panel says which interpretation was used and what made it choose that — so a surprising render is explainable rather than mysterious.</p>
 </div>
-
-<h2>Built for long documents</h2>
-<p>Large files raise a warning, expensive automatic resource checks are skipped, and files above the safe open limit are blocked rather than allowed to hang the window. Unsaved cleanup or repair changes prompt before you open another document or quit. Raw HTML in the source is sanitized before preview and export, so a document from elsewhere cannot execute anything.</p>
-<p>Built with Tauri&nbsp;v2 and TypeScript over a Python rendering backend. Zoom, theme and recent files persist across sessions, and there is a built-in user guide plus a rotated diagnostic log you can open from the Help menu.</p>
         </div>
 
         <div class="tool-side">
         <div class="aside-dock">
+        <div class="aside-stack">
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
@@ -115,6 +126,16 @@
             <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Markdown%20Renderer">Ask about Markdown Renderer</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
+        <aside class="release-box" aria-labelledby="rel-markdown-renderer">
+          <p class="release-kicker" id="rel-markdown-renderer">New in 1.9.6</p>
+          <ul>
+            <li><b>Table and figure captions.</b> <code>Table:</code> and <code>Figure:</code> captions are recognised, rendered, and checked in the diagnostics.</li>
+            <li><b>A native desktop menu</b> for Open, Export, Search, Cleanup, Full Check, Preferences and Help, with more reliable recent-files handling.</li>
+            <li><b>Toolbar buttons stay put</b> when the window is resized, and the first click on an inactive macOS window now registers.</li>
+            <li><b>More openable file types</b> &mdash; <code>.mdown</code>, <code>.mkd</code>, <code>.mkdn</code>, <code>.mdwn</code> and <code>.txt</code>.</li>
+          </ul>
+        </aside>
+        </div>
         </div>
       <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>
@@ -143,7 +164,7 @@
             </tr>
             <tr>
               <td class="tool"><a href="pdf-classifier.html">PDF Classifier</a><small>Routes PDFs by text-layer quality before anyone pays for OCR</small></td>
-              <td class="num" data-label="Version">1.0.2</td>
+              <td class="num" data-label="Version">1.0.6</td>
               <td class="num" data-label="Platform">Windows</td>
               <td data-label="Status"><span class="chip is-private">Private release</span></td>
               <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>

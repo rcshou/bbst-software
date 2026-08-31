@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cassandra Risking — Bluebonnet Studios</title>
-  <meta name="description" content="Prospect risking with the evidence attached: chance-of-success calculations that keep a snapshot of what they were based on." />
+  <meta name="description" content="Geological chance-of-success risking for exploration prospects, keeping the evidence and reviewer context attached to every number." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -49,11 +49,12 @@
       <div>
         <p class="eyebrow"><a href="geoscience-tools.html">Geoscience Tools</a></p>
         <h1>Cassandra Risking</h1>
+        <p class="subtitle">Chance of success, with the evidence still attached</p>
         <div class="head-meta">
           <span class="chip is-private">Private release</span>
           <span class="ver">Version 0.4.3 &middot; Windows</span>
         </div>
-        <p>Calculates prospect chance of success and keeps a snapshot of the evidence each number was based on, so a risking decision can still be explained months later.</p>
+        <p>Calculates geological chance of success and keeps a snapshot of the evidence each number was based on, so a risking decision can still be explained — and defended — months later.</p>
       </div>
     </div>
   </div>
@@ -61,9 +62,9 @@
   <div class="layout">
     <nav class="rail" aria-label="Categories">
       <h2>Categories</h2>
-      <a href="index.html">All tools <em>10</em></a>
+      <a href="index.html">All tools <em>11</em></a>
       <a href="business-tools.html">Business <em>3</em></a>
-      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
       <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
       <a href="geoscience-tools.html" class="is-active">Geoscience <em>3</em></a>
       <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
@@ -71,30 +72,43 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>What it does</h2>
-<p>Calculates prospect chance of success, and keeps the evidence. Each calculation stores a snapshot of the inputs and the supporting material it was based on, linked to the scenarios and hypotheses it came from, in a local database with an audited schema.</p>
+<h2>What it is for</h2>
+<p>A prospect&rsquo;s chance of success is a number that gets quoted in meetings for years and explained approximately once. By the time anyone asks why the seal risk was 0.6, the spreadsheet has been copied twice, the person who set it has moved on, and the reasoning exists only as a recollection. The number survives; the evidence behind it does not.</p>
+<p>Cassandra structures geological risking so the evidence stays attached. Each assessment records the interpretation, the data it rests on, and the reviewer context — and a published scenario freezes all of it together, so the number can still be defended months later.</p>
 
-<h2>Why the evidence matters</h2>
-<div class="compare">
-  <p class="compare-label">Instead of</p>
-  <p><strong>A spreadsheet that produces a number and forgets why.</strong> Risking numbers get quoted in decisions months after they are calculated, by people who were not in the room. A figure whose basis cannot be reconstructed cannot be defended, revised or audited — so the evidence snapshot travels with the result rather than living in someone&rsquo;s memory.</p>
-</div>
+<h2>Geological chance of success, and only that</h2>
+<p>The scope is deliberately narrow. Cassandra calculates geological Pg and refuses to mix it with economics — no EMV, no recoverable volumes, no development chance. Those are real questions, but blending them into one figure is how a geological risk becomes an unfalsifiable commercial one. Keeping them apart is what lets a geologist defend the part they are actually responsible for.</p>
 
-<h2>Shape of the tool</h2>
+<h2>How an assessment is structured</h2>
+<p>The classic components — <strong>Play, Source, Charge, Reservoir, Seal</strong> and <strong>Trap</strong> — each get their own assessment tab, with shared play risk kept explicitly separate from prospect and segment risk. That separation runs through the whole model:</p>
 <ul>
-  <li>Scenario and hypothesis structure, with evidence attached at the point it is used.</li>
-  <li>Calculation results stored with their evidence snapshots rather than recomputed on demand.</li>
-  <li>A local database that migrates its own schema forward, including index backfill for existing databases.</li>
-  <li>A generated HTML guide built from the same source as the application.</li>
-  <li>Packaged as a standalone Windows build.</li>
+  <li><strong>Play</strong> — the shared geological chance for the selected play: working petroleum system, regional seal preservation, migration fairway.</li>
+  <li><strong>Segment</strong> — the local interpretation currently selected, such as one mapped closure.</li>
+  <li><strong>Prospect</strong> — a roll-up of stored segment results within the active play, handling single- and multi-segment prospects.</li>
+  <li><strong>Cross-play</strong> — a review layer across plays for the same prospect, covering independent plays, overlapping plays and alternative concepts.</li>
 </ul>
 
-<h2>Status</h2>
-<p>Versioned and in active development, currently on the 0.5 series. It is listed as a private release: built and usable, distributed on request rather than published.</p>
+<h2>The evidence base</h2>
+<p>Every geological hypothesis can carry attached data and evidence alongside the judgment itself, with reviewer comments in the same place. Both judgment-led and evidence-native workflows are supported, because real assessments are a mix: some components rest on a measurement, others on an experienced opinion, and pretending otherwise makes the record less honest rather than more rigorous. Several datasets of the same type can coexist against one hypothesis, each labelled, so two seismic interpretations do not silently overwrite one another.</p>
+
+<h2>DHI, kept separate</h2>
+<p>Direct hydrocarbon indicators are handled as an explicit likelihood-ratio update on top of the geological assessment, rather than folded invisibly into a component. You can see what the base geological case was and what the DHI did to it — which is the only way a reviewer can disagree with one without discarding the other.</p>
+
+<h2>Publishing and reopening</h2>
+<p>Before a scenario is frozen, the app checks circulation and publish readiness. A published scenario becomes read-only and keeps its reproducibility metadata and review context, so the snapshot is genuinely a snapshot. Reopening it creates a new draft rather than editing the published record — the earlier decision stays intact and quotable, and the revision is visibly a revision.</p>
+<p>Exports produce a risk narrative with that metadata attached, rather than a bare number.</p>
+
+<h2>What it does not do</h2>
+<div class="compare">
+  <p class="compare-label">Instead of</p>
+  <p><strong>Replacing geological interpretation with automation.</strong> The application structures, records and calculates. The interpretation is the geologist&rsquo;s, and the tool is designed to make that authorship explicit rather than to obscure it behind a model.</p>
+  <p><strong>Reaching for a server.</strong> This release is a desktop application working against local project files. It does not sync, and it does not offer a portfolio aggregation workflow.</p>
+</div>
         </div>
 
         <div class="tool-side">
         <div class="aside-dock">
+        <div class="aside-stack">
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
@@ -112,6 +126,8 @@
             <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Cassandra%20Risking">Ask about Cassandra Risking</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
+
+        </div>
         </div>
       <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>

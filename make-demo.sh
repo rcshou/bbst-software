@@ -39,7 +39,9 @@ PIXEL="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAI
   for a in assets/bluebonnet-*.png; do
     stem="$(basename "$a" .png)"
     printf '.a-%s{ background-image:url(data:image/png;base64,' "$stem"
-    base64 -w0 "$a"
+    # Read from stdin and strip newlines rather than using GNU's -w0, which BSD
+    # base64 (macOS) rejects along with a positional filename.
+    base64 < "$a" | tr -d '\n'
     printf '); }\n'
   done
   cat <<'CSS'
@@ -48,11 +50,18 @@ CSS
   echo '</style>'
 } >> "$OUT"
 
+# The tool pages follow the catalog, so a newly listed app appears in the preview
+# without anyone remembering to edit a list here. The fixed pages lead, in reading
+# order; the tool pages follow in catalog order.
+PAGES="index.html about.html privacy.html business-tools.html web-apps.html lightroom-plugins.html geoscience-tools.html"
+while IFS=$'\t\r' read -r slug _rest; do
+  case "$slug" in ''|\#*) continue ;; esac
+  PAGES="$PAGES $slug.html"
+done < CATALOG.txt
+
 first=1
-for f in index.html about.html business-tools.html web-apps.html lightroom-plugins.html geoscience-tools.html \
-         project2excel.html pdf-classifier.html markdown-renderer.html bakmil-metro.html \
-         similars-and-statistics.html restore-missing-photos.html location-caption.html \
-         geocrawler.html segy-coordinate-security.html cassandra-risking.html; do
+for f in $PAGES; do
+  [ -f "$f" ] || { echo "make-demo: $f not built — run bash build.sh first" >&2; exit 1; }
   slug="${f%.html}"
   if [ "$first" = 1 ]; then hid=""; first=0; else hid=" hidden"; fi
   printf '<div class="demo-page" data-slug="%s"%s>\n' "$slug" "$hid" >> "$OUT"
@@ -70,7 +79,7 @@ for f in index.html about.html business-tools.html web-apps.html lightroom-plugi
 done
 
 cat >> "$OUT" <<'TAIL'
-<div class="demo-badge"><b>Preview</b> <span>18 pages, one file &middot; links work</span></div>
+<div class="demo-badge"><b>Preview</b> <span>__PAGECOUNT__ pages, one file &middot; links work</span></div>
 <script>
 (function () {
   "use strict";
@@ -125,4 +134,7 @@ cat >> "$OUT" <<'TAIL'
 })();
 </script>
 TAIL
-echo "packed $(grep -c 'class="demo-page"' "$OUT") pages into $OUT"
+# State the count the file actually holds, rather than asserting one in the markup.
+packed="$(grep -c 'class="demo-page"' "$OUT")"
+sed -i.bak "s/__PAGECOUNT__/$packed/" "$OUT" && rm -f "$OUT.bak"
+echo "packed $packed pages into $OUT"

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Geocrawler — Bluebonnet Studios</title>
-  <meta name="description" content="Audit a subsurface data repository: catalog SEG-Y and LAS files, read their headers, detect coordinate systems, and find duplicates." />
+  <meta name="description" content="Audit a subsurface data repository: catalog SEG-Y and LAS files, read their headers, detect coordinate systems, find duplicates, and export the result to Excel." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -49,6 +49,7 @@
       <div>
         <p class="eyebrow"><a href="geoscience-tools.html">Geoscience Tools</a></p>
         <h1>Geocrawler</h1>
+        <p class="subtitle">Find out what is actually in your data repository</p>
         <div class="head-meta">
           <span class="chip is-private">Private release</span>
           <span class="ver">Version 2.19.1 &middot; Windows</span>
@@ -61,9 +62,9 @@
   <div class="layout">
     <nav class="rail" aria-label="Categories">
       <h2>Categories</h2>
-      <a href="index.html">All tools <em>10</em></a>
+      <a href="index.html">All tools <em>11</em></a>
       <a href="business-tools.html">Business <em>3</em></a>
-      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
       <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
       <a href="geoscience-tools.html" class="is-active">Geoscience <em>3</em></a>
       <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
@@ -71,30 +72,37 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>What it does</h2>
-<p>Exploration data repositories grow by accretion. Geocrawler walks a folder tree and turns it into a catalog you can reason about:</p>
+<h2>What it is for</h2>
+<p>Exploration data accumulates faster than anyone catalogs it. A project folder inherited from a partner, a drive returned by a contractor, or twenty years of a company&rsquo;s own work all arrive as the same thing: a file tree nobody can characterise without opening it. How much of this is seismic? How many wells? Is this the same survey as that one, under a different name? Which of these files claim a coordinate system, and should we believe them?</p>
+<p>Geocrawler answers those questions by reading the data rather than the folder names. It crawls the tree, categorises what it finds, opens the headers, and produces a report you can hand to someone else.</p>
+
+<h2>What it reads</h2>
 <ul>
-  <li><strong>Catalogs</strong> seismic, well-log and related subsurface files by type.</li>
-  <li><strong>Reads headers</strong> — SEG-Y binary and textual headers, LAS well logs, and survey metadata.</li>
-  <li><strong>Detects coordinate reference systems</strong>, EPSG codes and project context from what the headers actually say.</li>
-  <li><strong>Finds duplicates</strong>, both individual files and folder-level duplicate content.</li>
-  <li><strong>Reports</strong> to Excel for stakeholder review and Markdown for quick documentation, from a PySide6 interface where results can be reviewed before export.</li>
+  <li><strong>SEG-Y</strong> — binary and textual headers, geometry, survey metadata, and the byte layouts that vary between vendors more than the standard suggests they should.</li>
+  <li><strong>LAS well logs</strong> — curves, headers and well identification, with format and status reported separately so an unsupported LAS 3.0 file is distinguishable from a supported file that failed to read.</li>
+  <li><strong>Coordinate reference systems</strong> — detected from the data, with EPSG codes and project context where they can be established.</li>
 </ul>
 
-<h2>Honest about what it cannot know</h2>
+<h2>Duplicates</h2>
+<p>Duplicate detection works at file level and at folder level. The folder-level check is the one that earns its keep: it is common to find the same survey delivered twice into differently named directories, and comparing content rather than names is what surfaces it. That is usually the single largest reclaimable chunk of a repository.</p>
+
+<h2>What comes out</h2>
+<p>A PySide6 desktop application for reviewing results interactively, and exports for everyone who was not at the screen: Excel workbooks for stakeholder review and handoff, and Markdown reports for quick documentation. The catalog data underneath supports ongoing data management rather than being a one-off summary.</p>
+
+<h2>Why it is careful about what it claims</h2>
+<p>A header is an assertion, not a fact. Files routinely carry coordinate systems that were never correct, byte layouts that do not match the standard they name, and survey names that disagree with their contents. Geocrawler reports what a file claims, marks what it inferred, and distinguishes &ldquo;this format is not supported&rdquo; from &ldquo;this file failed to read&rdquo; — because those lead to completely different next actions, and conflating them wastes an afternoon.</p>
+
+<h2>What it does not do</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Reporting a confident guess as a fact.</strong> Header-derived coordinate systems are labelled &ldquo;CRS from headers&rdquo; and flagged as unverified, because zone numbers are especially unreliable on older surveys. A CRS inferred from trace coordinates is tagged as inferred, so it is never mistaken for a header declaration. Where a zone label is genuinely ambiguous — the classic case where a legacy Gauss-Kr&uuml;ger zone survives a conversion and looks like a UTM zone — it is surfaced as an ambiguity rather than resolved by coin flip.</p>
+  <p><strong>Interpreting your data.</strong> It is an inventory and quality tool. It tells you what you have and what is questionable about it; it does not process seismic or interpret logs.</p>
+  <p><strong>Moving or deleting anything.</strong> The crawl is read-only. Acting on a duplicate report stays a human decision with a human&rsquo;s knowledge of which copy is authoritative.</p>
 </div>
-<p>The same care applies to 2D/3D classification. A quick scan of the first traces can call a real 3D volume &ldquo;2D&rdquo; when a single inline runs longer than the sample, so a full-scan action validates candidate axis bytes against a whole-file geometry builder before committing to an answer.</p>
-
-<h2>Why it matters day to day</h2>
-<p>It replaces manual folder inspection with automated discovery, speeds up quality checks with metadata validation and duplicate detection, keeps catalogs consistent across projects, and makes a handoff reviewable — because the report goes with the data.</p>
-
         </div>
 
         <div class="tool-side">
         <div class="aside-dock">
+        <div class="aside-stack">
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
@@ -112,6 +120,14 @@
             <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Geocrawler">Ask about Geocrawler</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
+        <aside class="release-box" aria-labelledby="rel-geocrawler">
+          <p class="release-kicker" id="rel-geocrawler">New in 2.19.1</p>
+          <ul>
+            <li><b>Clearer labels for well-log formats.</b> A LIS file that cannot be read now reads as <em>read failed</em> rather than &ldquo;unsupported&rdquo; &mdash; LIS is a format Geocrawler supports and attempts, so a failure there is about that file, not the format.</li>
+            <li><b>The LAS tab has Format and Status columns</b>, so a LAS 3.0 file shows as unsupported at a glance instead of looking like an ordinary well with missing data.</li>
+          </ul>
+        </aside>
+        </div>
         </div>
       <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>

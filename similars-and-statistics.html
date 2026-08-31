@@ -49,6 +49,7 @@
       <div>
         <p class="eyebrow"><a href="lightroom-plugins.html">Lightroom Plugins</a></p>
         <h1>Similars and Photo Statistics</h1>
+        <p class="subtitle">Four catalog chores, one plugin</p>
         <div class="head-meta">
           <span class="chip is-private">Private release</span>
           <span class="ver">Version 1.8.1 &middot; Plugin · macOS</span>
@@ -61,9 +62,9 @@
   <div class="layout">
     <nav class="rail" aria-label="Categories">
       <h2>Categories</h2>
-      <a href="index.html">All tools <em>10</em></a>
+      <a href="index.html">All tools <em>11</em></a>
       <a href="business-tools.html">Business <em>3</em></a>
-      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
       <a href="lightroom-plugins.html" class="is-active">Lightroom <em>3</em></a>
       <a href="geoscience-tools.html">Geoscience <em>3</em></a>
       <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
@@ -71,33 +72,37 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>Four jobs, one plugin</h2>
-<ul>
-  <li><strong>Find similar photos</strong> — groups visually similar images using HSV colour-histogram comparison plus a coarse structural-correlation check, so near-duplicates from a burst or a re-import surface together.</li>
-  <li><strong>File type statistics</strong> — reports what file types the selection actually contains, which is usually not what you assumed.</li>
-  <li><strong>HEIC corruption check</strong> — flags HEIC files that have gone bad, before you find out at export time.</li>
-  <li><strong>Fix invalid capture date</strong> — finds photographs whose capture year disagrees with the folder they are filed under, and organises them.</li>
-</ul>
+<h2>What it is for</h2>
+<p>A photo library that has been running for years accumulates a specific set of problems. The same shot exists three times because it was imported from three cards. Nobody knows how much of the catalog is JPEG and how much is raw. A batch of HEIC files copied off a phone has gone quietly bad. And a folder of pictures from 2019 has capture dates in 1970 because a camera lost its battery.</p>
+<p>None of these is hard to fix once you can see it. All of them are invisible until something surfaces them. This plugin adds four tools to Lightroom Classic that do exactly that, under <strong>Library &rsaquo; Plug-in Extras</strong>.</p>
 
-<h2>Similar, not identical</h2>
+<h2>Find similar photographs</h2>
+<p>Groups visually similar images in the current selection using HSV colour-histogram comparison with a structural-correlation check on top. That combination matters: a histogram alone will happily group two unrelated sunsets, and structure alone is slow and brittle. Together they find the burst of near-identical frames you meant to cull, and the same photograph imported twice at different sizes.</p>
+<p>Results are offered back as Lightroom collections, so you review and delete inside Lightroom with everything you normally have to hand — you are never asked to make deletion decisions inside a plugin dialog.</p>
+
+<h2>File-type statistics</h2>
+<p>Reports what the selection actually contains, by file type. Useful before a migration, before buying storage, or when deciding whether a raw-to-DNG conversion is worth the afternoon it will cost.</p>
+
+<h2>Corrupt HEIC detection</h2>
+<p>HEIC files fail in a particularly unhelpful way: the catalog still shows a thumbnail, and the underlying file is unreadable. The plugin validates HEIC containers directly and flags the ones that have gone bad, so you find out while the originals may still exist elsewhere rather than years later.</p>
+
+<h2>Capture-date repair</h2>
+<p>Flags photographs whose capture year disagrees with the folder they are filed in — the usual signature of a camera clock that reset. You tell the plugin what your library&rsquo;s root folder is called, and it works out each photo&rsquo;s expected year from its path.</p>
+
+<h2>How it runs</h2>
+<p>The comparison work is done by small native helpers bundled inside the plugin, not in Lua — image comparison across thousands of files is not something a scripting layer should attempt. The libraries they depend on ship inside the plugin folder with their load paths rewritten, so there is nothing to install alongside it and no Homebrew dependency on the machine that runs it.</p>
+
+<h2>What it does not do</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Matching checksums and calling it duplicate detection.</strong> A checksum finds byte-identical files, which is the easy half of the problem and rarely the half you have. Two exports at different sizes, a re-edit, the same frame from a burst — none of those match on bytes, and all of them are what you actually want grouped. Comparing colour histograms and coarse structure finds them.</p>
+  <p><strong>Deleting anything.</strong> Every tool reports and organises. Removing a photograph stays a decision you make in Lightroom, with the photographs in front of you.</p>
+  <p><strong>Scanning your whole catalog uninvited.</strong> All four tools work on the current selection and nothing else.</p>
 </div>
-
-<h2>How it is built</h2>
-<p>The comparison work runs in native helper executables bundled inside the plugin rather than in
-   Lightroom&rsquo;s Lua runtime, because pixel comparison across a large selection is not something to
-   ask a scripting host to do. The helpers are built from C++ sources kept in the same repository,
-   against OpenCV, libheif and libraw.</p>
-<p>Built against Lightroom SDK 12 with a declared minimum of SDK 10, so it runs on current
-   Lightroom Classic and on installations several versions behind. Every command appears under
-   <strong>Library &gt; Plug-in Extras</strong>, and a Plugin Descriptions item explains what each
-   one does without leaving the application.</p>
         </div>
 
         <div class="tool-side">
         <div class="aside-dock">
+        <div class="aside-stack">
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
@@ -115,6 +120,14 @@
             <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Similars%20and%20Photo%20Statistics">Ask about Similars and Photo Statistics</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
+        <aside class="release-box" aria-labelledby="rel-similars-and-statistics">
+          <p class="release-kicker" id="rel-similars-and-statistics">New in 1.8.1</p>
+          <ul>
+            <li><b>Fix invalid capture date no longer fails part-way through.</b> The tool could abort with a Lightroom context error before it finished; the operation now holds its context open for the whole run.</li>
+            <li><b>One similar-photo tool instead of two.</b> The separate structural-comparison item is gone &mdash; the main histogram search already applies the same structural check, so the second menu entry only offered a slower route to the same answer.</li>
+          </ul>
+        </aside>
+        </div>
         </div>
       <div class="art art-column"><img src="assets/bluebonnet-side-right.png" width="380" height="950" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>

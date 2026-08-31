@@ -5,6 +5,84 @@ All notable changes to the public catalog site are recorded here.
 ## [Unreleased]
 
 ### Added
+- **APK Finder** joins the catalog — a Google-independent Android app for finding, checking
+  and installing APKs on devices with no Play Services, built for Chinese-market car head
+  units and equally at home on degoogled phones and custom ROMs. It has no published release
+  yet, so it is listed as a private release and shows no version until one is tagged.
+- **A subtitle on every tool page**, under the name, saying what the tool does for a reader
+  who has only ever seen its name. Names and slugs stay pinned; the subtitle carries the
+  explanation.
+- **A latest-release box** beside the At a glance panel on the five tools whose projects keep
+  user-facing release notes, written in the reader's terms rather than the maintainer's. The
+  two boxes travel with the panel as one sticky unit.
+- `check_copy` now warns when a category has no `cat_pitch` or `cat_head`. Category copy is
+  keyed by the escaped category name, so renaming a category to one containing `&` silently
+  produced a blank panel and an empty page heading until this check existed.
+
+### Fixed
+- **A version tagged without a GitHub Release is no longer invisible.** `fetch-catalog.sh`
+  read only `releases/latest`, which returns 404 for a bare tag, so APK Finder — a production
+  application tagged `v0.20.3` — was published with no version at all, and Markdown Renderer
+  showed the right version only because the cache happened to hold it. The fetch now falls
+  back to the highest version-shaped tag and says so. Prefixed tags such as
+  `twoplugins-v1.8.1` are ignored, since they version one app inside a shared repository.
+
+### Changed
+- **The home page names the four categories instead of listing every tool.** The roster moved
+  to the category pages; the home page carries a panel per category with its pitch, count and
+  tool names. A flat roster of eleven was already long, and it does not get better.
+- **Every tool page was rewritten as a full product page** — what it is for, what it actually
+  does, and what it deliberately does not do — written from each project's own README, user
+  guide and release notes rather than from its repository description.
+- **`Web Apps` is now `Web & Mobile`**, holding the Bakmil PWA and APK Finder. The page stays
+  `web-apps.html`, so no published link breaks.
+- The home page's tool, category and private-release counts are derived rather than hardcoded.
+
+### Changed
+- **The catalog is authored again, and only versions and licences are fetched.** An audit
+  found the previous arrangement was circular: `setup-repo-metadata.sh` pushed each
+  repository's description to GitHub, and `fetch-catalog.sh` read the same string back as
+  though GitHub were upstream of it. Name, category, platform, status and summary now live
+  in `CATALOG.txt`, which became tab-separated with eight columns. `fetch-catalog.sh` keeps
+  only the two facts that genuinely change without anyone editing this repository — the
+  latest release tag and the declared licence — and `catalog-cache.tsv` shrank to three
+  columns. `build.sh` joins the two on the slug. The site rebuilt byte-identical across all
+  seventeen pages, so this changed how the catalog is maintained and nothing it says.
+- Retiring the round-trip also retires the contracts that only existed to serve it: the
+  `"Name — summary"` em-dash description format, the `bbst-*` category, platform and status
+  topics on ten remote repositories, and the derivation of status from release state.
+
+### Removed
+- `setup-repo-metadata.sh`. Its purpose was to write the descriptions and topics that
+  `fetch-catalog.sh` read; nothing reads them now. Recoverable from git history if the
+  topics turn out to be worth maintaining for GitHub discoverability.
+
+### Fixed
+- **Catalog values are HTML-escaped** as they enter the build. Previously every field was
+  interpolated raw, so a description containing `&` or `<` produced invalid markup, and
+  markup in a name or summary was emitted intact into `<title>`, `<h1>` and the roster —
+  verified by rebuilding with a deliberately malformed catalog row.
+- **A pipe character in a summary no longer truncates it.** The build re-packed the
+  tab-separated cache into pipe-delimited records, so a summary reading "Import | export"
+  published as "Import", silently. The build now reads tab-separated throughout.
+- `build.sh` refuses a slug containing anything but lowercase letters, digits and hyphens,
+  since a slug becomes both a filename and a URL.
+- **`--dimmer` now clears WCAG AA in both themes.** It was `#868CA4` on the light ground —
+  2.96:1, below even the large-text floor — and `#6D7699` on dark panels at 3.87:1, while
+  carrying the 11–13px metadata labels: the rail counts, the mobile roster's column labels,
+  and the aside's Version, Status, Platform, Category and License rows. Now `#646A82` and
+  `#828BAD`, measuring 4.75:1 and 5.14:1. The README's claim that every pair cleared AA was
+  wrong until this change.
+- **`make-demo.sh` runs on macOS.** `base64 -w0 <file>` is GNU syntax that BSD base64
+  rejects, so the script aborted at the first ornament, exited 64, and left a stylesheet-only
+  file containing no pages at all.
+- `make-demo.sh` derives its page list from `CATALOG.txt` instead of a hardcoded list that
+  had fallen a page behind, and its badge counts the pages it packed rather than asserting
+  a number. It packed 16 of 17 pages, omitted `privacy.html`, and claimed 18.
+- The build's success line names `privacy.html` and reports the file count. Omitting it is
+  how the README came to describe a sixteen-page site that has seventeen pages.
+
+### Added
 - **`privacy.html`** — a privacy policy covering every listed application and this site,
   published because the Microsoft Store listing for Project2Excel needs one at a public URL.
   It carries a per-application table of network use rather than a blanket claim, since four
@@ -16,7 +94,7 @@ All notable changes to the public catalog site are recorded here.
 - The site's own third-party requests are disclosed: Google Fonts, GitHub Pages hosting, and
   the `bbst-theme` value kept in the reader's browser storage.
 - Privacy is linked from the footer of every page.
-- **Page art**: one ornament on each of the sixteen pages, drawn from the four Arts and
+- **Page art**: one ornament on each of the seventeen pages, drawn from the four Arts and
   Crafts bluebonnet illustrations in `assets/`. Placed by shape — the wide arch crowns the
   home page head, the wide garland closes About and two category pages as a tailpiece, and
   the two tall stems run down the aside column of the ten tool pages.
@@ -43,20 +121,21 @@ All notable changes to the public catalog site are recorded here.
   not yet open, pollinated magenta for private release, no colour for not started. Private
   release previously shared the neutral grey of "In development" and was hard to tell apart.
 - The brand mark gained its banner spot — a cobalt petal with a pale centre on a grass stem.
-- Every foreground/background pair in both themes was checked against WCAG AA contrast and
-  clears it; the lowest is 4.6:1.
+- Every foreground/background pair in both themes was checked against WCAG AA contrast.
+  The check missed `--dimmer`, which sat at 2.96:1 in the light theme; see the correction
+  under Fixed above. With that token raised, the narrowest pair is 4.75:1.
 - **Light theme**, and a theme toggle in the top bar. Both themes are defined at token level
   only, so no component carries a colour literal.
 - Theme handling in `theme.js`, with a small inline snippet in each page head that applies
   the stored choice before first paint. No stored value means "follow the operating system",
   which is the default; a blocked `localStorage` degrades to per-view only.
-- **Twelve tool pages**, one per application, each with a long-form description, an
+- **Ten tool pages**, one per application, each with a long-form description, an
   "instead of" section explaining what the tool is an alternative to, and an at-a-glance
   panel carrying version, status, platform, licence, copyright holder and category.
 - **`about.html`** — how the tools are built, the shared update mechanism, licensing, and
   where the studio name comes from.
-- `build.sh`, which generates all sixteen pages from one shared shell and one catalog data
-  block, so the roster, rail counts and category pages cannot drift apart.
+- `build.sh`, which generates all seventeen pages from one shared shell and the catalog
+  data, so the roster, rail counts and category pages cannot drift apart.
 - `make-demo.sh`, which packs the whole site into one navigable HTML file for preview, with
   per-page id namespacing and a small in-page router so every link works.
 

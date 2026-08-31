@@ -49,6 +49,7 @@
       <div>
         <p class="eyebrow"><a href="lightroom-plugins.html">Lightroom Plugins</a></p>
         <h1>Location Caption Assistant</h1>
+        <p class="subtitle">The temple, not the province</p>
         <div class="head-meta">
           <span class="chip is-beta">Beta</span>
           <span class="ver">Version 0.1.10 &middot; Plugin</span>
@@ -61,9 +62,9 @@
   <div class="layout">
     <nav class="rail" aria-label="Categories">
       <h2>Categories</h2>
-      <a href="index.html">All tools <em>10</em></a>
+      <a href="index.html">All tools <em>11</em></a>
       <a href="business-tools.html">Business <em>3</em></a>
-      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
       <a href="lightroom-plugins.html" class="is-active">Lightroom <em>3</em></a>
       <a href="geoscience-tools.html">Geoscience <em>3</em></a>
       <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
@@ -71,42 +72,35 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>The problem with reverse geocoding</h2>
-<p>Ask most tools where a photograph was taken and they answer with a city. But you did not
-   photograph Siem Reap, you photographed the Bayon. The name worth keeping is the specific one —
-   the temple, the monument, the museum, the archaeological site — and it is the one general
-   reverse geocoding is least likely to give you.</p>
+<h2>What it is for</h2>
+<p>A GPS-tagged photograph knows its coordinates, and reverse geocoding will happily turn those into a city. But &ldquo;Siem Reap&rdquo; is not what the picture is of — the picture is of Bayon Temple. The useful name is almost always more specific than the administrative one, and it is exactly the name that is hardest to remember six months later when you are captioning a trip.</p>
+<p>This plugin reads a photograph&rsquo;s position, asks OpenStreetMap what is actually at that spot, and proposes the specific landmark — temple, monument, museum, hotel, archaeological site, park — for you to approve.</p>
 
-<h2>What it does</h2>
-<p>Select GPS-tagged photographs and run <strong>Library &gt; Plug-in Extras &gt; Suggest Location
-   Metadata</strong>. Nearby photographs are grouped into coordinate clusters and each cluster is
-   looked up once — a reverse geocode plus a search for named landmarks nearby, through the public
-   Nominatim and Overpass services. Results are then ranked so a specific landmark outranks the
-   complex containing it, which outranks the surrounding city, when the evidence supports it.</p>
+<h2>How it decides</h2>
+<p>Photographs are grouped into coordinate clusters first, so a series shot around one site is looked up once rather than once per frame. Everything within the configured radius — 500 m by default — is considered together, then ranked so that a specific landmark outranks the complex containing it, which outranks the surrounding city, <em>when the evidence supports it</em>. That last clause matters: the ranking is evidence-led, so an ambiguous position produces an honest set of candidates rather than a confident wrong answer.</p>
 
-<h2>Nothing is written until you say so</h2>
+<h2>Nothing is written until you approve it</h2>
+<p>Every suggestion goes through a review dialog. Accept it, pick a different candidate, edit the text yourself, or exclude the photograph entirely. Only then is anything written.</p>
+<p>What gets written is deliberately narrow: the approved place goes to Lightroom&rsquo;s <strong>Sublocation</strong> field, and you choose whether it replaces the existing value or is appended to it. Caption, City, State/Province, Country, ISO country code, title, keywords, copyright, capture time and GPS are all left alone. Nothing is written to your original files or to XMP sidecars.</p>
+
+<h2>What leaves your machine</h2>
+<p>Before the first lookup, the plugin shows a one-time disclosure. GPS coordinates from the selected photographs are sent to the configured geocoding service to retrieve place names — that is the whole point of the tool and it cannot work otherwise. Image files, thumbnails, filenames, captions and your identity are never sent. Requests are throttled and cached to stay within the public services&rsquo; usage policies.</p>
+
+<h2>Where it currently stands</h2>
+<p>Everything testable outside a running Lightroom process is implemented and unit tested — candidate ranking, metadata formatting, caching, provider clients, coordinate grouping — including tests against real captured responses from the live geocoding services. The modules that talk to Lightroom itself are written against the documented, long-stable Lightroom Classic SDK, but have not been fully exercised inside Lightroom.</p>
+<p>That is why this is listed as a beta, and why the honest advice is to run it against a disposable test catalog first. The plugin never touches anything beyond your current selection either way, but a plugin that writes metadata deserves to earn trust on a catalog you can throw away.</p>
+
+<h2>What it does not do</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Writing captions straight into the catalog and letting you audit them later.</strong>
-     Automated place names are wrong often enough that a silent bulk write is a bad trade. Every
-     suggestion goes through a review dialog first — accept it, choose a different candidate, or
-     skip it — and only approved captions reach the catalog metadata.</p>
+  <p><strong>Captioning your library unattended.</strong> There is no bulk mode that writes without review. Every photograph is approved individually, because a plausible wrong landmark is worse than no landmark.</p>
+  <p><strong>Sending your photographs anywhere.</strong> Coordinates go out. Images never do.</p>
 </div>
-
-<h2>Status, stated plainly</h2>
-<p>Every module that does not touch the Lightroom SDK — candidate ranking, caption formatting,
-   caching, the provider clients, coordinate grouping, results summarisation — is implemented and
-   unit tested, including tests run against real captured Nominatim and Overpass responses rather
-   than hand-written guesses. The SDK-facing parts — catalog access, metadata writes, the review
-   dialog, menu registration — are written against the documented Lightroom Classic SDK but have
-   <strong>not yet been run inside Lightroom</strong>.</p>
-<p>So: point it at a disposable test catalog first, not a production one. The Plug-in Manager lets
-   you add it without touching your real catalog, and the plugin itself never reads or changes
-   anything beyond your current selection either way.</p>
         </div>
 
         <div class="tool-side">
         <div class="aside-dock">
+        <div class="aside-stack">
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
@@ -124,6 +118,8 @@
             <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Location%20Caption%20Assistant">Ask about Location Caption Assistant</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
+
+        </div>
         </div>
       <div class="art art-column"><img src="assets/bluebonnet-side-right.png" width="380" height="950" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>

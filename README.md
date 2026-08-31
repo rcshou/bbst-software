@@ -13,92 +13,103 @@ are distributed through their own channels.
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | Full roster of every tool, plus the access and status legend |
+| `index.html` | Category panels and the access and status legend — the full roster lives on the category pages |
 | `about.html` | How the tools are built, releases, licensing |
 | `privacy.html` | Privacy policy, published for the Microsoft Store listing |
-| `business-tools.html`, `web-apps.html`, `lightroom-plugins.html`, `geoscience-tools.html` | Category pages |
-| `<slug>.html` | One page per app, ten in total |
+| `business-tools.html`, `web-apps.html`, `lightroom-plugins.html`, `geoscience-tools.html` | Category pages, each carrying its category's roster |
+| `<slug>.html` | One page per app, eleven in total |
 | `styles.css` | Single stylesheet shared by every page |
 | `theme.js` | Theme toggle wiring |
-| `CATALOG.txt` | The list of repositories to publish — hand-maintained |
-| `fetch-catalog.sh` | Pulls their metadata from GitHub into the cache |
-| `catalog-cache.tsv` | Fetched metadata, generated |
-| `setup-repo-metadata.sh` | One-time: sets repo descriptions and topics on GitHub |
-| `build.sh` | Generates every page from the cache |
+| `CATALOG.txt` | The catalog: what is listed, and what the site says about it. Authored |
+| `fetch-catalog.sh` | Refreshes versions and licences from GitHub |
+| `catalog-cache.tsv` | Fetched versions and licences, generated |
+| `build.sh` | Generates every page by joining the two |
 | `CNAME` | Custom domain for GitHub Pages |
 | `.github/ISSUE_TEMPLATE/` | Issue routing config and two issue forms |
 | `.github/DISCUSSION_TEMPLATE/` | Q&A discussion form |
 | `assets/` | Page ornaments, one per page |
 | `make-demo.sh` | Packs the site into one navigable preview file |
+| `docs/handoff/` | Work-state records: what is open, unverified, or waiting on a decision |
 
 ## The catalog: what gets listed
 
-`CATALOG.txt` decides what the site lists, and holds **nothing that goes stale** — one line
-per app, `owner/repo` plus a pinned URL slug. Everything else is read from the repository on
-GitHub, so a version bump or a reworded summary reaches the site without editing this repo.
+`CATALOG.txt` is the catalog. It decides what the site lists **and what the site says about
+it** — one tab-separated line per app:
+
+```
+slug   repo   subpath   name   category   platform   status   summary
+```
+
+Everything in it is authored and reviewed. Only two facts about an app change upstream
+without anyone editing this repository — its **latest release version** and its **declared
+licence** — and those are the only two things `fetch-catalog.sh` pulls from GitHub, into
+`catalog-cache.tsv`. `build.sh` joins the two on the slug.
 
 ```bash
-bash setup-repo-metadata.sh --dry-run   # review the description/topics to be set
-bash setup-repo-metadata.sh             # one-time: configure the repos on GitHub
-bash fetch-catalog.sh                   # pull current metadata into catalog-cache.tsv
-bash build.sh                           # regenerate the site from the cache
-bash build.sh --refresh                 # fetch and build in one step
+bash fetch-catalog.sh    # refresh versions and licences from GitHub
+bash build.sh            # regenerate the site
+bash build.sh --refresh  # do both
 ```
 
 ### Where each field comes from
 
-| Field | Source on GitHub |
+| Field | Source |
 | --- | --- |
-| Display name | repo description, the part before the em dash |
-| Summary | repo description, the part after the em dash |
-| Category | topic `bbst-business` / `bbst-webapps` / `bbst-lightroom` / `bbst-geoscience` |
-| Platform | topics `platform-windows`, `platform-macos`, `platform-linux`, `platform-web`, `platform-gpu`, `platform-plugin`, `platform-library` |
-| Version | latest release tag, leading `v` stripped |
-| Status | topic `bbst-released` / `bbst-beta` / `bbst-private` / `bbst-dev`; with no topic, derived from releases — published release is *released*, prerelease is *beta*, no release is *dev* |
-| Licence | detected by GitHub from the LICENSE file; a repo with none shows "Not stated" |
+| Display name, subtitle, category, platform, status, summary | `CATALOG.txt` and `tool_subtitle` in `build.sh` |
+| Lede, body copy, meta description, release box | `tool_lede`, `tool_prose`, `tool_meta_desc`, `tool_release_notes` in `build.sh`, keyed by slug |
+| Version | latest GitHub release; failing that, the highest version-shaped git tag; failing that, the last cached value |
+| Licence | `license.spdx_id` on GitHub; a repo with no LICENSE shows "Not stated" |
 
-`bbst-private` has to be set explicitly. GitHub has no way to express "built and versioned,
-handed out on request", so nothing can infer it.
+A tag pushed without a GitHub Release still identifies a version, and the releases API
+returns 404 for it — so `fetch-catalog.sh` falls back to the repository's tags and takes the
+highest bare `v1.2.3` tag, warning as it does so. Prefixed tags such as `twoplugins-v1.8.1`
+are ignored: they version one app inside a shared repository, not the repository itself.
+
+Status is set deliberately rather than inferred. GitHub has no way to express "built and
+versioned, handed out on request", which is what most of this catalog is, so nothing can
+derive it — and a status that silently flipped because a draft release was published would
+be worse than one that is simply stated.
 
 The **slug is pinned in `CATALOG.txt`** rather than derived, because it becomes `<slug>.html`
-and every existing link depends on it. A reworded description must never rename a page.
+and every existing link depends on it. A reworded name must never rename a page. `build.sh`
+refuses a slug containing anything but lowercase letters, digits and hyphens.
 
+Catalog values are HTML-escaped once, as they enter the build, so an ampersand or an angle
+bracket in a name or summary reaches the page as text rather than as markup.
 
 ### One repository holding several apps
 
-`CATALOG.txt` accepts a third field, a subpath, for a repository that ships more than one app —
-the Lightroom plugin bundles:
+The `subpath` column lists one app out of a repository that ships several — the Lightroom
+plugin bundles:
 
 ```
-rcshou/LIghtroom_plugins  similars-and-statistics  twoPlugins.lrplugin
-rcshou/LIghtroom_plugins  restore-missing-photos   MissPhotos.lrplugin
+similars-and-statistics   rcshou/LIghtroom_plugins   twoPlugins.lrplugin   …
+restore-missing-photos    rcshou/LIghtroom_plugins   MissPhotos.lrplugin   …
 ```
 
-For a subpath entry the display name and version come from that folder's `Info.lua`
-(`LrPluginName` and `VERSION`) and the summary from the first sentence of its `README.md`,
-because one repository description cannot describe two different plugins. Category, platform
-and status still come from the repository's topics, which the plugins share.
+A subpath entry takes its version from that folder's `Info.lua` (`major`, `minor`,
+`revision`) rather than from a repository release tag, because one tag cannot version two
+plugins separately. Everything else comes from `CATALOG.txt` like any other row.
 
-`catalog-cache.tsv` is the fetched result, committed so the site can be rebuilt offline and
-so a diff shows exactly what moved upstream when a release lands. Do not edit it by hand.
-
-Long-form page copy — the lede and body sections — stays in `tool_lede` and `tool_prose` in
-`build.sh`, keyed by slug. It is written for a public audience rather than for developers, so
-it is not a README and does not come from the app repo. The build warns about any listed app
-with no page copy yet.
+`catalog-cache.tsv` is the fetched result — three columns, `slug`, `version`, `license` —
+committed so the site can be rebuilt offline and so a diff shows exactly what moved upstream
+when a release lands. Do not edit it by hand.
 
 ## Editing the site
 
-**Do not hand-edit the generated HTML.** All sixteen pages are produced by `build.sh`, so
+**Do not hand-edit the generated HTML.** All eighteen pages are produced by `build.sh`, so
 the roster, the rail counts, the category pages and the tool pages cannot drift apart.
 
-To **add an app**: create its repository, set its description and topics as above, add one
-line to `CATALOG.txt`, write its `tool_lede`, `tool_meta_desc` and `tool_prose` in
-`build.sh`, then `bash build.sh --refresh`.
+To **add an app**: add one tab-separated line to `CATALOG.txt`, write its `tool_lede`,
+`tool_meta_desc` and `tool_prose` in `build.sh`, then `bash build.sh --refresh`.
 
-To **change a version, summary, name, platform, category, status or licence**: change it on
-GitHub — a release, the description, the topics, the LICENSE file — then `bash build.sh
---refresh`. Nothing in this repository needs touching.
+To **change a name, summary, platform, category or status**: edit that field in
+`CATALOG.txt` and run `bash build.sh`. These are the site's own words about a tool, so they
+are decided here and nowhere else.
+
+To **pick up a new release**: `bash build.sh --refresh`. The version and licence come from
+GitHub; nothing else in the row is touched. Check the `catalog-cache.tsv` diff before
+committing — it is small by design, so a surprise in it is worth reading.
 
 To **stop listing an app**: remove its line from `CATALOG.txt` and note why in the section
 at the bottom of that file. Its `<slug>.html` is left behind; delete it deliberately, since
@@ -111,6 +122,18 @@ Counts, navigation and cross-links follow the catalog automatically.
 The site uses the "Instrument Panel" direction: a technical shell, a persistent category
 rail, and the catalog rendered as a dense roster table rather than a card grid, so the list
 stays readable as it grows.
+
+The **home page names the four categories rather than listing every tool.** Each panel
+carries the category's pitch, its count and its tool names, and links to the category page
+where that roster lives. Category copy is `cat_pitch` (the panel line) and `cat_head` (the
+category page's heading, intro and meta description), both in `build.sh` and both keyed by
+the category name **as it appears after HTML escaping** — so the key for `Web & Mobile` is
+`Web &amp; Mobile`. A pattern that spells the unescaped name matches nothing and yields a
+blank panel and an empty heading; `check_copy` warns when that happens.
+
+Each tool page carries a **subtitle** (`tool_subtitle`) under its name, and where the
+project keeps user-facing release notes, a **release box** (`tool_release_notes`) beside
+the At a glance panel. Both are optional — a tool without them simply renders neither.
 
 The palette is taken from *Lupinus texensis* itself:
 
@@ -128,9 +151,7 @@ yellow for what has not opened, pollinated magenta for what is handed out on req
 no colour at all for what has not started.
 
 Both themes are defined purely as tokens at the top of `styles.css`; no component below the
-token blocks references a colour literal, so a palette change is a token edit. Every
-foreground/background pair was checked against WCAG AA and clears it on both themes.
-
+token blocks references a colour literal, so a palette change is a token edit.
 
 | Face | Role |
 | --- | --- |
@@ -146,9 +167,11 @@ rigidity. Chips and buttons are pills in sentence case; panels, cards and the as
 
 The layout is unchanged: same grid, same rail width, same table columns, same spacing scale.
 
-Both themes are defined purely as tokens at the top of `styles.css`; no component below the
-token blocks references a colour literal, so a palette change is a token edit. Every
-foreground/background pair was checked against WCAG AA and clears it on both themes.
+Every foreground/background pair was measured against WCAG AA on 2026-08-31 and clears it
+on both themes for normal text. The narrowest margin is `--dimmer`, which carries the small
+metadata labels: 4.75:1 on the light ground, 5.14:1 on the dark panel. `--dimmer` previously
+sat at 2.96:1 in the light theme, below even the large-text floor, and the claim that the
+palette cleared AA was wrong until it was corrected.
 
 The theme follows the operating system until the reader presses the toggle, after which the
 choice is remembered in `localStorage` under `bbst-theme`.
@@ -171,7 +194,7 @@ repositories declare one.
 
 ## Page art
 
-One ornament per page, sixteen pages, four assets in `assets/`. Each is placed by its
+One ornament per page, eighteen pages, four assets in `assets/`. Each is placed by its
 shape rather than dropped in uniformly:
 
 | Asset | Shape | Placement | Pages |
@@ -246,6 +269,11 @@ that is not published: this repository is public and the application repositorie
 
 - Create releases in private repos for the binaries themselves.
 - Publish release metadata here: version, platform, status, and release notes.
-- Use GitHub Actions or a sync workflow to update the `TOOLS` block and rerun `build.sh`
-  when a private release ships.
+- When a release ships, run `bash build.sh --refresh` and commit the `catalog-cache.tsv`
+  diff alongside the regenerated pages.
 - For public assets, link their URLs from the relevant tool page.
+
+Automating the refresh in CI is possible but not free: most of the listed repositories are
+private, so a workflow would need a token that can read them, stored as a secret in this
+public repository. Running the fetch locally avoids that trade entirely, which is why it is
+a command rather than an Action.

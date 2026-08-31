@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SEG-Y Coordinate Security — Bluebonnet Studios</title>
-  <meta name="description" content="Audit, sanitize and independently verify SEG-Y files before sharing them, replacing map coordinates with one consistent local grid." />
+  <meta name="description" content="Audit, sanitize and independently verify SEG-Y files before sharing them, replacing map coordinates with one consistent local grid while preserving line geometry." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -49,6 +49,7 @@
       <div>
         <p class="eyebrow"><a href="geoscience-tools.html">Geoscience Tools</a></p>
         <h1>SEG-Y Coordinate Security</h1>
+        <p class="subtitle">Share seismic data without giving away where it was shot</p>
         <div class="head-meta">
           <span class="chip is-private">Private release</span>
           <span class="ver">Version 0.16.1 &middot; Windows</span>
@@ -61,9 +62,9 @@
   <div class="layout">
     <nav class="rail" aria-label="Categories">
       <h2>Categories</h2>
-      <a href="index.html">All tools <em>10</em></a>
+      <a href="index.html">All tools <em>11</em></a>
       <a href="business-tools.html">Business <em>3</em></a>
-      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
       <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
       <a href="geoscience-tools.html" class="is-active">Geoscience <em>3</em></a>
       <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
@@ -71,25 +72,38 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>The situation</h2>
-<p>You need to send seismic data to a vendor, or open a data room. The data has to remain loadable and interpretable as seismic. What it must not do is hand over exactly where the survey was shot.</p>
+<h2>What it is for</h2>
+<p>Seismic data has to be shared — with a processing vendor, a farm-in partner, a data room — and the coordinates in it are frequently the most sensitive thing it carries. Where a survey was shot can reveal an exploration position long before anyone wants that known. But stripping the coordinates outright breaks the data: line geometry, relative positions and bin topology all have to survive, or what you shipped is no longer usable seismic.</p>
+<p>This tool removes direct georeferencing while preserving the geometry, applying one consistent local-grid transformation across a whole delivery set — then independently verifies the result before you hand it over.</p>
 
-<h2>What it does</h2>
-<p>Audit, sanitize and independently verify — as three separate steps, in that order. Direct map coordinates in the standard CDP, source and receiver header locations are replaced with one consistent local-grid transformation applied across the whole delivery set, so line geometry and relative positions survive intact. Textual headers are replaced with a controlled functional header that declares the preserved inline and crossline bytes, the transformed X/Y bytes, the scalar, units and sample layout — and states plainly that the local grid has no external reference.</p>
-<p>Binary headers, seismic samples, trace order, inline and crossline words and bin topology are left unchanged. The output loads as seismic data because it still is seismic data.</p>
+<h2>Three steps, in this order</h2>
+<p><strong>Audit</strong> reads every trace by default and examines all three standard coordinate pairs, the scalars, the units, and both the primary and extended textual headers. A quick mode exists for exploration but deliberately cannot be used to build a plan — a sanitization decision should not rest on a sample.</p>
+<p><strong>Plan</strong> produces one reviewable transformation for the whole dataset: rotation, scale, reflection and target origin. Every populated field, whether selected or excluded, is checked against the scalar before the plan is written, so a magnitude that cannot be re-encoded is rejected up front rather than surfacing as an overflow mid-sanitize. Excluding a field the audit flagged as genuinely georeferenced requires you to acknowledge that explicitly.</p>
+<p><strong>Sanitize</strong> writes copies. Inputs are never modified and existing outputs are never overwritten. The whole set is written to a staging directory, every file is reopened and checked, and the result is promoted atomically only once all of them succeed — so an interrupted run cannot leave a half-sanitized delivery that looks finished.</p>
+<p><strong>Verify</strong> then checks the output independently, and can also be pointed at a delivery someone else produced, on its own terms.</p>
 
-<h2>What it refuses to claim</h2>
+<h2>What is preserved, and what is replaced</h2>
+<p>Direct map coordinates in the standard CDP, source and receiver header locations are replaced. Binary headers, seismic samples, trace order, inline and crossline words and bin topology are left unchanged, so the output still loads as seismic. Textual headers are replaced with a controlled functional header that declares the preserved inline/crossline bytes, the transformed X/Y bytes, the scalar, the units and the sample layout — and states plainly that the local grid has no external reference.</p>
+<p>Vendor-specific or duplicated coordinates in nonstandard header bytes are not rewritten automatically. They are reported for review, and a reviewed mapping can be declared in the plan so it is transformed along with the standard fields, restricted to a fixed set of safe offsets.</p>
+
+<h2>The honest security boundary</h2>
+<p>This is the part worth reading before relying on the tool. Preserved geometry remains a recognisable fingerprint. If someone already holds another copy of the same survey, the shape of the acquisition can be matched against it. The tool therefore reports <strong>no direct georeferencing detected</strong> — never that re-identification is impossible, because that would be a claim it cannot support.</p>
+<p>The audit, the plan and the internal manifest disclose source paths, coordinate evidence and the transformation itself. They are working files and must stay out of the external delivery.</p>
+
+<h2>The desktop application</h2>
+<p>Audit, Transformation Plan, Sanitize, Verify, Verify Existing, Geometry QA, 3D Survey QA and Settings screens, with Verify Existing sitting outside the pipeline so a third-party file can be checked independently. Geometry QA displays one line or every verified line and fits the map to the loaded geometry. A bundled, fully offline Azerbaijan and Caspian Sea basemap outline is available as a background that needs no network at all, and public map tiles stay disabled until explicitly allowed — you should not have to send survey geometry to a tile server to look at it. A saved plan can be reloaded to reuse its rotation, scale and scalar when adding more lines or a 3D volume to an existing batch.</p>
+
+<h2>What it does not do</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Promising anonymity it cannot deliver.</strong> Preserved geometry remains a recognisable fingerprint and can be matched against another copy of the same survey. The tool therefore reports &ldquo;no direct georeferencing detected&rdquo; — never that re-identification is impossible. Coordinates duplicated into nonstandard vendor header bytes are flagged for review rather than rewritten silently; transforming one requires an explicitly reviewed and declared mapping, restricted to a fixed set of safe offsets.</p>
+  <p><strong>Promising anonymity.</strong> It removes direct georeferencing and says so precisely. It does not claim the result cannot be matched to a survey by someone who already has one.</p>
+  <p><strong>Touching your originals.</strong> Sanitize reads inputs and writes copies. It never modifies a source file and never overwrites an existing output.</p>
 </div>
-
-<h2>The application</h2>
-<p>A PySide6 desktop workflow with Audit, Transformation Plan, Sanitize, Verify, Verify Existing, Geometry QA, 3D Survey QA and Settings screens. Verify Existing sits outside the pipeline, so a file someone else produced can be checked on its own terms. Geometry QA can display one line or every verified line and fits the map to the loaded geometry; a bundled offline Azerbaijan and Caspian Sea basemap outline is available as a background that needs no network at all, and public map tiles stay disabled until explicitly allowed. A saved plan can be reloaded to reuse its rotation, scale and scalar when adding more lines or a 3D volume to an existing batch.</p>
         </div>
 
         <div class="tool-side">
         <div class="aside-dock">
+        <div class="aside-stack">
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
@@ -107,6 +121,8 @@
             <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20SEG-Y%20Coordinate%20Security">Ask about SEG-Y Coordinate Security</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
+
+        </div>
         </div>
       <div class="art art-column"><img src="assets/bluebonnet-side-right.png" width="380" height="950" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>

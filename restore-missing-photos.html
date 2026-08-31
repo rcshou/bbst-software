@@ -49,6 +49,7 @@
       <div>
         <p class="eyebrow"><a href="lightroom-plugins.html">Lightroom Plugins</a></p>
         <h1>Restore Missing Photos</h1>
+        <p class="subtitle">Put the files Lightroom lost back where the catalog expects them</p>
         <div class="head-meta">
           <span class="chip is-private">Private release</span>
           <span class="ver">Version 1.22.0 &middot; Plugin</span>
@@ -61,9 +62,9 @@
   <div class="layout">
     <nav class="rail" aria-label="Categories">
       <h2>Categories</h2>
-      <a href="index.html">All tools <em>10</em></a>
+      <a href="index.html">All tools <em>11</em></a>
       <a href="business-tools.html">Business <em>3</em></a>
-      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
       <a href="lightroom-plugins.html" class="is-active">Lightroom <em>3</em></a>
       <a href="geoscience-tools.html">Geoscience <em>3</em></a>
       <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
@@ -71,37 +72,36 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>The situation</h2>
-<p>Lightroom records where every photograph lives. Move the files with anything other than
-   Lightroom — a backup restore, a drive swap, a tidy-up in Finder or Explorer — and the catalog
-   still holds all your edits, collections and ratings, pointing at paths that no longer exist.
-   The thumbnails stay; the photographs are gone.</p>
+<h2>What it is for</h2>
+<p>Lightroom records where every photograph lives. Move the files with Finder, restore from a backup to a different path, or swap a drive letter, and the catalog is left pointing at places nothing exists — every affected photo marked missing, all its edits and metadata intact but detached from any actual pixels.</p>
+<p>The files usually still exist. They are on the backup drive, or the NAS, or the old disk in a drawer. What is missing is the correspondence between the catalog&rsquo;s expected path and where the file actually sits now. This plugin rebuilds that correspondence and, if you want, copies the files back to the paths the catalog already expects — so no relinking is needed afterwards.</p>
 
-<h2>What it does</h2>
-<p>Searches one or more source folders for files whose names match the photographs the catalog
-   currently reports as missing, then optionally copies the matches back to the exact paths the
-   catalog still expects. The catalog is never rewritten to chase the files; the files are
-   returned to where the catalog already believes they are, so every edit and collection stays
-   attached.</p>
+<h2>The workflow</h2>
+<p>Use Lightroom&rsquo;s own <strong>Find All Missing Photos</strong>, select what you want to recover, and run the plugin. It shows the paths the catalog is expecting, and optionally saves them to a text file for reference. Then you point it at a folder that might contain replacements — a backup drive, a NAS share, an old export — and it scans.</p>
+<p>The selection is captured when the workflow starts and held for its whole duration, so it survives you clicking around in Lightroom mid-scan. It is discarded when the workflow ends.</p>
+
+<h2>Indexing, and why it counts rather than estimates</h2>
+<p>Indexing walks the chosen folder once. There is deliberately no preliminary counting pass, because counting the tree takes about as long as indexing it and would nearly double the wait for a progress bar. So the dialog shows a running count — <em>Indexing files… (1,250 indexed)</em> — rather than a percentage it would have to invent. It can be cancelled, and a cancelled index is discarded rather than half-used.</p>
+<p>Each folder&rsquo;s index is kept in memory for the rest of the Lightroom session. Scanning the same share again — including on a later <em>Search Another Folder</em> pass — reuses it instead of walking the tree a second time. Nothing is written to disk, and a plugin reload or a Lightroom restart always forces a fresh scan.</p>
+<p>Because a reused index describes the folder as it was earlier, every match is verified to still exist immediately before it is accepted. One that has since moved is dropped from the index so it is not offered again, and the results report how many were caught that way.</p>
+
+<h2>When something goes wrong</h2>
+<p>If the source disk or NAS share disconnects part-way through, you get an explicit <strong>Indexing Failed</strong> error with a path to the error log — not a generic Lightroom task failure, and not a results screen full of &ldquo;not found&rdquo; that looks like a completed scan. An incomplete index is never treated as a finished one. That distinction is the difference between retrying a scan and wrongly concluding your backup does not have the files.</p>
+
+<h2>Duplicates</h2>
+<p>When several files match one missing photo, you choose how it behaves: <strong>manual review</strong>, where you decide each case, or <strong>first match</strong>, where it takes the first and keeps moving. The active mode is shown in the folder-picker title before every scan, so it is never a surprise, and it can be changed from the plugin&rsquo;s menu or from Plug-in Manager — both read and write the same setting.</p>
+
+<h2>What it does not do</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Reconnecting folders by hand, one at a time.</strong> Lightroom&rsquo;s own reconnect
-     works, and works well, when the missing photographs sit together in one moved folder. It is
-     painful when a few thousand files scattered across a restored backup need matching
-     individually — which is exactly the case this exists for.</p>
+  <p><strong>Touching your catalog.</strong> The plugin copies files into place. It does not rewrite catalog paths, edit metadata, or modify the originals it finds.</p>
+  <p><strong>Searching anything you did not point it at.</strong> It reads the folders you choose and the photos you selected, and nothing else.</p>
 </div>
-
-<h2>Controls</h2>
-<ul>
-  <li><strong>List missed photo locations</strong> — starts the recovery workflow from the current selection.</li>
-  <li><strong>Duplicate handling</strong> — settable from the plugin&rsquo;s own menu without opening the Plug-in Manager, because it is the setting you actually change mid-run.</li>
-  <li><strong>In-app help</strong> — available both from the menu and from the Plug-in Manager entry.</li>
-</ul>
-<p>Built against Lightroom SDK 12 with a declared minimum of SDK 10.</p>
         </div>
 
         <div class="tool-side">
         <div class="aside-dock">
+        <div class="aside-stack">
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
@@ -119,6 +119,15 @@
             <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Restore%20Missing%20Photos">Ask about Restore Missing Photos</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
+        <aside class="release-box" aria-labelledby="rel-restore-missing-photos">
+          <p class="release-kicker" id="rel-restore-missing-photos">New in 1.22.0</p>
+          <ul>
+            <li><b>Scanning the same folder twice is now instant.</b> Each source folder&rsquo;s index is kept for the rest of the Lightroom session, so a second pass over a large NAS share reuses it instead of walking the whole tree again.</li>
+            <li><b>Every match is re-checked before it is offered.</b> A cached index can describe a folder as it was earlier, so a file that has since moved is verified on disk first, dropped from the index if gone, and counted in the results.</li>
+            <li><b>A failed scan is now reported as a failure.</b> A disconnected disk or NAS share during indexing raises an explicit error instead of quietly producing &ldquo;not found&rdquo; results.</li>
+          </ul>
+        </aside>
+        </div>
         </div>
       <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>

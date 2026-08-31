@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Project2Excel — Bluebonnet Studios</title>
-  <meta name="description" content="Convert Microsoft Project .mpp files into editable Excel workbooks — Gantt view, task data, resources, assignments and relations — without a Project licence." />
+  <meta name="description" content="Convert Microsoft Project .mpp files into editable Excel workbooks — drawn Gantt chart, task data, resources, assignments and relations — on a machine that has never had Project installed." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -49,6 +49,7 @@
       <div>
         <p class="eyebrow"><a href="business-tools.html">Business Tools</a></p>
         <h1>Project2Excel</h1>
+        <p class="subtitle">Read a Microsoft Project schedule without Microsoft Project</p>
         <div class="head-meta">
           <span class="chip is-private">Private release</span>
           <span class="ver">Version 1.0.2 &middot; Windows · macOS</span>
@@ -61,9 +62,9 @@
   <div class="layout">
     <nav class="rail" aria-label="Categories">
       <h2>Categories</h2>
-      <a href="index.html">All tools <em>10</em></a>
+      <a href="index.html">All tools <em>11</em></a>
       <a href="business-tools.html" class="is-active">Business <em>3</em></a>
-      <a href="web-apps.html">Web Apps <em>1</em></a>
+      <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
       <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
       <a href="geoscience-tools.html">Geoscience <em>3</em></a>
       <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
@@ -71,30 +72,41 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
+<h2>What it is for</h2>
+<p>A Microsoft Project schedule is usually read by far more people than ever author one. The planner has Project; the engineers, the commercial team, the client and the subcontractors mostly do not, and buying each of them a licence to look at a Gantt chart is not a serious proposal. What those readers actually want is the schedule in the tool they already use all day.</p>
+<p>Project2Excel opens an <code>.mpp</code> file and writes a real Excel workbook — not a screenshot of a chart, and not a flat CSV dump that loses the hierarchy. The result is something a reader can filter, sort, comment on and paste into a report, on a machine that has never had Project installed.</p>
+
 <h2>What it produces</h2>
 <p>One workbook, with the schedule split across the sheets you would otherwise build by hand:</p>
 <ul>
   <li><strong>Gantt View</strong> — task hierarchy, durations, dates, progress and resources, with calendar-aware shading for nonworking days, milestone markers, critical-task highlighting, and thin FS/SS/FF/SF dependency connectors drawn behind the bars.</li>
   <li><strong>Task Data</strong> — the filterable source data, with real task IDs, readable dependency notation, and baseline, actual, constraint and calendar fields.</li>
-  <li><strong>Resources</strong> — the project&rsquo;s resource catalog with rate, calendar and contact fields.</li>
+  <li><strong>Resources</strong> — the project&rsquo;s resource catalog, with rate, calendar and contact fields.</li>
   <li><strong>Assignments</strong> — task-to-resource assignments with resolved names, units, work and cost.</li>
   <li><strong>Relations</strong> — one row per relationship, with endpoint IDs and names, type, lag and lag units.</li>
 </ul>
+<p>The Gantt is drawn with Excel&rsquo;s own primitives rather than pasted as a picture, so it stays legible when someone widens a column or changes the timescale.</p>
 
-<h2>Why it exists</h2>
+<h2>How it reads the file</h2>
+<p>The <code>.mpp</code> format is not documented for outside use, so the conversion is done by MPXJ, a mature open-source Java library that reads Project files directly. That means a Java runtime is involved — but a trimmed one ships inside the application, along with the reader itself. There is no system-wide Java to install, no <code>JAVA_HOME</code> to set, and no version conflict with anything else on the machine.</p>
+
+<h2>Two ways to run it</h2>
+<p>A desktop application for Windows and macOS covers the ordinary case: pick a file, choose a timescale, write the workbook. A command-line interface covers the rest — batch conversion, scheduled jobs, or a pipeline step — with switches for output path, timescale and overwrite behaviour.</p>
+
+<h2>Installing it</h2>
+<p>The Windows installer defaults to a per-user install that needs no administrator rights, which matters on a locked-down corporate machine; an administrator can still choose an all-users install, and both modes can be driven unattended. On macOS the app is dragged out of its disk image in the usual way. The macOS build is checked at package time to confirm nothing in it links outside the bundle or the system frameworks.</p>
+
+<h2>What it does not do</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Buying a Project licence for someone who only needs to read the schedule.</strong> Most people who receive an .mpp file need to look at it, filter it, and paste part of it into a report. That is a spreadsheet job, and it should not require the authoring tool.</p>
-  <p><strong>Uploading the schedule to a web converter.</strong> Project plans carry budgets, staffing and delivery dates. This runs entirely on your machine, with a bundled MPXJ reader and its own Java runtime, so nothing leaves the desktop.</p>
+  <p><strong>Being a Project editor.</strong> The conversion runs one way. Nothing you change in the workbook travels back to the <code>.mpp</code>, and the tool never modifies the file it read.</p>
+  <p><strong>Uploading your schedule to convert it.</strong> Everything happens on your machine, with a bundled reader and a bundled runtime. Project plans carry budgets, staffing and delivery dates; none of that needs to leave the desktop to become a spreadsheet.</p>
 </div>
-
-<h2>How it runs</h2>
-<p>There is a desktop application for Windows and macOS, and a command-line interface that performs the same conversion, so a batch of plans can be converted on a schedule rather than by hand. Gantt output scale is configurable, and packaging is standalone: an installer on Windows, an app bundle on macOS, reader and runtime included.</p>
-<p>The version in the project manifest is the single source of truth. The About dialog and the CLI&rsquo;s version flag both read it back, so the number the application reports is the number that was built.</p>
         </div>
 
         <div class="tool-side">
         <div class="aside-dock">
+        <div class="aside-stack">
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
@@ -112,6 +124,8 @@
             <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Project2Excel">Ask about Project2Excel</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
+
+        </div>
         </div>
       <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>
@@ -140,7 +154,7 @@
             </tr>
             <tr>
               <td class="tool"><a href="pdf-classifier.html">PDF Classifier</a><small>Routes PDFs by text-layer quality before anyone pays for OCR</small></td>
-              <td class="num" data-label="Version">1.0.2</td>
+              <td class="num" data-label="Version">1.0.6</td>
               <td class="num" data-label="Platform">Windows</td>
               <td data-label="Status"><span class="chip is-private">Private release</span></td>
               <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>

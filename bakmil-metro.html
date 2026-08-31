@@ -47,8 +47,9 @@
   <div class="page-head">
     <div class="page-head-inner">
       <div>
-        <p class="eyebrow"><a href="web-apps.html">Web Apps</a></p>
+        <p class="eyebrow"><a href="web-apps.html">Web &amp; Mobile</a></p>
         <h1>Bakmil Metro Schedule</h1>
+        <p class="subtitle">When the next Bakmil shuttle leaves</p>
         <div class="head-meta">
           <span class="chip is-released">Released</span>
           <span class="ver">Version — &middot; Web</span>
@@ -61,9 +62,9 @@
   <div class="layout">
     <nav class="rail" aria-label="Categories">
       <h2>Categories</h2>
-      <a href="index.html">All tools <em>10</em></a>
+      <a href="index.html">All tools <em>11</em></a>
       <a href="business-tools.html">Business <em>3</em></a>
-      <a href="web-apps.html" class="is-active">Web Apps <em>1</em></a>
+      <a href="web-apps.html" class="is-active">Web &amp; Mobile <em>2</em></a>
       <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
       <a href="geoscience-tools.html">Geoscience <em>3</em></a>
       <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
@@ -71,44 +72,35 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>What it does</h2>
-<p>The Bakmil to Nərimanov shuttle runs on a published timetable. Finding the next departure
-   normally means loading a site built for a desktop, hunting for the right line, and reading a
-   table. This shows the next departures for that line and stops there.</p>
-<p>It installs as a progressive web app, so it can sit on a home screen and open like anything
-   else on the phone. There is no account, no install prompt on first visit, and nothing that
-   follows you.</p>
+<h2>What it is for</h2>
+<p>The Bakmil ↔ Nərimanov shuttle runs on its own timetable, and the question anyone standing on the platform has is the same one every time: when does the next one leave? That question deserves an answer in one screen, immediately, on a phone with poor reception — not an app to install, an account to make, or a page that loads a carousel first.</p>
+<p>Open it and the next departures are already on screen. That is the entire product.</p>
 
-<h2>Where the times come from</h2>
-<p>The schedule is refreshed once a day by a scheduled job that reads the metro operator&rsquo;s own
-   published schedule service. Any external source can change or go quiet, and that is handled
-   rather than ignored.</p>
+<h2>How the schedule stays current</h2>
+<p>The timetable is refreshed automatically once a day from Baku Metro&rsquo;s own scheduling endpoint. That endpoint is undocumented and unofficial — it was found by inspecting the operator&rsquo;s own site, not published as an API — which shapes how the update is handled.</p>
+<p>If the source ever stops returning valid data, the job does not publish what it got. The previously published schedule is left exactly as it was and the failure is recorded separately, so the app keeps showing the last known-good timetable rather than an empty screen or invented times. Stale but true beats fresh and wrong when someone is deciding whether to run for a train.</p>
+
+<h2>Built small on purpose</h2>
+<p>Plain HTML, CSS and JavaScript, with no framework and no build step. The update script has no third-party dependencies at all — it runs on Node&rsquo;s built-ins — so there is no dependency tree to audit and nothing to go stale in the background. It installs as a progressive web app if you want it on a home screen, and works as an ordinary page if you do not.</p>
+
+<h2>What it does not do</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Publishing whatever the source returned today.</strong> If it stops returning valid
-     data, the job leaves the last known-good schedule in place and records the failure
-     separately. A stale timetable that was correct last week beats a broken one generated this
-     morning, and either way the failure is visible rather than silent.</p>
+  <p><strong>Asking who you are.</strong> No account, no login, no analytics, no tracking. The app does not know or care who is looking at it.</p>
+  <p><strong>Claiming to be official.</strong> Bakı Metropoliteni is not affiliated with this project and does not endorse it. The schedule comes from their data; the app carries that disclaimer in plain sight rather than implying an endorsement it does not have.</p>
 </div>
-
-<h2>How it is built</h2>
-<p>No build step and no dependencies: the app is plain files, and the update scripts run directly
-   on Node&rsquo;s built-ins. The scraper&rsquo;s logic — station matching, time normalisation and sorting,
-   validation, change detection — is unit tested with the built-in test runner, and those tests run
-   in CI before every scheduled update. The live network fetch is exercised for real each time the
-   scheduled job runs.</p>
-<p>The version lives in exactly one file and is shown on the About screen.</p>
         </div>
 
         <div class="tool-side">
         <div class="aside-dock">
+        <div class="aside-stack">
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
             <div><dt>Version</dt><dd>—</dd></div>
             <div><dt>Status</dt><dd>Released</dd></div>
             <div><dt>Platform</dt><dd>Web</dd></div>
-            <div><dt>Category</dt><dd><a href="web-apps.html">Web Apps</a></dd></div>
+            <div><dt>Category</dt><dd><a href="web-apps.html">Web &amp; Mobile</a></dd></div>
             <div><dt>License</dt><dd>Apache-2.0</dd></div>
             <div><dt>Copyright</dt><dd>Bluebonnet Studios</dd></div>
             <div><dt>Updated</dt><dd>2026-08-29</dd></div>
@@ -119,13 +111,15 @@
             <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Bakmil%20Metro%20Schedule">Ask about Bakmil Metro Schedule</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
+
+        </div>
         </div>
       <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>
       </div>
 
       <section>
-        <p class="section-label">More in Web Apps</p>
+        <p class="section-label">More in Web &amp; Mobile</p>
       <div class="tablewrap">
         <table class="roster">
           <thead>
@@ -144,6 +138,13 @@
               <td class="num" data-label="Platform">Web</td>
               <td data-label="Status"><span class="chip is-released">Released</span></td>
               <td class="act" data-label="Get"><a class="btn" href="index.html#access">Download</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="apk-finder.html">APK Finder</a><small>Finds, checks and installs Android apps on devices with no Google Play Services</small></td>
+              <td class="num" data-label="Version">0.20.3</td>
+              <td class="num" data-label="Platform">Android</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
             </tr>
           </tbody>
         </table>

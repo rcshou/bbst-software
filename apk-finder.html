@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APK Finder — Bluebonnet Studios</title>
+  <meta name="description" content="Find, compatibility-check and install Android apps on devices with no Google Play Services — built for Chinese-market car head units, degoogled phones and custom ROMs." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Apply the stored theme before first paint so the page never flashes. */
+    (function(){try{var t=localStorage.getItem("bbst-theme");
+    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <svg class="mark" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
+          <rect class="stem" x="6.3" y="7" width="1.4" height="9" rx="0.7" />
+          <circle class="petal" cx="7" cy="3.6" r="3.6" />
+          <circle class="spot" cx="7" cy="2.6" r="1.15" />
+        </svg>
+        Bluebonnet Studios
+      </a>
+      <div class="topbar-right">
+        <nav class="mainnav" aria-label="Primary">
+          <a href="index.html">Catalog</a>
+          <a href="about.html">About</a>
+          <a href="index.html#access">Access</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 1.5A6.5 6.5 0 0 1 8 14.5Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="page-head">
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow"><a href="web-apps.html">Web &amp; Mobile</a></p>
+        <h1>APK Finder</h1>
+        <p class="subtitle">Android apps for the devices Google left out</p>
+        <div class="head-meta">
+          <span class="chip is-private">Private release</span>
+          <span class="ver">Version 0.20.3 &middot; Android</span>
+        </div>
+        <p>Most APK finders assume Google Play Services exist. This one assumes nothing: it detects what your device actually has, then tells you honestly whether an app will work on it and what you would lose if it does not.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Categories">
+      <h2>Categories</h2>
+      <a href="index.html">All tools <em>11</em></a>
+      <a href="business-tools.html">Business <em>3</em></a>
+      <a href="web-apps.html" class="is-active">Web &amp; Mobile <em>2</em></a>
+      <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
+      <a href="geoscience-tools.html">Geoscience <em>3</em></a>
+      <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
+    </nav>
+    <main class="content" id="main">
+      <div class="tool-body">
+        <div class="prose">
+<h2>What it is for</h2>
+<p>Many Chinese-market vehicles ship an Android-based infotainment system with no Google Play Services, no Play Store, and no consistent alternative. The same is true of degoogled phones and plenty of custom ROMs. On hardware like that, the ordinary way of getting an app — open the Play Store — simply does not exist, and the tools that fill the gap almost all assume Google is present anyway. They either misbehave, or they hedge every answer into uselessness.</p>
+<p>APK Finder is built the other way round: assume nothing about Google, detect what is really on the device, and report compatibility — and any functionality you would lose — specifically rather than vaguely.</p>
+
+<h2>It profiles the device first</h2>
+<p>On first launch it profiles the hardware: Android version, CPU architecture, display, hardware features, and crucially which service framework is actually present — Google Play Services, the Play Store, microG, Huawei Mobile Services, or none at all. That profile is stored locally, can be re-detected on demand, and can be exported as a diagnostic to clipboard or file. Every compatibility answer afterwards is measured against that real device rather than an assumed one.</p>
+<p>On supported head units it will also make a best-effort attempt to identify the vehicle model and infotainment software version, and show it at the top of the app. When it cannot, it stays silent and blocks nothing.</p>
+
+<h2>Searching several sources at once</h2>
+<p>It searches F-Droid, IzzyOnDroid and APKPure together, merging results for the same app into a single card so you compare versions rather than hunt across three interfaces. Each source can be switched off independently in Settings if you would rather not use it.</p>
+
+<h2>Compatibility, checked twice</h2>
+<p>The first check is <strong>preliminary</strong>, built from repository metadata and shown before you download anything, so an obviously incompatible build can be ruled out immediately. The second is <strong>authoritative</strong>, run against the actual downloaded APK and checked against your real Android version, CPU architecture, hardware features and requested permissions.</p>
+
+<h2>The Google-dependency report</h2>
+<p>This is the part built specifically for devices without Google. A downloaded APK is inspected for Play Services and Firebase usage, and what it finds is classified rather than lumped together — Maps, Sign-In, Play Integrity, Billing, Push Messaging, Analytics, Location, Cast. Each one comes with a plain-English explanation of what will actually happen if Google services are absent. &ldquo;This app uses Google Sign-In, so you will not be able to log in&rdquo; is a usable answer; &ldquo;this app may not work&rdquo; is not.</p>
+
+<h2>Downloading and installing</h2>
+<p>Downloads stream with progress and can be cancelled, and every file is verified by SHA-256 against the hash the repository published. Installation hands off to Android&rsquo;s standard package installer — no root, no silent install — and reports the real completion status rather than assuming success.</p>
+
+<h2>Built for a dashboard</h2>
+<p>Content is centred and width-capped instead of stretching across a very wide landscape display, and touch targets are larger than Android&rsquo;s defaults. This is an app used at arm&rsquo;s length, on a screen bolted into a dashboard, often without anything resembling a precise pointer.</p>
+
+<h2>Non-negotiables</h2>
+<div class="compare">
+  <p class="compare-label">By design</p>
+  <p><strong>No Google anywhere in its own dependency graph.</strong> No Play Services, Firebase, Sign-In, Maps SDK, Play Billing, Play Integrity or Analytics. A tool for Google-free devices that itself depends on Google would be a contradiction.</p>
+  <p><strong>Nothing is transmitted.</strong> No telemetry, no analytics, no ads. All compatibility analysis and APK inspection run entirely on the device — nothing about your hardware, your downloads or your search terms goes anywhere.</p>
+  <p><strong>Warnings cannot be globally silenced.</strong> Google-dependency and signature-mismatch warnings can only be overridden per download, deliberately, by you. There is no setting that turns them all off and lets you forget.</p>
+</div>
+        </div>
+
+        <div class="tool-side">
+        <div class="aside-dock">
+        <div class="aside-stack">
+        <aside class="aside">
+          <h2>At a glance</h2>
+          <dl>
+            <div><dt>Version</dt><dd>0.20.3</dd></div>
+            <div><dt>Status</dt><dd>Private release</dd></div>
+            <div><dt>Platform</dt><dd>Android</dd></div>
+            <div><dt>Category</dt><dd><a href="web-apps.html">Web &amp; Mobile</a></dd></div>
+            <div><dt>License</dt><dd>Apache-2.0</dd></div>
+            <div><dt>Copyright</dt><dd>Bluebonnet Studios</dd></div>
+            <div><dt>Updated</dt><dd>2026-08-29</dd></div>
+          </dl>
+          <div class="aside-act">
+            <a class="btn" href="index.html#access">Request</a>
+            <p>Built and versioned, distributed on request rather than published.</p>
+            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20APK%20Finder">Ask about APK Finder</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+          </div>
+        </aside>
+
+        </div>
+        </div>
+      <div class="art art-column"><img src="assets/bluebonnet-side-right.png" width="380" height="950" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+        </div>
+      </div>
+
+      <section>
+        <p class="section-label">More in Web &amp; Mobile</p>
+      <div class="tablewrap">
+        <table class="roster">
+          <thead>
+            <tr>
+              <th scope="col">Tool</th>
+              <th scope="col">Version</th>
+              <th scope="col">Platform</th>
+              <th scope="col">Status</th>
+              <th scope="col"><span class="visually-hidden">Availability</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="tool"><a href="bakmil-metro.html">Bakmil Metro Schedule</a><small>Next-departure times for the Bakmil metro shuttle in Baku</small></td>
+              <td class="num" data-label="Version">—</td>
+              <td class="num" data-label="Platform">Web</td>
+              <td data-label="Status"><span class="chip is-released">Released</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Download</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="apk-finder.html">APK Finder</a><small>Finds, checks and installs Android apps on devices with no Google Play Services</small></td>
+              <td class="num" data-label="Version">0.20.3</td>
+              <td class="num" data-label="Platform">Android</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </section>
+    </main>
+  </div>
+  <footer class="site-foot">
+    <div class="site-foot-inner">
+      <span>Bluebonnet Studios</span>
+      <span>Catalog updated 2026-08-29 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+    </div>
+  </footer>
+  <script src="theme.js"></script>
+</body>
+</html>

@@ -4,6 +4,16 @@ All notable changes to the public catalog site are recorded here.
 
 ## [Unreleased]
 
+### Fixed
+- **The site no longer describes itself as desktop-only.** The home page led with "Desktop
+  tools that do one job properly", and the About page claimed "every application in this
+  catalog is a native desktop program — ... two as Lightroom plugins". Neither was true: of
+  eleven applications, six are desktop, three are Lightroom Classic plugins, one is a web app
+  and one is an Android app. The headline is now "One job each, wherever the work happens",
+  and About states the actual split — five PySide6 applications and one Tauri, plus three
+  plugins, a web app and an Android app. The framework attributions were verified by code
+  search rather than assumed.
+
 ### Added
 - **APK Finder** joins the catalog — a Google-independent Android app for finding, checking
   and installing APKs on devices with no Play Services, built for Chinese-market car head

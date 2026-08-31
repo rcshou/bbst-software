@@ -1131,7 +1131,7 @@ HTML
 
 about_page () {
   page_open "About — Bluebonnet Studios" \
-    "Bluebonnet Studios builds small, precise desktop tools for document workflows, photo catalogs and subsurface data." \
+    "Bluebonnet Studios builds small, precise tools for document workflows, photo catalogs, subsurface data and devices without Google services." \
     "about"
 cat <<'HTML'
   <div class="page-head">
@@ -1139,10 +1139,11 @@ cat <<'HTML'
       <div>
         <p class="eyebrow">About</p>
         <h1>A small studio that builds <span class="hl">specific tools.</span></h1>
-        <p>Bluebonnet Studios builds desktop software for people whose work is stuck between
+        <p>Bluebonnet Studios builds software for people whose work is stuck between
            applications: a schedule trapped in the tool that authored it, a folder of PDFs that
            may or may not be readable, a photo catalog with twenty years of accumulated mess, a
-           seismic dataset that has to leave the building without giving away where it came from.</p>
+           seismic dataset that has to leave the building without giving away where it came from,
+           a car with an Android screen and no way to install anything on it.</p>
       </div>
     </div>
   </div>
@@ -1154,9 +1155,11 @@ cat <<'HTML'
     <main class="content" id="main">
       <div class="prose">
         <h2>How the tools are built</h2>
-        <p>Every application in this catalog is a native desktop program — mostly PySide6 on
-           Windows and macOS, one built on Tauri, two as Lightroom plugins. They open fast, they
-           work offline, and they keep their data on your machine.</p>
+        <p>Most of this catalog is native desktop software — five PySide6 applications on
+           Windows and macOS, and one built on Tauri. The rest goes where a desktop program
+           cannot: three Lightroom Classic plugins, a web app that installs nothing, and an
+           Android app for car head units with no Play Store. Whatever the platform, they open
+           fast, they work offline, and they keep their data on your machine.</p>
         <ul>
           <li><strong>Nothing phones home.</strong> No telemetry, no account, no licence server.
               Where a tool touches the network at all — a map tile, an update check — it is off
@@ -1255,11 +1258,11 @@ $(art index crown)
     <div class="page-head-inner">
       <div>
         <p class="eyebrow">Software catalog</p>
-        <h1>Desktop tools that do <span class="hl">one job</span> properly.</h1>
-        <p>$(total_tools) applications for document workflows, OCR routing, Lightroom catalogs,
-           subsurface data and Android devices with no Google Play Services. Each is listed with its
-           version, platform and availability, so you can see what exists, what is finished, and what
-           you can actually get hold of.</p>
+        <h1>One job each, <span class="hl">wherever the work happens.</span></h1>
+        <p>$(total_tools) applications across Windows, macOS, Lightroom, the browser and Android
+           — document workflows, OCR routing, photo catalogs and subsurface data. Each is listed
+           with its version, platform and availability, so you can see what exists, what is
+           finished, and what you can actually get hold of.</p>
       </div>
       <div class="stats">
         <div><b>$(total_tools)</b><span>Tools</span></div>

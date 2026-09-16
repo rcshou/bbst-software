@@ -2,19 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About — Bluebonnet Studios</title>
   <meta name="description" content="Bluebonnet Studios builds small, precise tools for document workflows, photo catalogs, subsurface data and devices without Google services." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
-  <script>
-    /* Apply the stored theme before first paint so the page never flashes. */
-    (function(){try{var t=localStorage.getItem("bbst-theme");
-    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
-  </script>
+  <script src="theme-init.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>

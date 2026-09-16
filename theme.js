@@ -1,5 +1,5 @@
 /* Theme toggle.
-   The stored value is applied by a small inline snippet in each page's <head>
+   The stored value is applied by theme-init.js, loaded in each page's <head>,
    so the correct theme paints on first frame; this file only wires the button.
    No stored value means "follow the operating system", which is the default. */
 (function () {

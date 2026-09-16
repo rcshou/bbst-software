@@ -10,6 +10,13 @@ UPDATED="2026-09-16"
 REPO="https://github.com/rcshou/bbst-software"
 CONTACT_EMAIL="dev@bbst.us"
 
+# GitHub Pages cannot send response headers, so the policy travels in a meta
+# tag. Everything the site loads is its own: stylesheet, fonts, images, and two
+# scripts. No inline script or style is allowed, which is why the pre-paint
+# theme snippet is a file (theme-init.js) rather than a <script> block.
+# frame-ancestors is ignored in a meta tag, so it is not listed.
+CSP="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'"
+
 # Percent-encode spaces so a prefilled discussion title survives the URL.
 urlenc () { printf "%s" "$1" | sed "s/ /%20/g"; }
 
@@ -50,7 +57,11 @@ if [ ! -f "$DOWNLOADS_CACHE" ]; then
 fi
 
 # Join the two files into the tab-separated internal form:
-#   name  slug  category  version  platform  status  summary  license
+#   name  slug  category  version  platform  status  summary  license  vsource
+#
+# vsource says where the version came from: "fetched" (a release, a tag or a
+# plugin's Info.lua, via the cache), "authored" (CATALOG.txt's optional ninth
+# column, used only when nothing was fetched) or "none".
 # Tab throughout, so a character that can appear in a summary can never be
 # mistaken for a field separator. awk splits on every tab, so an empty column is
 # preserved rather than collapsed — which is why the join happens here and not in
@@ -61,6 +72,7 @@ fi
 # would silently misalign the row.
 TOOLS="$(
   awk -F'\t' -v OFS='\t' '
+    { sub(/\r$/, "") }
     FNR==NR { if ($0 !~ /^#/ && NF>=3) { ver[$1]=$2; lic[$1]=$3 } ; next }
     /^#/ || $0 ~ /^[[:space:]]*$/ { next }
     NF<8 { printf("build: %s line %d has %d columns, expected 8\n", FILENAME, FNR, NF) > "/dev/stderr"; bad=1; next }
@@ -68,8 +80,11 @@ TOOLS="$(
       slug=$1
       for (i=4; i<=8; i++)
         if ($i == "") { printf("build: [%s] column %d is empty\n", slug, i) > "/dev/stderr"; bad=1 }
-      print $4, slug, $5, (slug in ver && ver[slug] != "" ? ver[slug] : "—"), $6, $7, $8,
-            (slug in lic && lic[slug] != "" ? lic[slug] : "Not stated")
+      v = (slug in ver ? ver[slug] : ""); src = "fetched"
+      if (v == "" || v == "—") { v = $9; src = "authored" }
+      if (v == "") { v = "—"; src = "none" }
+      print $4, slug, $5, v, $6, $7, $8,
+            (slug in lic && lic[slug] != "" ? lic[slug] : "Not stated"), src
     }
     END { if (bad) exit 1 }
   ' "$CACHE_FILE" "$CATALOG_FILE"
@@ -79,10 +94,10 @@ TOOLS="$(
 # Escape every field once, here, rather than at each of the two dozen points
 # where one reaches the page.
 TOOLS="$(
-  printf '%s\n' "$TOOLS" | while IFS=$'\t' read -r name slug cat ver plat stat desc lic; do
-    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+  printf '%s\n' "$TOOLS" | while IFS=$'\t' read -r name slug cat ver plat stat desc lic vsrc; do
+    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
       "$(esc "$name")" "$slug" "$(esc "$cat")" "$(esc "$ver")" \
-      "$(esc "$plat")" "$stat" "$(esc "$desc")" "$(esc "$lic")"
+      "$(esc "$plat")" "$stat" "$(esc "$desc")" "$(esc "$lic")" "$vsrc"
   done
 )"
 
@@ -148,19 +163,13 @@ cat <<HTML
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="$CSP" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>$title</title>
   <meta name="description" content="$desc" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
-  <script>
-    /* Apply the stored theme before first paint so the page never flashes. */
-    (function(){try{var t=localStorage.getItem("bbst-theme");
-    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
-  </script>
+  <script src="theme-init.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -321,7 +330,7 @@ roster () {  # access-href | category-filter (empty = all)
   printf '              <th scope="col">Status</th>\n'
   printf '              <th scope="col"><span class="visually-hidden">Availability</span></th>\n'
   printf '            </tr>\n          </thead>\n          <tbody>\n'
-  printf '%s\n' "$TOOLS" | while IFS=$'\t' read -r name slug cat ver plat stat desc lic; do
+  printf '%s\n' "$TOOLS" | while IFS=$'\t' read -r name slug cat ver plat stat desc lic vsrc; do
     [ -n "$name" ] || continue
     if [ -n "$filter" ] && [ "$cat" != "$filter" ]; then continue; fi
     cattd=""
@@ -341,7 +350,7 @@ roster () {  # access-href | category-filter (empty = all)
 access_section () {
 cat <<HTML
       <section id="access">
-        <p class="section-label">Access and releases</p>
+        <h2 class="section-label">Access and releases</h2>
         <div class="access-box">
           <p>Bluebonnet Studios builds and releases from private repositories. This catalog is the
              public record: it publishes each tool&rsquo;s version, platform and availability. Builds
@@ -448,7 +457,7 @@ cat <<HTML
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
-            <div><dt>Version</dt><dd>$ver</dd></div>
+            <div><dt>Version</dt><dd>$ver$(version_note "$slug")</dd></div>
             <div><dt>Status</dt><dd>$(status_word "$stat")</dd></div>
             <div><dt>Platform</dt><dd>$plat</dd></div>
             <div><dt>Category</dt><dd><a href="$cpage">$cat</a></dd></div>
@@ -470,7 +479,7 @@ $(art "$slug" column)
       </div>
 
       <section>
-        <p class="section-label">More in $cl</p>
+        <h2 class="section-label">More in $cl</h2>
 HTML
   roster "index.html#access" "$cat"
 cat <<HTML
@@ -479,6 +488,13 @@ cat <<HTML
   </div>
 HTML
   page_close
+}
+
+# A version taken from CATALOG.txt rather than from a published release says
+# so where the details are read, rather than looking like a release number.
+version_note () {  # slug
+  [ "$(tool_field "$1" 9)" = "authored" ] || return 0
+  printf '<small class="ver-note">no published release</small>'
 }
 
 status_word () {
@@ -1190,17 +1206,17 @@ HTML
 cat <<HTML
     <main class="content" id="main">
       <section>
-        <p class="section-label">$label</p>
+        <h2 class="section-label">$label</h2>
 HTML
   roster "index.html#access" "$c"
 cat <<HTML
       </section>
 
       <section>
-        <p class="section-label">Detail</p>
+        <h2 class="section-label">Detail</h2>
         <div class="details">
 HTML
-  printf '%s\n' "$TOOLS" | while IFS=$'\t' read -r name slug tcat ver plat stat desc lic; do
+  printf '%s\n' "$TOOLS" | while IFS=$'\t' read -r name slug tcat ver plat stat desc lic vsrc; do
     [ "$tcat" = "$c" ] || continue
     cat <<HTML
         <article class="detail" id="$slug">
@@ -1400,10 +1416,11 @@ cat <<'HTML'
            embeddings wherever you save it, so handle it as carefully as the photographs.</p>
 
         <h2>This website</h2>
-        <p>This site sets no cookies and runs no analytics. Three things are worth naming:</p>
+        <p>This site sets no cookies, runs no analytics and loads nothing from any other site:
+           its fonts, images and scripts are all served from this address. Two things are worth
+           naming:</p>
         <ul>
-          <li><strong>Fonts</strong> are loaded from Google Fonts, so Google receives your IP address and browser details when a page loads.</li>
-          <li><strong>Hosting</strong> is GitHub Pages, so GitHub receives the same request information.</li>
+          <li><strong>Hosting</strong> is GitHub Pages, so GitHub receives your IP address and browser details when a page loads.</li>
           <li><strong>Your theme choice</strong> is remembered in your browser's local storage under <code>bbst-theme</code>. It never leaves your browser, and clearing site data removes it.</li>
         </ul>
 
@@ -1553,7 +1570,7 @@ download_files () {  # slug -> the file table for that tool's release
 checksum_help () {
 cat <<'HTML'
       <section>
-        <p class="section-label">Checking a download</p>
+        <h2 class="section-label">Checking a download</h2>
         <div class="prose">
           <p>Compare the checksum of the file you downloaded with the one listed above. They must match
              exactly; if they do not, delete the file and download it again.</p>
@@ -1601,7 +1618,7 @@ HTML
   if [ "$n_files" = "0" ]; then
 cat <<HTML
       <section>
-        <p class="section-label">Nothing published yet</p>
+        <h2 class="section-label">Nothing published yet</h2>
         <div class="prose">
           <p>No builds are published for download yet. Every tool in the catalog is currently
              distributed on request — see <a href="index.html#access">Access and releases</a> for how
@@ -1612,7 +1629,7 @@ HTML
   else
 cat <<HTML
       <section>
-        <p class="section-label">Published builds</p>
+        <h2 class="section-label">Published builds</h2>
         <div class="details">
 HTML
     printf '%s\n' "$TOOLS" | while IFS=$'\t' read -r name slug rest; do
@@ -1679,7 +1696,7 @@ HTML
 cat <<HTML
     <main class="content" id="main">
       <section id="files">
-        <p class="section-label">Files</p>
+        <h2 class="section-label">Files</h2>
 HTML
   download_files "$slug"
 cat <<HTML
@@ -1690,21 +1707,21 @@ HTML
 cat <<HTML
 
       <section id="notes">
-        <p class="section-label">Release notes</p>
+        <h2 class="section-label">Release notes</h2>
         <div class="prose doc">
 $(download_doc "$slug" notes)
         </div>
       </section>
 
       <section id="readme">
-        <p class="section-label">README</p>
+        <h2 class="section-label">README</h2>
         <div class="prose doc">
 $(download_doc "$slug" readme)
         </div>
       </section>
 
       <section id="guide">
-        <p class="section-label">User guide</p>
+        <h2 class="section-label">User guide</h2>
         <div class="prose doc">
 $(download_doc "$slug" guide)
         </div>

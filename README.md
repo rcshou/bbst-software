@@ -23,6 +23,7 @@ a separate public repository, `rcshou/bbst-downloads`, and listed on `downloads.
 | `downloads.html` | Published builds, with each file's SHA-256 |
 | `download-<slug>.html` | One download page per tool with a published release |
 | `styles.css` | Single stylesheet shared by every page |
+| `theme-init.js` | Applies the stored theme before first paint, from each page's head |
 | `theme.js` | Theme toggle wiring |
 | `CATALOG.txt` | The catalog: what is listed, and what the site says about it. Authored |
 | `fetch-catalog.sh` | Refreshes versions and licences from GitHub |
@@ -31,11 +32,11 @@ a separate public repository, `rcshou/bbst-downloads`, and listed on `downloads.
 | `downloads-cache.tsv` | Fetched download files, generated |
 | `downloads-docs/` | Each listed release's notes, README and user guide, rendered to HTML, generated |
 | `build.sh` | Generates every page from the catalog, the cache and the downloads cache |
-| `tests/` | Offline tests for both fetch scripts |
+| `tests/` | Offline tests for both fetch scripts and the build |
 | `CNAME` | Custom domain for GitHub Pages |
 | `.github/ISSUE_TEMPLATE/` | Issue routing config and two issue forms |
 | `.github/DISCUSSION_TEMPLATE/` | Q&A discussion form |
-| `assets/` | Page ornaments, one per page |
+| `assets/` | Page ornaments, one per page, and the self-hosted fonts in `assets/fonts/` |
 | `make-demo.sh` | Packs the site into one navigable preview file |
 | `docs/handoff/` | Work-state records: what is open, unverified, or waiting on a decision |
 
@@ -45,7 +46,7 @@ a separate public repository, `rcshou/bbst-downloads`, and listed on `downloads.
 it** — one tab-separated line per app:
 
 ```
-slug   repo   subpath   name   category   platform   status   summary
+slug   repo   subpath   name   category   platform   status   summary   [version]
 ```
 
 Everything in it is authored and reviewed. Only two facts about an app change upstream
@@ -66,13 +67,19 @@ bash build.sh --refresh  # all three
 | --- | --- |
 | Display name, subtitle, category, platform, status, summary | `CATALOG.txt` and `tool_subtitle` in `build.sh` |
 | Lede, body copy, meta description, release box | `tool_lede`, `tool_prose`, `tool_meta_desc`, `tool_release_notes` in `build.sh`, keyed by slug |
-| Version | latest GitHub release, with a leading `v` or a `<product>-v` prefix removed; failing that, the highest version-shaped git tag; failing that, the last cached value. A Lightroom plugin row takes it from `Info.lua` instead |
+| Version | latest GitHub release, with a leading `v` or a `<product>-v` prefix removed; failing that, the highest version-shaped git tag; failing that, the last cached value. A Lightroom plugin row takes it from `Info.lua` instead. When nothing can be fetched, the optional ninth column of `CATALOG.txt` is used, and the tool page marks it "no published release" |
 | Licence | `license.spdx_id` on GitHub; a repo with no LICENSE shows "Not stated" |
 
 A tag pushed without a GitHub Release still identifies a version, and the releases API
 returns 404 for it — so `fetch-catalog.sh` falls back to the repository's tags and takes the
 highest bare `v1.2.3` tag, warning as it does so. Prefixed tags such as `twoplugins-v1.8.1`
 are ignored: they version one app inside a shared repository, not the repository itself.
+
+The optional **ninth column** is a hand-kept version for a project that publishes neither a
+release nor a tag. It is a value that can go stale, so it is used only when nothing was
+fetched, the tool page says it has no published release, and `fetch-catalog.sh` warns once a
+release or tag appears so the column can be cleared. Take it from the project's own version
+source, not from memory.
 
 Status is set deliberately rather than inferred. GitHub has no way to express "built and
 versioned, handed out on request", which is what most of this catalog is, so nothing can
@@ -179,6 +186,7 @@ The repository can be overridden with `DOWNLOADS_REPO=owner/name`. Tests run off
 ```bash
 bash tests/fetch-downloads.test.sh
 bash tests/fetch-catalog.test.sh
+bash tests/build.test.sh
 ```
 
 ## Design
@@ -239,6 +247,20 @@ palette cleared AA was wrong until it was corrected.
 
 The theme follows the operating system until the reader presses the toggle, after which the
 choice is remembered in `localStorage` under `bbst-theme`.
+
+The **fonts are self-hosted** in `assets/fonts/`, with their licences and provenance in that
+folder's README, so a page load contacts no third party.
+
+Every page carries a **Content-Security-Policy** in a `<meta>` tag (GitHub Pages cannot send
+headers): the stylesheet, fonts, images and scripts must all come from the site itself, and
+no inline script or style is allowed. That is why the pre-paint theme snippet is
+`theme-init.js` rather than an inline `<script>`. The policy is `CSP` near the top of
+`build.sh`; anything new that loads from elsewhere, or any inline `style=`, has to be
+allowed there first, or the browser blocks it.
+
+On **narrow screens** (640px and below) the navigation moves to a full-width row under the
+brand and the theme toggle, so nothing is pushed past the edge of a 320px screen (WCAG 1.4.10).
+Section labels are real `<h2>` headings, so they appear in the page outline.
 
 ## Status vocabulary
 

@@ -2,19 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>vCard Cleaner — Bluebonnet Studios</title>
   <meta name="description" content="A small desktop tool that searches vCard contact files and strips Outlook junk fields, embedded photos and unwanted values while leaving names and phone numbers alone." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
-  <script>
-    /* Apply the stored theme before first paint so the page never flashes. */
-    (function(){try{var t=localStorage.getItem("bbst-theme");
-    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
-  </script>
+  <script src="theme-init.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -124,7 +118,7 @@
       </div>
 
       <section>
-        <p class="section-label">More in Business Tools</p>
+        <h2 class="section-label">More in Business Tools</h2>
       <div class="tablewrap">
         <table class="roster">
           <thead>
@@ -160,7 +154,7 @@
             </tr>
             <tr>
               <td class="tool"><a href="pdf-processor.html">PDF Processor for Embeddings</a><small>Sends only the PDF pages that need OCR to Chandra OCR 2, for embedding-ready output</small></td>
-              <td class="num" data-label="Version">—</td>
+              <td class="num" data-label="Version">1.57.20</td>
               <td class="num" data-label="Platform">Windows · GPU</td>
               <td data-label="Status"><span class="chip is-dev">In development</span></td>
               <td class="act" data-label="Get"><span class="btn" aria-disabled="true">Unreleased</span></td>

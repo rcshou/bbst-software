@@ -2,19 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bakmil Metro Schedule — Bluebonnet Studios</title>
   <meta name="description" content="Next-departure times for the Bakmil to Nərimanov metro shuttle in Baku, in a web app that opens instantly and needs no account." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
-  <script>
-    /* Apply the stored theme before first paint so the page never flashes. */
-    (function(){try{var t=localStorage.getItem("bbst-theme");
-    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
-  </script>
+  <script src="theme-init.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -53,7 +47,7 @@
         <p class="subtitle">When the next Bakmil shuttle leaves</p>
         <div class="head-meta">
           <span class="chip is-released">Released</span>
-          <span class="ver">Version — &middot; Web</span>
+          <span class="ver">Version 0.6.1 &middot; Web</span>
         </div>
         <p>Tells you when the next shuttle leaves, and nothing else. No account, no install, no tracking — open it at the platform and the answer is already on screen.</p>
       </div>
@@ -98,7 +92,7 @@
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
-            <div><dt>Version</dt><dd>—</dd></div>
+            <div><dt>Version</dt><dd>0.6.1<small class="ver-note">no published release</small></dd></div>
             <div><dt>Status</dt><dd>Released</dd></div>
             <div><dt>Platform</dt><dd>Web</dd></div>
             <div><dt>Category</dt><dd><a href="web-apps.html">Web &amp; Mobile</a></dd></div>
@@ -120,7 +114,7 @@
       </div>
 
       <section>
-        <p class="section-label">More in Web &amp; Mobile</p>
+        <h2 class="section-label">More in Web &amp; Mobile</h2>
       <div class="tablewrap">
         <table class="roster">
           <thead>
@@ -135,7 +129,7 @@
           <tbody>
             <tr>
               <td class="tool"><a href="bakmil-metro.html">Bakmil Metro Schedule</a><small>Next-departure times for the Bakmil metro shuttle in Baku</small></td>
-              <td class="num" data-label="Version">—</td>
+              <td class="num" data-label="Version">0.6.1</td>
               <td class="num" data-label="Platform">Web</td>
               <td data-label="Status"><span class="chip is-released">Released</span></td>
               <td class="act" data-label="Get"><a class="btn" href="https://bbst.us/testweb/">Open app</a></td>

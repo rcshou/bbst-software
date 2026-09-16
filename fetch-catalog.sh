@@ -48,6 +48,10 @@ while IFS= read -r line; do
   slug="${rest%%$'\t'*}"; rest="${rest#*$'\t'}"
   repo="${rest%%$'\t'*}"; rest="${rest#*$'\t'}"
   sub="${rest%%$'\t'*}"
+  # The optional ninth column: a version authored in the catalog for a project
+  # with nothing to fetch. awk keeps empty columns, so this is the ninth field
+  # even when subpath is blank; empty when the column is absent.
+  authored="$(printf '%s\n' "$line" | awk -F'\t' '{print $9}')"
   [ -n "$repo" ] || { echo "fetch: $slug has no repository" >&2; fail=1; continue; }
 
   p_ver="$(cached "$slug" 2)"; p_lic="$(cached "$slug" 3)"
@@ -74,6 +78,7 @@ while IFS= read -r line; do
       vmin="$(printf '%s' "$info" | sed -n 's/.*minor *= *\([0-9]*\).*/\1/p' | head -1)"
       vrev="$(printf '%s' "$info" | sed -n 's/.*revision *= *\([0-9]*\).*/\1/p' | head -1)"
       ver="${vmaj:-0}.${vmin:-0}.${vrev:-0}"
+      [ -z "$authored" ] || echo "fetch: warning: $slug reads $ver from Info.lua — remove its authored version ($authored) from $CATALOG_FILE" >&2
     fi
   else
     # A repository with no releases returns 404, and gh prints the error body to
@@ -99,7 +104,11 @@ while IFS= read -r line; do
              | sed -n 's/^v\{0,1\}\([0-9][0-9.]*\)$/\1/p' | sort -V | tail -1)"
       [ -n "$ver" ] && echo "fetch: $repo has no published release — using tag v$ver" >&2
     fi
-    [ -n "$ver" ] || ver="${p_ver:-—}"
+    if [ -n "$ver" ]; then
+      [ -z "$authored" ] || echo "fetch: warning: $repo now publishes $ver — remove the authored version ($authored) for $slug from $CATALOG_FILE" >&2
+    else
+      ver="${p_ver:-—}"
+    fi
   fi
 
   printf '%s\t%s\t%s\n' "$slug" "$ver" "$lic" >> "$tmp"

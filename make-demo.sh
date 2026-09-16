@@ -8,9 +8,18 @@ OUT="$1"
 
 {
   echo '<title>Bluebonnet Catalog</title>'
-  grep '<link' index.html | grep -E 'fonts\.(googleapis|gstatic)'
   echo '<style>'
-  cat styles.css
+  # The fonts are self-hosted under assets/fonts, which a single preview file
+  # cannot reach, so each @font-face source is inlined as a data URI.
+  awk '{
+    if (match($0, /url\(assets\/fonts\/[a-z-]+\.woff2\)/)) {
+      f = substr($0, RSTART + 4, RLENGTH - 5)
+      cmd = "base64 < \"" f "\" | tr -d \"\\n\""
+      cmd | getline b64; close(cmd)
+      sub(/url\(assets\/fonts\/[a-z-]+\.woff2\)/, "url(data:font/woff2;base64," b64 ")")
+    }
+    print
+  }' styles.css
   cat <<'CSS'
 
 /* ---- preview shell (not part of the real site) ---- */

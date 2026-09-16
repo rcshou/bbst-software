@@ -5,6 +5,37 @@ All notable changes to the public catalog site are recorded here.
 ## [Unreleased]
 
 ### Added
+- **A Content-Security-Policy on every page**, as a `<meta>` tag since GitHub Pages cannot
+  send headers. Styles, fonts, images and scripts may come only from the site itself, and no
+  inline script or style is allowed; the pre-paint theme snippet moved from an inline block
+  into `theme-init.js` for that reason. Verified in Edge over HTTP on all 16 checked pages:
+  no violations, and the stored theme still applied before paint.
+- **An optional ninth `CATALOG.txt` column, `version`,** for a project that publishes neither
+  a release nor a tag. It is used only when nothing can be fetched, and the tool page marks it
+  "no published release". PDF Processor for Embeddings (1.57.20, from its `app_version.py`)
+  and Bakmil Metro Schedule (0.6.1, from its changelog) use it; vCard Cleaner has no version
+  anywhere and still shows "—". `fetch-catalog.sh` warns when a project with an authored
+  version starts publishing one, so the column can be cleared.
+- `tests/build.test.sh`: offline tests for the version fallback and for the page-head
+  contract (CSP on every page, no third-party font, no inline script, section labels as
+  headings). Six of its ten checks fail against the previous `build.sh`.
+
+### Changed
+- **Fonts are self-hosted** in `assets/fonts/` (Newsreader, Archivo, JetBrains Mono, all SIL
+  Open Font License 1.1, licence texts alongside), so a page load no longer contacts Google.
+  The privacy page no longer names Google Fonts; `make-demo.sh` inlines the fonts into the
+  preview file.
+- **Section labels are real `<h2>` headings**, so they appear in the document outline for
+  screen-reader users. They look the same.
+
+### Fixed
+- **The header overflowed at 320px** (WCAG 1.4.10, reflow), and the theme toggle was squeezed
+  to 17px wide at phone widths, below the 24px minimum target size. At 640px and below the
+  navigation now takes its own full-width row under the brand and the toggle, and the toggle
+  keeps 30×30px. Measured in Edge on 16 pages at 320px, 390px and 1280px: no horizontal
+  overflow at any of them.
+
+### Added
 - **Downloads.** `downloads.html` lists the newest public release of each catalogued tool
   that has one, every file with its size, SHA-256 and a direct download, and each tool gets a
   `download-<slug>.html` with its files, release notes, README and user guide. Builds for the

@@ -61,7 +61,12 @@ printf 'return {\n  VERSION = { major = 2, minor = 1, revision = 0, build = 1, }
   printf 'tagged\tacme/tagged\t\tT\tBusiness\tWindows\tprivate\ts\r\n'
   printf 'named\tacme/named\t\tN\tBusiness\tWindows\tprivate\ts\n'
   printf 'plugin\tacme/plugin\tTool.lrplugin\tL\tLightroom\tPlugin\tprivate\ts\n'
+  # The optional ninth column: an authored version beside a real release is
+  # reported, and one with nothing to fetch is left for build.sh to use.
+  printf 'stale\tacme/plain\t\tS\tBusiness\tWindows\tprivate\ts\t0.0.1\n'
+  printf 'unreleased\tacme/norelease\t\tU\tBusiness\tWindows\tdev\ts\t3.0.0\n'
 } > "$work/catalog.txt"
+repo acme/norelease Apache-2.0
 
 ( cd "$work" && PATH="$work/bin:$PATH" FAKE_REPOS="$work/repos" \
     CATALOG_FILE="$work/catalog.txt" CACHE_FILE="$work/cache.tsv" \
@@ -74,6 +79,10 @@ check "bare v release tag"                "2.3.4" "$(version_of plain)"
 check "highest bare tag without release"  "1.10.0" "$(version_of tagged)"
 check "non-version tag left as it is"     "nightly" "$(version_of named)"
 check "plugin version from Info.lua"      "2.1.0" "$(version_of plugin)"
+check "release still wins over authored"  "2.3.4" "$(version_of stale)"
+check "authored beside release is warned" "0" "$(grep -q 'remove the authored version (0.0.1) for stale' "$work/out.txt"; echo $?)"
+check "nothing fetched stays unversioned" "—" "$(version_of unreleased)"
+check "no warning without a release"      "1" "$(grep -q 'for unreleased' "$work/out.txt"; echo $?)"
 
 [ "$fail" = 0 ] || cat "$work/out.txt"
 printf '%s passed, %s failed\n' "$pass" "$fail"

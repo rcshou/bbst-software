@@ -3,9 +3,9 @@
 #
 # THIS FILE DECIDES WHAT THE PUBLIC SITE LISTS, AND WHAT IT SAYS ABOUT IT.
 #
-# Tab-separated, one line per app, eight columns:
+# Tab-separated, one line per app, eight columns and an optional ninth:
 #
-#   slug  repo  subpath  name  category  platform  status  summary
+#   slug  repo  subpath  name  category  platform  status  summary  [version]
 #
 # Everything here is authored and reviewed. Only two facts about an app are
 # genuinely upstream and change without anyone editing this file — its latest
@@ -52,6 +52,13 @@
 #   summary    one line, shown under the name in the roster. Sentence case, no
 #              trailing full stop.
 #
+#   version    optional. Used only when GitHub has no release or version tag to
+#              read, and marked on the tool page as having no published
+#              release. It is a hand-kept value that can go stale, so take it
+#              from the project's own version source, and remove it once the
+#              project publishes a release — fetch-catalog.sh warns when both
+#              exist. A published release or tag always wins.
+#
 # Long-form page copy — the lede and the body sections — lives in tool_lede,
 # tool_meta_desc and tool_prose in build.sh, keyed by slug. It is written for a
 # public audience rather than for developers, so it is not a README and does not
@@ -62,13 +69,13 @@
 # not, which is why this is tab-separated rather than pipe- or space-delimited.
 # =============================================================================
 
-# slug	repo	subpath	name	category	platform	status	summary
+# slug	repo	subpath	name	category	platform	status	summary	[version]
 project2excel	rcshou/Project2Excel		Project2Excel	Business	Windows · macOS	private	Microsoft Project files into editable Excel workbooks
 pdf-classifier	rcshou/PDF_classifier		PDF Classifier	Business	Windows	private	Routes PDFs by text-layer quality before anyone pays for OCR
 markdown-renderer	rcshou/md-reader_tauri		Markdown Renderer	Business	Windows · macOS	private	Markdown preview, linting and export with real tables and math
-pdf-processor	rcshou/Chandra2_integration		PDF Processor for Embeddings	Business	Windows · GPU	dev	Sends only the PDF pages that need OCR to Chandra OCR 2, for embedding-ready output
+pdf-processor	rcshou/Chandra2_integration		PDF Processor for Embeddings	Business	Windows · GPU	dev	Sends only the PDF pages that need OCR to Chandra OCR 2, for embedding-ready output	1.57.20
 vcard-cleaner	rcshou/vCard_cleaner		vCard Cleaner	Business	macOS	dev	Strips Outlook junk, photos and stray fields from .vcf contact files
-bakmil-metro	rcshou/Bakmill_PWA		Bakmil Metro Schedule	Web & Mobile	Web	released	Next-departure times for the Bakmil metro shuttle in Baku
+bakmil-metro	rcshou/Bakmill_PWA		Bakmil Metro Schedule	Web & Mobile	Web	released	Next-departure times for the Bakmil metro shuttle in Baku	0.6.1
 find-similar-photos	rcshou/lr-similar-photos	SimilarPhotos.lrplugin	Find Similar Photos	Lightroom	Plugin · macOS	private	Groups visually similar photos in a selection into collections
 photo-statistics	rcshou/lr-photo-stats	PhotoStats.lrplugin	Photo Statistics	Lightroom	Plugin · macOS	private	Counts the file types in a selection and flags broken HEIC files
 capture-year-check	rcshou/lr-datefix	DateFix.lrplugin	Check Capture Year vs Folder	Lightroom	Plugin · macOS	private	Flags photos whose capture year does not match their year folder

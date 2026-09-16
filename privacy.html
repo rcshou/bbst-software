@@ -2,19 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Privacy — Bluebonnet Studios</title>
   <meta name="description" content="How Bluebonnet Studios software handles your data: what stays on your device, what touches a network, and what the publisher receives." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
-  <script>
-    /* Apply the stored theme before first paint so the page never flashes. */
-    (function(){try{var t=localStorage.getItem("bbst-theme");
-    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
-  </script>
+  <script src="theme-init.js"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -207,10 +201,11 @@
            embeddings wherever you save it, so handle it as carefully as the photographs.</p>
 
         <h2>This website</h2>
-        <p>This site sets no cookies and runs no analytics. Three things are worth naming:</p>
+        <p>This site sets no cookies, runs no analytics and loads nothing from any other site:
+           its fonts, images and scripts are all served from this address. Two things are worth
+           naming:</p>
         <ul>
-          <li><strong>Fonts</strong> are loaded from Google Fonts, so Google receives your IP address and browser details when a page loads.</li>
-          <li><strong>Hosting</strong> is GitHub Pages, so GitHub receives the same request information.</li>
+          <li><strong>Hosting</strong> is GitHub Pages, so GitHub receives your IP address and browser details when a page loads.</li>
           <li><strong>Your theme choice</strong> is remembered in your browser's local storage under <code>bbst-theme</code>. It never leaves your browser, and clearing site data removes it.</li>
         </ul>
 

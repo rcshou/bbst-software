@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lightroom Plugins — Bluebonnet Studios</title>
-  <meta name="description" content="Lightroom Classic plugins for similar-photo detection, restoring missing files, and landmark-accurate location captions." />
+  <meta name="description" content="Lightroom Classic plugins for similar-photo detection, file statistics, capture-date checks, restoring missing files, offline face recognition and landmark-accurate location captions." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -32,6 +32,7 @@
       <div class="topbar-right">
         <nav class="mainnav" aria-label="Primary">
           <a href="index.html">Catalog</a>
+          <a href="downloads.html">Downloads</a>
           <a href="about.html">About</a>
           <a href="index.html#access">Access</a>
         </nav>
@@ -49,11 +50,11 @@
       <div>
         <p class="eyebrow">Lightroom Plugins</p>
         <h1>The catalog chores <span class="hl">nobody wants to do twice.</span></h1>
-        <p>Three plugins for Lightroom Classic that take on the unglamorous work of a large library: finding the photographs you already have twice, putting missing files back where the catalog expects them, and naming the place a photograph was actually taken.</p>
+        <p>Plugins for Lightroom Classic that take on the unglamorous work of a large library: finding the photographs you already have twice, counting what you actually hold, checking capture dates against their folders, putting missing files back where the catalog expects them, and naming the people in a photograph and the place it was taken.</p>
       </div>
       <div class="stats">
-        <div><b>3</b><span>Tools</span></div>
-        <div><b>11</b><span>In catalog</span></div>
+        <div><b>6</b><span>Tools</span></div>
+        <div><b>16</b><span>In catalog</span></div>
       </div>
     </div>
   </div>
@@ -61,12 +62,12 @@
   <div class="layout">
     <nav class="rail" aria-label="Categories">
       <h2>Categories</h2>
-      <a href="index.html">All tools <em>11</em></a>
-      <a href="business-tools.html">Business <em>3</em></a>
+      <a href="index.html">All tools <em>16</em></a>
+      <a href="business-tools.html">Business <em>5</em></a>
       <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
-      <a href="lightroom-plugins.html" aria-current="page">Lightroom <em>3</em></a>
+      <a href="lightroom-plugins.html" aria-current="page">Lightroom <em>6</em></a>
       <a href="geoscience-tools.html">Geoscience <em>3</em></a>
-      <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
+      <p class="rail-note">Published builds are listed under Downloads. Everything else is distributed on request.</p>
     </nav>
     <main class="content" id="main">
       <section>
@@ -84,17 +85,38 @@
           </thead>
           <tbody>
             <tr>
-              <td class="tool"><a href="similars-and-statistics.html">Similars and Photo Statistics</a><small>Groups visually similar photos, reports file-type statistics, and repairs wrong capture dates</small></td>
-              <td class="num" data-label="Version">1.8.1</td>
+              <td class="tool"><a href="find-similar-photos.html">Find Similar Photos</a><small>Groups visually similar photos in a selection into collections</small></td>
+              <td class="num" data-label="Version">2.0.0</td>
+              <td class="num" data-label="Platform">Plugin · macOS</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="photo-statistics.html">Photo Statistics</a><small>Counts the file types in a selection and flags broken HEIC files</small></td>
+              <td class="num" data-label="Version">2.0.0</td>
+              <td class="num" data-label="Platform">Plugin · macOS</td>
+              <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="capture-year-check.html">Check Capture Year vs Folder</a><small>Flags photos whose capture year does not match their year folder</small></td>
+              <td class="num" data-label="Version">2.1.0</td>
               <td class="num" data-label="Platform">Plugin · macOS</td>
               <td data-label="Status"><span class="chip is-private">Private release</span></td>
               <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
             </tr>
             <tr>
               <td class="tool"><a href="restore-missing-photos.html">Restore Missing Photos</a><small>Puts files that Lightroom reports as missing back where the catalog expects them</small></td>
-              <td class="num" data-label="Version">1.22.0</td>
+              <td class="num" data-label="Version">1.23.3</td>
               <td class="num" data-label="Platform">Plugin</td>
               <td data-label="Status"><span class="chip is-private">Private release</span></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
+            </tr>
+            <tr>
+              <td class="tool"><a href="face-assistant.html">Face Assistant</a><small>Offline face recognition that applies your own person keywords</small></td>
+              <td class="num" data-label="Version">0.3.7</td>
+              <td class="num" data-label="Platform">Plugin · macOS</td>
+              <td data-label="Status"><span class="chip is-beta">Beta</span></td>
               <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
             </tr>
             <tr>
@@ -102,7 +124,7 @@
               <td class="num" data-label="Version">0.1.10</td>
               <td class="num" data-label="Platform">Plugin</td>
               <td data-label="Status"><span class="chip is-beta">Beta</span></td>
-              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Download</a></td>
+              <td class="act" data-label="Get"><a class="btn" href="index.html#access">Request</a></td>
             </tr>
           </tbody>
         </table>
@@ -112,17 +134,43 @@
       <section>
         <p class="section-label">Detail</p>
         <div class="details">
-        <article class="detail" id="similars-and-statistics">
+        <article class="detail" id="find-similar-photos">
           <div class="detail-head">
-            <h3><a href="similars-and-statistics.html">Similars and Photo Statistics</a></h3>
+            <h3><a href="find-similar-photos.html">Find Similar Photos</a></h3>
             <span class="chip is-private">Private release</span>
           </div>
-          <p>Four jobs a large Lightroom catalog eventually needs doing, in one plugin: find the photographs you already have twice, count what file types you are actually holding, catch HEIC files that have gone bad, and fix capture dates that disagree with the folder they sit in.</p>
+          <p>Finds the photographs you already have twice — the burst frames, the re-export at a different size, the re-edit — by comparing what the images look like rather than the bytes they contain, and gathers each group into a collection.</p>
           <dl class="facts">
-            <div><dt>Version</dt><dd>1.8.1</dd></div>
+            <div><dt>Version</dt><dd>2.0.0</dd></div>
             <div><dt>Platform</dt><dd>Plugin · macOS</dd></div>
-            <div><dt>License</dt><dd>Not stated</dd></div>
-            <div><dt>Read more</dt><dd><a href="similars-and-statistics.html">similars-and-statistics.html</a></dd></div>
+            <div><dt>License</dt><dd>Apache-2.0</dd></div>
+            <div><dt>Read more</dt><dd><a href="find-similar-photos.html">find-similar-photos.html</a></dd></div>
+          </dl>
+        </article>
+        <article class="detail" id="photo-statistics">
+          <div class="detail-head">
+            <h3><a href="photo-statistics.html">Photo Statistics</a></h3>
+            <span class="chip is-private">Private release</span>
+          </div>
+          <p>Tells you what a selection actually holds — how many RAW files, how many HEIC, how many in formats the rest of your workflow cannot read — and can check the HEIC files among them for ones that no longer open as HEIC at all.</p>
+          <dl class="facts">
+            <div><dt>Version</dt><dd>2.0.0</dd></div>
+            <div><dt>Platform</dt><dd>Plugin · macOS</dd></div>
+            <div><dt>License</dt><dd>Apache-2.0</dd></div>
+            <div><dt>Read more</dt><dd><a href="photo-statistics.html">photo-statistics.html</a></dd></div>
+          </dl>
+        </article>
+        <article class="detail" id="capture-year-check">
+          <div class="detail-head">
+            <h3><a href="capture-year-check.html">Check Capture Year vs Folder</a></h3>
+            <span class="chip is-private">Private release</span>
+          </div>
+          <p>If your photographs live in folders named by year, the folder is a second opinion on when each one was taken. This compares the two and gathers every disagreement into collections, without changing a single capture date.</p>
+          <dl class="facts">
+            <div><dt>Version</dt><dd>2.1.0</dd></div>
+            <div><dt>Platform</dt><dd>Plugin · macOS</dd></div>
+            <div><dt>License</dt><dd>Apache-2.0</dd></div>
+            <div><dt>Read more</dt><dd><a href="capture-year-check.html">capture-year-check.html</a></dd></div>
           </dl>
         </article>
         <article class="detail" id="restore-missing-photos">
@@ -132,10 +180,23 @@
           </div>
           <p>Lightroom marks a photo as missing when the file moves out from under it. This searches the folders you point it at for files matching those photos and puts them back at the paths the catalog still expects.</p>
           <dl class="facts">
-            <div><dt>Version</dt><dd>1.22.0</dd></div>
+            <div><dt>Version</dt><dd>1.23.3</dd></div>
             <div><dt>Platform</dt><dd>Plugin</dd></div>
-            <div><dt>License</dt><dd>Not stated</dd></div>
+            <div><dt>License</dt><dd>Apache-2.0</dd></div>
             <div><dt>Read more</dt><dd><a href="restore-missing-photos.html">restore-missing-photos.html</a></dd></div>
+          </dl>
+        </article>
+        <article class="detail" id="face-assistant">
+          <div class="detail-head">
+            <h3><a href="face-assistant.html">Face Assistant</a></h3>
+            <span class="chip is-beta">Beta</span>
+          </div>
+          <p>Finds faces in the photographs you select, learns who people are only from the faces you confirm, and applies the person keywords you already use — on your own Mac, with no cloud service, and nothing written until you press apply.</p>
+          <dl class="facts">
+            <div><dt>Version</dt><dd>0.3.7</dd></div>
+            <div><dt>Platform</dt><dd>Plugin · macOS</dd></div>
+            <div><dt>License</dt><dd>Apache-2.0</dd></div>
+            <div><dt>Read more</dt><dd><a href="face-assistant.html">face-assistant.html</a></dd></div>
           </dl>
         </article>
         <article class="detail" id="location-caption">
@@ -159,7 +220,7 @@
   <footer class="site-foot">
     <div class="site-foot-inner">
       <span>Bluebonnet Studios</span>
-      <span>Catalog updated 2026-08-29 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+      <span>Catalog updated 2026-09-16 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
     </div>
   </footer>
   <script src="theme.js"></script>

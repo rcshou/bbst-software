@@ -32,6 +32,7 @@
       <div class="topbar-right">
         <nav class="mainnav" aria-label="Primary">
           <a href="index.html">Catalog</a>
+          <a href="downloads.html">Downloads</a>
           <a href="about.html">About</a>
           <a href="index.html#access">Access</a>
         </nav>
@@ -49,7 +50,7 @@
       <div>
         <p class="eyebrow">Privacy policy</p>
         <h1>What stays on your machine, <span class="hl">and what does not.</span></h1>
-        <p>Effective 30 August 2026. This policy covers every application listed in this
+        <p>Effective 16 September 2026. This policy covers every application listed in this
            catalog and this website itself.</p>
       </div>
     </div>
@@ -58,12 +59,12 @@
   <div class="layout">
     <nav class="rail" aria-label="Categories">
       <h2>Categories</h2>
-      <a href="index.html">All tools <em>11</em></a>
-      <a href="business-tools.html">Business <em>3</em></a>
+      <a href="index.html">All tools <em>16</em></a>
+      <a href="business-tools.html">Business <em>5</em></a>
       <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
-      <a href="lightroom-plugins.html">Lightroom <em>3</em></a>
+      <a href="lightroom-plugins.html">Lightroom <em>6</em></a>
       <a href="geoscience-tools.html">Geoscience <em>3</em></a>
-      <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>
+      <p class="rail-note">Published builds are listed under Downloads. Everything else is distributed on request.</p>
     </nav>
     <main class="content" id="main">
       <div class="prose">
@@ -71,14 +72,16 @@
         <p>Bluebonnet Studios software has <strong>no user accounts, no sign-in, no advertising,
            no analytics and no telemetry.</strong> The publisher receives nothing from any
            application. Your documents, photographs and data are read on your own device and are
-           never uploaded.</p>
+           never uploaded, with one exception you would have to set up yourself: PDF Processor for
+           Embeddings sends page images to whichever OCR server you point it at, which is your own
+           machine unless you change it.</p>
         <p><strong>No application in this catalog uses your location.</strong> None of them asks
            your device where you are, and none contains any code capable of it. Where coordinates
            appear at all, they are values already stored inside the files you chose to process —
            the position a camera recorded in a photograph, or the survey geometry inside a seismic
            file — never a reading of where you are.</p>
-        <p>Four of the ten applications do contact a network, for reasons named below. None of
-           them sends your file contents anywhere, and each is listed rather than glossed over.</p>
+        <p>Six of the sixteen applications do contact a network, for reasons named below. Each is
+           listed rather than glossed over.</p>
 
         <h2>What each application does with the network</h2>
         <table>
@@ -86,14 +89,20 @@
           <tbody>
             <tr><td>Project2Excel</td><td><strong>None.</strong> Runs fully offline</td></tr>
             <tr><td>Markdown Renderer</td><td><strong>None.</strong> Runs fully offline</td></tr>
-            <tr><td>Similars and Photo Statistics</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>vCard Cleaner</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Find Similar Photos</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Photo Statistics</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Check Capture Year vs Folder</td><td><strong>None.</strong> Runs fully offline</td></tr>
             <tr><td>Restore Missing Photos</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Face Assistant</td><td><strong>None.</strong> Runs fully offline; face data stays on your Mac</td></tr>
             <tr><td>Cassandra Risking</td><td><strong>None.</strong> Runs fully offline</td></tr>
             <tr><td>PDF Classifier</td><td>Checks for application updates only</td></tr>
             <tr><td>Geocrawler</td><td>Checks for application updates only</td></tr>
             <tr><td>SEG-Y Coordinate Security</td><td>Optional map tiles, off until you enable them</td></tr>
             <tr><td>Location Caption Assistant</td><td>Looks up place names for coordinates already stored in your photographs</td></tr>
             <tr><td>Bakmil Metro Schedule</td><td>A website; loads and caches its own timetable</td></tr>
+            <tr><td>APK Finder</td><td>Searches and downloads from the app repositories you enable</td></tr>
+            <tr><td>PDF Processor for Embeddings</td><td>Downloads models during setup; sends page images to the OCR server you configure</td></tr>
           </tbody>
         </table>
 
@@ -128,7 +137,7 @@
            under Microsoft's own privacy practices; the publisher receives only the aggregate
            acquisition statistics the Store provides.</p>
 
-        <h2>The four applications that contact a network</h2>
+        <h2>The six applications that contact a network</h2>
         <h3>PDF Classifier and Geocrawler — update checks</h3>
         <p>Both can check whether a newer version exists, against a local network share first and
            a public release channel second. The check sends nothing about you or your documents.
@@ -160,6 +169,43 @@
            under their own privacy terms. Nothing is written to your catalog until you approve
            each suggestion, and photographs with no stored coordinate are skipped entirely.</p>
 
+        <h3>PDF Processor for Embeddings — models and the OCR server</h3>
+        <p>Setting it up downloads Python packages and the Chandra OCR 2 model weights from
+           Hugging Face; the supplied launchers then run it with model downloads switched off. The
+           optional MinerU engine downloads its own models the first time it is used, and the
+           optional vLLM backend downloads a container image, after asking.</p>
+        <p>With the vLLM backend, <strong>page images are sent to the server address in
+           Settings</strong>. That address is your own machine by default. If you change it to
+           another computer, the pages it is asked to read go to that computer. It sends nothing
+           to the publisher, has no update check and no telemetry.</p>
+
+        <h3>APK Finder — the app repositories you enable</h3>
+        <p>APK Finder searches app repositories and downloads apps from them, so it has to contact
+           them. Requests go to the repositories switched on in its settings: F-Droid, which is on
+           by default, and IzzyOnDroid and APKPure, which are off until you enable them. Like any
+           web request, each one reveals your IP address and which apps you look at or download.</p>
+        <p>F-Droid and IzzyOnDroid searches run against a catalogue downloaded to your device, so
+           <strong>your search terms stay on the device</strong>. APKPure publishes no such
+           catalogue: <strong>when APKPure is enabled, your search terms are sent to
+           apkpure.com.</strong> App icons are loaded from the addresses the repositories list; turn
+           off &ldquo;Allow repository icons/images&rdquo; and no image requests are made. The
+           one-tap download of the SAI installer always comes from F-Droid, even if F-Droid is
+           switched off for searching.</p>
+        <p>Device profiling, compatibility checks and inspection of downloaded apps all run on the
+           device. Your device profile, download history and diagnostic log never leave it unless
+           you export them yourself. It contains no analytics, advertising or Google services
+           libraries, and it does not ask for your location.</p>
+
+        <h2>Face Assistant — face data</h2>
+        <p>Face Assistant makes no network requests. To recognise people it stores, on your Mac,
+           the names you confirm and <strong>face embeddings</strong> — numerical descriptions of
+           faces, which are biometric data about the people in your photographs — together with
+           face positions, your review decisions and the keywords you linked. They are kept in a
+           database readable only by your user account, in your Library folder, with backups
+           beside it, and are shared across your Lightroom catalogs. Its log records operations
+           and outcomes, not names, paths or images. An export you create contains names and
+           embeddings wherever you save it, so handle it as carefully as the photographs.</p>
+
         <h2>This website</h2>
         <p>This site sets no cookies and runs no analytics. Three things are worth naming:</p>
         <ul>
@@ -189,7 +235,7 @@
   <footer class="site-foot">
     <div class="site-foot-inner">
       <span>Bluebonnet Studios</span>
-      <span>Catalog updated 2026-08-29 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+      <span>Catalog updated 2026-09-16 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
     </div>
   </footer>
   <script src="theme.js"></script>

@@ -62,9 +62,9 @@ while IFS= read -r line; do
   esac
 
   if [ -n "$sub" ]; then
-    # One app out of a repository holding several — the Lightroom plugin
-    # bundles. A repository-wide release tag cannot version two plugins
-    # separately, so the version comes from the plugin's own Info.lua.
+    # A Lightroom plugin. Plugins are versioned in Info.lua, and a repository
+    # holding several could not version them with one release tag, so the
+    # version comes from the plugin folder's own Info.lua.
     info="$(gh api "repos/$repo/contents/$sub/Info.lua" --jq '.content' 2>/dev/null | base64 -d 2>/dev/null)"
     if [ -z "$info" ]; then
       echo "fetch: $repo/$sub has no Info.lua — keeping the catalogued version" >&2
@@ -80,7 +80,11 @@ while IFS= read -r line; do
     # stdout, so the exit status is what decides — not whether output is empty.
     ver=""
     if tag="$(gh api "repos/$repo/releases/latest" --jq '.tag_name // ""' 2>/dev/null)"; then
-      ver="${tag#v}"
+      # Some repositories tag releases with a product prefix
+      # (project2excel-v1.0.12); strip "<prefix>-v" as well as a bare leading
+      # "v", but only where a digit follows, so a tag that is not a version
+      # is left visible rather than mangled.
+      ver="$(printf '%s' "$tag" | sed -E 's/^([A-Za-z0-9_.-]*-)?v([0-9])/\2/')"
     fi
 
     # A tag pushed without a GitHub Release still identifies a version, and

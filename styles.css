@@ -51,6 +51,9 @@
   --spot:#FCFBF4;          /* the pale banner spot on the mark */
   --shadow:0 1px 3px rgba(16,22,58,.045), 0 8px 24px rgba(16,22,58,.045);
 
+  --art-on-light:block;    /* which copy of lettered art displays */
+  --art-on-dark:none;
+
   --display:"Newsreader", Georgia, "Times New Roman", serif;
   --ui:"Archivo", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -96,6 +99,9 @@
 
     --spot:#E6E3CE;
     --shadow:0 1px 3px rgba(0,0,0,.30);
+
+    --art-on-light:none;
+    --art-on-dark:block;
   }
 }
 :root[data-theme="dark"]{
@@ -130,6 +136,9 @@
 
   --spot:#E6E3CE;
   --shadow:0 1px 3px rgba(0,0,0,.30);
+
+  --art-on-light:none;
+  --art-on-dark:block;
 }
 
 /* ---------- base ------------------------------------------- */
@@ -678,9 +687,13 @@ table.roster{ width:100%; border-collapse:collapse; font-size:14px; }
 /* ---------- page art --------------------------------------- */
 /* One ornament per page, placed by its shape. Every one is decorative:
    empty alt, aria-hidden, and never carrying information the text does not.
-   Images are RGBA, so they sit on either theme's ground unaltered. */
+   Images are RGBA, so they sit on either theme's ground unaltered — except
+   art with lettering in it, which ships a copy per theme and lets the
+   --art-on-* tokens choose. */
 .art{ pointer-events:none; }
 .art img{ display:block; max-width:100%; height:auto; }
+.art .art-on-light{ display:var(--art-on-light); }
+.art .art-on-dark{ display:var(--art-on-dark); }
 
 /* the arch that crowns the home page */
 .art-crown{
@@ -726,3 +739,42 @@ table.roster{ width:100%; border-collapse:collapse; font-size:14px; }
 }
 .prose td{ padding:10px 14px 10px 0; border-bottom:1px solid var(--line); color:var(--dim); vertical-align:top; }
 .prose td strong{ color:var(--ink); font-weight:600; }
+
+/* ---------- downloads page --------------------------------- */
+/* A file's table sits inside its tool's detail block and borrows the roster's
+   layout, including the stacked form on narrow screens. */
+.detail .tablewrap{ margin-top:4px; }
+.downloads .file{
+  font-family:var(--mono); font-size:12.5px; color:var(--ink); overflow-wrap:anywhere;
+}
+/* A SHA-256 is copied, not read, so it wraps rather than being elided: a
+   truncated checksum cannot be checked. 32ch splits it into two equal lines. */
+.downloads .hash{ font-size:12px; color:var(--dim); }
+.downloads .hash code{
+  display:block; max-width:32ch; font-family:var(--mono); font-size:11px;
+  line-height:1.55; word-break:break-all;
+}
+
+/* Release notes, READMEs and user guides, rendered from Markdown by GitHub's
+   renderer at fetch time. Their headings arrive two levels down, under the
+   page's own section labels. */
+.doc{ max-width:72ch; }
+.doc h3{ font-family:var(--display); font-size:21px; font-weight:500; color:var(--ink); margin:28px 0 10px; }
+.doc h4{ font-family:var(--display); font-size:17px; font-weight:500; color:var(--ink); margin:24px 0 8px; }
+.doc h5, .doc h6{ font-family:var(--ui); font-size:14px; font-weight:600; color:var(--ink); margin:20px 0 6px; }
+.doc > :first-child{ margin-top:0; }
+.doc ol{ margin:0 0 18px; padding-left:22px; font-size:14.5px; color:var(--dim); }
+.doc ol li{ margin-bottom:9px; line-height:1.68; }
+.doc li > ul, .doc li > ol{ margin:8px 0 0; }
+.doc code{ font-family:var(--mono); font-size:.9em; }
+.doc pre{
+  overflow-x:auto; padding:12px 14px; margin:0 0 18px;
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius-sm);
+}
+.doc blockquote{ margin:0 0 18px; padding:2px 0 2px 14px; border-left:2px solid var(--line-strong); }
+.doc .markdown-alert{ margin:0 0 18px; padding:10px 14px; border-left:2px solid var(--blue); background:var(--panel); }
+.doc .markdown-alert-title{ display:flex; align-items:center; gap:6px; font-weight:600; color:var(--ink); }
+.doc .markdown-alert svg{ fill:currentColor; }
+.doc .task-list-item{ list-style:none; }
+/* a wide table scrolls inside the document instead of widening the page */
+.doc table{ display:block; overflow-x:auto; }

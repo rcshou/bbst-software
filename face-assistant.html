@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Restore Missing Photos — Bluebonnet Studios</title>
-  <meta name="description" content="A Lightroom Classic plugin that finds files matching photos the catalog reports as missing and puts them back where the catalog expects them." />
+  <title>Face Assistant — Bluebonnet Studios</title>
+  <meta name="description" content="An offline face-recognition plugin for Lightroom Classic on Apple Silicon Macs that learns people from faces you confirm and applies your existing person keywords only when you say so." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -49,13 +49,13 @@
     <div class="page-head-inner">
       <div>
         <p class="eyebrow"><a href="lightroom-plugins.html">Lightroom Plugins</a></p>
-        <h1>Restore Missing Photos</h1>
-        <p class="subtitle">Put the files Lightroom lost back where the catalog expects them</p>
+        <h1>Face Assistant</h1>
+        <p class="subtitle">Name the people in your photographs, on your own Mac</p>
         <div class="head-meta">
-          <span class="chip is-private">Private release</span>
-          <span class="ver">Version 1.23.3 &middot; Plugin</span>
+          <span class="chip is-beta">Beta</span>
+          <span class="ver">Version 0.3.7 &middot; Plugin · macOS</span>
         </div>
-        <p>Lightroom marks a photo as missing when the file moves out from under it. This searches the folders you point it at for files matching those photos and puts them back at the paths the catalog still expects.</p>
+        <p>Finds faces in the photographs you select, learns who people are only from the faces you confirm, and applies the person keywords you already use — on your own Mac, with no cloud service, and nothing written until you press apply.</p>
       </div>
     </div>
   </div>
@@ -73,31 +73,43 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>What it is for</h2>
-<p>Lightroom records where every photograph lives. Move the files with Finder, restore from a backup to a different path, or swap a drive letter, and the catalog is left pointing at places nothing exists — every affected photo marked missing, all its edits and metadata intact but detached from any actual pixels.</p>
-<p>The files usually still exist. They are on the backup drive, or the NAS, or the old disk in a drawer. What is missing is the correspondence between the catalog&rsquo;s expected path and where the file actually sits now. This plugin rebuilds that correspondence and, if you want, copies the files back to the paths the catalog already expects — so no relinking is needed afterwards.</p>
+<h2>How it works</h2>
+<p>One menu item, <strong>Library &gt; Plug-in Extras &gt; Face Assistant…</strong>, opens a
+   console that stays beside the Library and follows your selection. From there you find faces in
+   the selected photographs, import the person keywords your catalog already carries as a starting
+   point, review unnamed faces — one known person at a time, ranked by resemblance, or in
+   similarity groups you can name together — and apply the confirmed names.</p>
+<ul>
+  <li><strong>No selection, no scan.</strong> There is no background pass over the whole catalog.</li>
+  <li><strong>It learns only from faces you confirm.</strong> A group action applies to exactly the faces ticked when you press it, and the last one can be undone.</li>
+  <li><strong>Names are compared sensibly.</strong> Accents and case are folded for Latin letters, so <em>Zoe</em> and <em>Zoë</em> are one person — but not for Cyrillic, where the mark is what separates two different letters.</li>
+  <li><strong>A read-only keyword check</strong> reports person keywords that look like duplicates of each other.</li>
+</ul>
 
-<h2>The workflow</h2>
-<p>Use Lightroom&rsquo;s own <strong>Find All Missing Photos</strong>, select what you want to recover, and run the plugin. It shows the paths the catalog is expecting, and optionally saves them to a text file for reference. Then you point it at a folder that might contain replacements — a backup drive, a NAS share, an old export — and it scans.</p>
-<p>The selection is captured when the workflow starts and held for its whole duration, so it survives you clicking around in Lightroom mid-scan. It is discarded when the workflow ends.</p>
-
-<h2>Indexing, and why it counts rather than estimates</h2>
-<p>Indexing walks the chosen folder once. There is deliberately no preliminary counting pass, because counting the tree takes about as long as indexing it and would nearly double the wait for a progress bar. So the dialog shows a running count — <em>Indexing files… (1,250 indexed)</em> — rather than a percentage it would have to invent. It can be cancelled, and a cancelled index is discarded rather than half-used.</p>
-<p>Each folder&rsquo;s index is kept in memory for the rest of the Lightroom session. Scanning the same share again — including on a later <em>Search Another Folder</em> pass — reuses it instead of walking the tree a second time. Nothing is written to disk, and a plugin reload or a Lightroom restart always forces a fresh scan.</p>
-<p>Because a reused index describes the folder as it was earlier, every match is verified to still exist immediately before it is accepted. One that has since moved is dropped from the index so it is not offered again, and the results report how many were caught that way.</p>
-
-<h2>When something goes wrong</h2>
-<p>If the source disk or NAS share disconnects part-way through, you get an explicit <strong>Indexing Failed</strong> error with a path to the error log — not a generic Lightroom task failure, and not a results screen full of &ldquo;not found&rdquo; that looks like a completed scan. An incomplete index is never treated as a finished one. That distinction is the difference between retrying a scan and wrongly concluding your backup does not have the files.</p>
-
-<h2>Duplicates</h2>
-<p>When several files match one missing photo, you choose how it behaves: <strong>manual review</strong>, where you decide each case, or <strong>first match</strong>, where it takes the first and keeps moving. The active mode is shown in the folder-picker title before every scan, so it is never a surprise, and it can be changed from the plugin&rsquo;s menu or from Plug-in Manager — both read and write the same setting.</p>
-
-<h2>What it does not do</h2>
+<h2>Your keywords stay yours</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Touching your catalog.</strong> The plugin copies files into place. It does not rewrite catalog paths, edit metadata, or modify the originals it finds.</p>
-  <p><strong>Searching anything you did not point it at.</strong> It reads the folders you choose and the photos you selected, and nothing else.</p>
+  <p><strong>Inventing its own names and hierarchy.</strong> It works with the person keywords already in Lightroom&rsquo;s Keyword List, and never creates, renames or deletes one. Names reach your photographs only when you press <strong>Apply confirmed names</strong>, and only as keywords you chose. Taking a wrongly imported name off a photograph is a separate action that asks first.</p>
 </div>
+
+<h2>Where the data lives</h2>
+<p>Everything runs on your Mac. The plugin makes no network requests: the model download buttons
+   open the model pages in your browser, and you place the files yourself. The people it knows and
+   their face data are kept in a local database in your user Library folder, shared across your
+   catalogs, with backups beside it. That database holds face embeddings — biometric data about
+   the people in your photographs — so treat an export of it as carefully as the photographs
+   themselves.</p>
+
+<h2>Status, stated plainly</h2>
+<p>Version 0.3 is an early release for Lightroom Classic 15 and later, on <strong>Apple Silicon
+   Macs only</strong>, running on the CPU, and it has been tested in Lightroom Classic on a Mac. Its
+   matching thresholds have not been measured against a benchmark set, so treat every proposed
+   match as a suggestion to review. It is not yet signed or notarised.</p>
+<h2>Licensing</h2>
+<p>The plugin is licensed under Apache&nbsp;2.0. No model weights are included: the default models
+   are published under the MIT and Apache&nbsp;2.0 licences, and an optional alternative backend uses
+   weights released <strong>for non-commercial research only</strong>, which you would be bound by if
+   you chose it.</p>
         </div>
 
         <div class="tool-side">
@@ -106,9 +118,9 @@
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
-            <div><dt>Version</dt><dd>1.23.3</dd></div>
-            <div><dt>Status</dt><dd>Private release</dd></div>
-            <div><dt>Platform</dt><dd>Plugin</dd></div>
+            <div><dt>Version</dt><dd>0.3.7</dd></div>
+            <div><dt>Status</dt><dd>Beta</dd></div>
+            <div><dt>Platform</dt><dd>Plugin · macOS</dd></div>
             <div><dt>Category</dt><dd><a href="lightroom-plugins.html">Lightroom</a></dd></div>
             <div><dt>License</dt><dd>Apache-2.0</dd></div>
             <div><dt>Copyright</dt><dd>Bluebonnet Studios</dd></div>
@@ -116,22 +128,14 @@
           </dl>
           <div class="aside-act">
             <a class="btn" href="index.html#access">Request</a>
-            <p>Built and versioned, distributed on request rather than published.</p>
-            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Restore%20Missing%20Photos">Ask about Restore Missing Photos</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+            <p>No public download yet; distributed on request.</p>
+            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Face%20Assistant">Ask about Face Assistant</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
-        <aside class="release-box" aria-labelledby="rel-restore-missing-photos">
-          <p class="release-kicker" id="rel-restore-missing-photos">New in 1.23.3</p>
-          <ul>
-            <li><b>Virtual copies are handled once.</b> Selected virtual copies that share one file are processed together, so nothing is restored twice and the totals are right.</li>
-            <li><b>Windows network paths are recognised consistently</b>, including network paths written with forward slashes.</li>
-            <li><b>A failed copy names every file it affected</b>, with a clear next step when an incomplete destination blocks a retry.</li>
-            <li><b>Reports never replace an existing file silently</b>, and folders skipped by the depth safety limit are listed.</li>
-          </ul>
-        </aside>
+
         </div>
         </div>
-      <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+      <div class="art art-column"><img src="assets/bluebonnet-side-right.png" width="380" height="950" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>
       </div>
 

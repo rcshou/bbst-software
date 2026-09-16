@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Download APK Finder 0.21.5 — Bluebonnet Studios</title>
+  <meta name="description" content="Download APK Finder 0.21.5: files with SHA-256 checksums, release notes, README and user guide." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Apply the stored theme before first paint so the page never flashes. */
+    (function(){try{var t=localStorage.getItem("bbst-theme");
+    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <svg class="mark" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
+          <rect class="stem" x="6.3" y="7" width="1.4" height="9" rx="0.7" />
+          <circle class="petal" cx="7" cy="3.6" r="3.6" />
+          <circle class="spot" cx="7" cy="2.6" r="1.15" />
+        </svg>
+        Bluebonnet Studios
+      </a>
+      <div class="topbar-right">
+        <nav class="mainnav" aria-label="Primary">
+          <a href="index.html">Catalog</a>
+          <a href="downloads.html" aria-current="page">Downloads</a>
+          <a href="about.html">About</a>
+          <a href="index.html#access">Access</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 1.5A6.5 6.5 0 0 1 8 14.5Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="page-head">
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow"><a href="downloads.html">Downloads</a></p>
+        <h1>APK Finder <span class="hl">0.21.5</span></h1>
+        <div class="head-meta">
+          
+          <span class="ver">Published 2026-09-15</span>
+        </div>
+        <p><a href="#files">Files</a> &middot; <a href="#notes">Release notes</a> &middot;
+           <a href="#readme">README</a> &middot; <a href="#guide">User guide</a> &middot;
+           <a href="apk-finder.html">About APK Finder</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Categories">
+      <h2>Categories</h2>
+      <a href="index.html">All tools <em>16</em></a>
+      <a href="business-tools.html">Business <em>5</em></a>
+      <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
+      <a href="lightroom-plugins.html">Lightroom <em>6</em></a>
+      <a href="geoscience-tools.html">Geoscience <em>3</em></a>
+      <p class="rail-note">Published builds are listed under Downloads. Everything else is distributed on request.</p>
+    </nav>
+    <main class="content" id="main">
+      <section id="files">
+        <p class="section-label">Files</p>
+            <div class="tablewrap">
+              <table class="roster downloads">
+                <thead>
+                  <tr>
+                    <th scope="col">File</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">SHA-256</th>
+                    <th scope="col"><span class="visually-hidden">Download</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="file" data-label="File">APKFinder-0.21.5-release.apk</td>
+                    <td class="num" data-label="Size">14.1 MB</td>
+                    <td class="hash" data-label="SHA-256"><code>41c623cea96865a5eb4ac2157a4a81919f3f472fa6f9f998718ba2869d52dd00</code></td>
+                    <td class="act" data-label="Get"><a class="btn" href="https://github.com/rcshou/bbst-downloads/releases/download/apk-finder-v0.21.5/APKFinder-0.21.5-release.apk">Download<span class="visually-hidden"> APKFinder-0.21.5-release.apk</span></a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+      </section>
+
+      <section>
+        <p class="section-label">Checking a download</p>
+        <div class="prose">
+          <p>Compare the checksum of the file you downloaded with the one listed above. They must match
+             exactly; if they do not, delete the file and download it again.</p>
+          <ul>
+            <li><strong>Windows</strong> — in PowerShell, <code>Get-FileHash .\file-name</code></li>
+            <li><strong>macOS and Linux</strong> — in Terminal, <code>shasum -a 256 file-name</code></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="notes">
+        <p class="section-label">Release notes</p>
+        <div class="prose doc">
+<h5 class="heading-element">Installing</h5>
+<ul>
+<li>
+<p>Every Install button now checks the file before installing. Before, only Install straight after a download (with <strong>Inspect APK after download</strong> on) or on the <strong>Details</strong> screen checked the signature and compatibility. The Install button in Downloads, and on a download you came back to later, checked only the checksum. Now:</p>
+<ul>
+<li>it warns you and asks you to confirm if the app is signed by someone else or may not work fully on your device;</li>
+<li>it refuses a file Android can't install on this device, and says why.</li>
+</ul>
+<p>The check can take a few seconds for a large app; the button shows <em>Checking…</em> meanwhile.</p>
+</li>
+<li>
+<p><strong>Open installer automatically</strong> now waits for the inspection. With <strong>Inspect APK after download</strong> off, it no longer opens the installer on the checksum alone; tap Install instead.</p>
+</li>
+</ul>
+<h5 class="heading-element">Good to know</h5>
+<ul>
+<li>The privacy description now mentions that <strong>Download and install SAI</strong> always contacts F-Droid, even when F-Droid is switched off for searching.</li>
+<li>The warning on search results now says the repository flags the app for non-free dependencies <em>or tracking</em>, because it appears for both. Before, an app flagged only for tracking was described as depending on a non-free service.</li>
+<li>Settings text is more precise about where downloads are stored and about touch targets, which are larger on every screen, not only wide ones.</li>
+</ul>
+        </div>
+      </section>
+
+      <section id="readme">
+        <p class="section-label">README</p>
+        <div class="prose doc">
+<h3 class="heading-element">APK Finder</h3>
+<p>APK Finder finds, checks and installs Android apps on devices that have no Google Play
+Services: Chinese-market car head units first of all, and just as well custom ROMs and
+degoogled phones.</p>
+<p>Most app finders assume Google is there. APK Finder checks what your device actually has —
+Google Play Services, the Play Store, microG, Huawei Mobile Services, or none of them — and
+tells you, before you install, whether an app will run and what it may lose.</p>
+<h4 class="heading-element">What you need</h4>
+<ul>
+<li>Android 8.0 or later.</li>
+<li>Permission to install apps from outside an app store. Android asks for this the first time
+you install something that did not come from a store: once for the browser or file manager
+you use to open the APK Finder file, and once for APK Finder itself when it installs an app
+for you.</li>
+</ul>
+<h4 class="heading-element">Installing APK Finder</h4>
+<ol>
+<li>Download <code>APKFinder-0.21.5-release.apk</code>.</li>
+<li>Optionally, check the file: its SHA-256 checksum is listed on the download page. It must
+match exactly.</li>
+<li>Open the file on the device and allow the install when Android asks.</li>
+</ol>
+<p>If you already use a copy of APK Finder that you built yourself, or got from somewhere else
+with a different signing key, Android will not update it. Uninstall that copy first; note that
+uninstalling deletes its settings and download history.</p>
+<h4 class="heading-element">First steps</h4>
+<ol>
+<li>Open APK Finder, type an app name into <strong>Search apps…</strong> and tap <strong>Search</strong>.</li>
+<li>In a result, tap one of the repository lines to open the app's details, with its versions
+and a first compatibility estimate. APK Finder profiles your device the first time it needs
+to.</li>
+<li>Tap <strong>Download</strong>. When the file arrives, it is checked against the repository's checksum
+(where the repository publishes one) and inspected, and the result shows what was found.</li>
+<li>Tap <strong>Install</strong>. If anything needs your attention, the button reads <strong>Install…</strong> and lists
+every warning before you decide. Wherever you tap Install, a file that has not been
+inspected yet is checked first.</li>
+</ol>
+<p>The <a href="#guide">user guide</a> explains every screen and setting.</p>
+<h4 class="heading-element">Privacy in short</h4>
+<ul>
+<li>No account, no telemetry, no analytics, no advertising.</li>
+<li>Compatibility checks, device profiling and file inspection run on the device.</li>
+<li>It contacts the app repositories you enable. F-Droid is on by default; IzzyOnDroid and
+APKPure are off. With APKPure enabled, your search terms are sent to apkpure.com. The one
+exception: installing the SAI bundle installer from settings always contacts F-Droid.</li>
+</ul>
+<p>The full privacy policy is at <a href="https://dev.bbst.us/privacy.html" rel="nofollow">https://dev.bbst.us/privacy.html</a></p>
+<h4 class="heading-element">Tested on</h4>
+<p>This release was tested on an Android 13 system without Google services. It has not yet been
+tested on Android 14 or on a BYD head unit.</p>
+<h4 class="heading-element">Help</h4>
+<p>Questions: <a href="https://github.com/rcshou/bbst-software/discussions">https://github.com/rcshou/bbst-software/discussions</a> — problems:
+<a href="https://github.com/rcshou/bbst-software/issues/new/choose">https://github.com/rcshou/bbst-software/issues/new/choose</a> — or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+<p>APK Finder is licensed under the Apache License 2.0. Copyright Bluebonnet Studios.</p>
+        </div>
+      </section>
+
+      <section id="guide">
+        <p class="section-label">User guide</p>
+        <div class="prose doc">
+<h3 class="heading-element">APK Finder user guide</h3>
+<p>For APK Finder 0.21.5.</p>
+<h4 class="heading-element">How it works</h4>
+<p>APK Finder searches app repositories, estimates whether an app suits your device, downloads
+the file, checks the downloaded file, and then hands it to Android's own installer. It never
+installs anything silently and needs no root access.</p>
+<p>Compatibility is judged twice:</p>
+<ul>
+<li>
+<strong>Preliminary</strong> — from the repository's information, before you download anything. Some
+things, such as required device features and Google dependencies, cannot be known until the
+file is downloaded, so an app with no known problems shows <em>Likely compatible</em> rather than
+<em>Compatible</em> at this stage.</li>
+<li>
+<strong>Authoritative</strong> — from the downloaded file itself, checked against your actual device.
+This is the result to trust.</li>
+</ul>
+<p>APK Finder profiles your device the first time it needs to, for example when you first open an
+app's details.</p>
+<h4 class="heading-element">Searching</h4>
+<p>Type into <strong>Search apps…</strong> and tap <strong>Search</strong>. Every enabled repository is searched at the same
+time, and results for the same app from different repositories are merged into one entry. If a
+repository cannot be reached, a line above the results says so for that repository, and results
+from the others are still shown.</p>
+<p>Each result lists the repositories that have the app. Tap one of those lines to open the app's
+details from that repository.</p>
+<p>Recent searches appear under the search field as shortcuts. You can clear them in
+<strong>Settings &gt; Privacy &amp; Storage</strong>.</p>
+<p>A result marked <em>⚠ The repository flags this app for non-free dependencies or tracking (often
+Google Play Services or analytics; unconfirmed until downloaded)</em> is one that F-Droid or
+IzzyOnDroid has flagged as depending on non-free components or as tracking its users. APKPure
+results are never flagged.</p>
+<p>On some BYD head units, APK Finder may detect the vehicle model and DiLink version and show them
+under the app name at the top of the search screen. Detection is best-effort; nothing is shown
+if they cannot be detected.</p>
+<h4 class="heading-element">App details</h4>
+<p>The app's details show its <strong>Available versions</strong>. For each version you see its preliminary
+compatibility, where it comes from and its package format (a standard APK, or a bundle such as
+XAPK), its minimum and target Android versions (SDK) and its size, and its CPU architectures
+(ABIs) when the repository lists them.</p>
+<p>By default only the newest version that passes your filters is shown, and versions that are
+incompatible or uncertain are hidden. When versions are hidden, the screen says how many;
+<strong>Settings &gt; Search &amp; Compatibility</strong> controls this.</p>
+<h4 class="heading-element">Compatibility results</h4>
+<p>Each check gets one of these results:</p>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compatible</td>
+<td>The check passed.</td>
+</tr>
+<tr>
+<td>Likely compatible</td>
+<td>Nothing wrong was found, but not everything could be confirmed.</td>
+</tr>
+<tr>
+<td>Warning</td>
+<td>The app will install, but something may not work. For <strong>Package format</strong>, it means Android's own installer cannot open the file.</td>
+</tr>
+<tr>
+<td>Incompatible</td>
+<td>Android will refuse to install it, or it cannot run on this device.</td>
+</tr>
+<tr>
+<td>Unknown</td>
+<td>There was not enough information to decide this check.</td>
+</tr>
+</tbody>
+</table>
+<p>The checks are:</p>
+<ul>
+<li>
+<strong>Android version</strong> — whether the app supports this device's Android version.</li>
+<li>
+<strong>Install policy</strong> — Android 14 and later refuse apps built for very old Android versions.</li>
+<li>
+<strong>CPU architecture</strong> — whether any native code in the app is built for this device's
+processor. An app with no native code runs on any processor.</li>
+<li>
+<strong>Device features</strong> — hardware or software features the app says it requires. If one is
+missing, Android installs the app anyway, but the functions that need it may not work.</li>
+<li>
+<strong>System libraries</strong> — libraries the app requires, such as Google Maps' library. If one is
+missing, Android refuses to install the app.</li>
+<li>
+<strong>Google services</strong> — see below.</li>
+<li>
+<strong>Display</strong> — not evaluated in this version.</li>
+<li>
+<strong>Package format</strong> — whether the file is a standard APK or a split-APK bundle.</li>
+</ul>
+<h5 class="heading-element">Google services</h5>
+<p>After download, APK Finder checks the app's manifest for references to Google Play Services and
+Firebase. The app's details show the overall result, such as <em>Google dependency: Some features
+may not work</em>. The <strong>Details</strong> screen names each finding — for example Google Maps, Google
+Sign-In, Play Integrity, Play Billing, push messaging, Google location or Google Cast — with its
+likely effect on a device without Google services, rated low, medium or high impact. Some
+examples:</p>
+<ul>
+<li>Maps may fail or show a blank map.</li>
+<li>Sign-in may fail if it is the app's only way to log in.</li>
+<li>The app may be blocked at startup or login if it requires Play Integrity.</li>
+<li>In-app purchases may fail while the rest of the app works.</li>
+<li>Apps that only use Google analytics or advertising are not expected to lose anything.</li>
+</ul>
+<p>When some or most features are likely to depend on Google and microG is installed, the result
+says that microG may cover some of them.</p>
+<h4 class="heading-element">Downloading</h4>
+<p>Tap <strong>Download</strong> on a version. Progress is shown on that version in the app's details, and in a
+notification. On Android 13 and later, APK Finder asks for permission to show notifications when
+you start a download, until you allow it; the download works either way. The download keeps going if you leave
+the screen or switch to another app, such as navigation. To stop it, open the app's details
+again and tap <strong>Cancel</strong> on that version.</p>
+<p>When the file arrives, APK Finder compares its SHA-256 checksum with the one the repository
+published:</p>
+<ul>
+<li>
+<em>✓ SHA-256 verified</em> — it matches;</li>
+<li>
+<em>⚠ SHA-256 does not match the repository's published hash</em> — the file may be corrupted or
+tampered with;</li>
+<li>
+<em>Not verified: the repository publishes no hash</em> — there was nothing to compare with;</li>
+<li>
+<em>Not verified: verification is off in Settings</em>.</li>
+</ul>
+<p>For a standard APK, and as long as <strong>Inspect APK after download</strong> is on, it then inspects the
+file straight away:</p>
+<ol>
+<li>it reads the package name and version, supported Android versions, CPU architectures,
+required libraries, requested permissions and signing certificates;</li>
+<li>it compares the signing certificate with the one the repository lists, and with the version
+already installed on the device, if there is one;</li>
+<li>it runs the authoritative compatibility checks.</li>
+</ol>
+<p>Split-APK bundles are not inspected. They come from APKPure, which publishes no checksum, so they
+are not verified either. Downloads are kept in APK Finder's own storage folder on the device.</p>
+<h4 class="heading-element">Installing</h4>
+<p>What you see depends on the result:</p>
+<ul>
+<li>
+<strong>Install</strong> — nothing needs your attention, or the file has not been inspected yet. If it has
+not, tapping Install first runs the same checks as after a download; the button reads
+<em>Checking…</em> meanwhile, which can take a few seconds for a large app. Then Android's installer
+opens, the warnings are listed as for <strong>Install…</strong>, or <em>Can't install</em> explains why the file
+cannot be installed on this device.</li>
+<li>
+<strong>Install…</strong> — there is at least one warning. Tapping it lists every warning; choose
+<strong>Install anyway</strong> to continue, or <strong>Cancel</strong>.</li>
+<li>
+<strong>No install button</strong> — a check found the app incompatible, and the reason is shown instead;
+or the automatic inspection failed, and <strong>Details</strong> retries it. The Downloads list also shows
+no Install button once that version is installed or its file is gone.</li>
+<li>
+<strong>Export…</strong> — the file is a split-APK bundle (see below), or a file whose format APK Finder
+does not recognize.</li>
+</ul>
+<p>The warnings are:</p>
+<ul>
+<li>the checksum does not match what the repository published;</li>
+<li>the app is signed with a different certificate than the repository lists;</li>
+<li>the app is signed differently from the version already installed. Android will refuse this
+update unless you uninstall the existing app first, <strong>which deletes that app's data</strong>;</li>
+<li>the app may not work fully on this device, for example because of a Google dependency or a
+missing feature.</li>
+</ul>
+<p>No setting turns these warnings off, and they are the same wherever you tap Install: on the
+app's details, in the Downloads list, or on the <strong>Details</strong> screen. The signing and compatibility
+checks look at the device as it is when you tap. One exception: with <strong>Verify downloads</strong> off,
+the checksum is not compared, so the checksum warning cannot appear.</p>
+<p>If APK Finder is not yet allowed to install apps, tapping Install opens the system screen where
+you allow it. If the device has no shortcut to that screen, APK Finder says so; look for
+<strong>Install unknown apps</strong> in the system settings.</p>
+<h5 class="heading-element">Split-APK bundles (XAPK, APKM, APKS)</h5>
+<p>Some downloads, mostly from APKPure, are bundles of several files rather than one APK. Android's
+installer cannot open them, so they are marked with a warning. While <strong>Compatible with this
+device only</strong> is on, they are hidden unless <strong>Include uncertain compatibility</strong> is also on.</p>
+<p>To install a bundle you need SAI (Split APKs Installer), a free, open-source installer:</p>
+<ol>
+<li>Install SAI from <strong>Settings &gt; Downloads &amp; Installation &gt; Download and install SAI</strong>. It comes
+from F-Droid, even if F-Droid is switched off for searching, and it is deleted again if it
+does not match F-Droid's published SHA-256.</li>
+<li>On the downloaded bundle, tap <strong>Export…</strong> and save it somewhere SAI can reach, such as
+Downloads.</li>
+<li>Open SAI and pick the file.</li>
+</ol>
+<p>APKM and APKS bundles also offer <strong>Open with…</strong>, which lets you choose SAI to open the file
+directly.</p>
+<h4 class="heading-element">Downloads screen</h4>
+<p><strong>Downloads</strong> lists your finished downloads. Each entry shows the version, source, format and
+size, the checksum result, when it was downloaded, and whether it is installed:</p>
+<ul>
+<li><em>✓ This version is installed</em></li>
+<li><em>An older version (…) is installed; this download is an update</em></li>
+<li><em>A newer version (…) is installed</em></li>
+<li>
+<em>Install requested — waiting to confirm</em> — Android's installer was opened. When you come back
+to the Downloads screen, it changes to <em>✓ This version is installed</em> if the install finished;
+if you cancelled the installer, it stays as it is. If another version of the app is on the
+device, the older- or newer-version line is shown instead while you wait.</li>
+<li><em>Not installed</em></li>
+</ul>
+<p><strong>Details</strong> (standard APKs whose file is still there) inspects the file again and shows every
+finding. <strong>Delete</strong> asks
+for confirmation, then removes the file and its history entry.</p>
+<h4 class="heading-element">Settings</h4>
+<h5 class="heading-element">Repositories</h5>
+<table>
+<thead>
+<tr>
+<th>Repository</th>
+<th>Default</th>
+<th>About it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F-Droid</td>
+<td>On</td>
+<td>Free and open-source apps, with signing information and direct APK files.</td>
+</tr>
+<tr>
+<td>IzzyOnDroid</td>
+<td>Off</td>
+<td>A larger F-Droid-compatible catalogue, including some copies of proprietary apps. Review what you install from here.</td>
+</tr>
+<tr>
+<td>APKPure</td>
+<td>Off</td>
+<td>A third-party copy of Play Store apps, mostly proprietary. APK Finder reads its public pages the way a browser would. If APKPure blocks automated requests, it shows as unavailable; APK Finder does not try to get around that.</td>
+</tr>
+</tbody>
+</table>
+<p>The F-Droid and IzzyOnDroid catalogues are downloaded to the device, so later searches start
+faster and work without a connection. Adding other repositories is not supported yet.</p>
+<h5 class="heading-element">Search &amp; Compatibility</h5>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prefer Google-free apps</td>
+<td>On</td>
+<td>Lists apps the repository flags for non-free dependencies or tracking after the rest.</td>
+</tr>
+<tr>
+<td>Compatible with this device only</td>
+<td>On</td>
+<td>Hides versions flagged as incompatible or uncertain.</td>
+</tr>
+<tr>
+<td>Include uncertain compatibility</td>
+<td>Off</td>
+<td>When the setting above is on, still shows versions with unresolved or warning-level checks, including split-APK bundles.</td>
+</tr>
+<tr>
+<td>Show older versions</td>
+<td>Off</td>
+<td>Lists every available version instead of only the newest.</td>
+</tr>
+</tbody>
+</table>
+<h5 class="heading-element">Downloads &amp; Installation</h5>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Verify downloads</td>
+<td>On</td>
+<td>Compares each file's SHA-256 with the repository's published hash.</td>
+</tr>
+<tr>
+<td>Inspect APK after download</td>
+<td>On</td>
+<td>Runs the checks right after each download. When off, the same checks run when you tap Install, or on <strong>Details</strong>.</td>
+</tr>
+<tr>
+<td>Open installer automatically</td>
+<td>Off</td>
+<td>Opens Android's installer when a download finishes and inspection finds nothing to confirm — only while <strong>Inspect APK after download</strong> is on, APK Finder is on screen, and it is already allowed to install apps.</td>
+</tr>
+<tr>
+<td>Delete APK after successful install</td>
+<td>Off</td>
+<td>Removes a file you installed from APK Finder the next time you open Downloads.</td>
+</tr>
+</tbody>
+</table>
+<p>The download location is fixed to APK Finder's own storage folder in this version.</p>
+<h5 class="heading-element">Device profile</h5>
+<p>Shows what APK Finder knows about the device: Android release, SDK level and security patch;
+manufacturer, brand, model and chip; supported CPU architectures; display resolution, density
+and smallest width; which of Google Play Services, the Google Play Store, microG and Huawei
+Mobile Services are present; whether APK Finder is allowed to install apps; and system interface
+details. After a system update, the profile is detected again the next time it is needed.</p>
+<ul>
+<li>
+<strong>Re-detect device</strong> reads everything again now.</li>
+<li>
+<strong>Copy diagnostic profile</strong> and <strong>Save diagnostic profile to file…</strong> produce a report to
+include when asking for help.</li>
+</ul>
+<h5 class="heading-element">Appearance</h5>
+<ul>
+<li>
+<strong>Theme</strong> — Follow system (default), Light or Dark.</li>
+<li>
+<strong>UI size</strong> — Normal (default), Large or Extra large. Buttons use larger touch targets on every
+screen, and content is capped in width and centred, which shows on wide screens such as head
+units and tablets. If the screen is viewed from a distance, try Large.</li>
+</ul>
+<h5 class="heading-element">Privacy &amp; Storage</h5>
+<ul>
+<li>
+<strong>Allow repository icons/images</strong> — on by default. Off shows a generic icon and makes no
+image requests.</li>
+<li>
+<strong>Clear search history</strong> — removes the recent-search shortcuts.</li>
+<li>
+<strong>Clear repository cache</strong> — deletes the downloaded F-Droid and IzzyOnDroid catalogues; the
+next search downloads them again.</li>
+<li>
+<strong>Manage downloaded APKs</strong> — opens Downloads.</li>
+</ul>
+<h5 class="heading-element">About</h5>
+<p>Shows the version, the licence and third-party licences. <strong>Export diagnostics</strong> saves the app
+version, the time of the export, the device profile and APK Finder's local log to a file you
+choose. Search terms are not logged, and nothing is sent anywhere.</p>
+<h4 class="heading-element">Troubleshooting</h4>
+<p><strong>"No repositories are enabled."</strong> Turn one on in <strong>Settings &gt; Repositories</strong>.</p>
+<p><strong>A repository shows as unavailable.</strong> It could not be reached, or, for APKPure, it is blocking
+automated requests. Try again later; the other repositories still work.</p>
+<p><strong>Android will not update an installed app.</strong> The new file is signed differently. The only way
+to install it is to uninstall the existing app first, which deletes its data.</p>
+<p><strong>Android refuses to install an app.</strong> Check the compatibility results: a missing system library,
+or an app built for a very old Android version on Android 14 and later, both cause this.</p>
+<p><strong>"Download incomplete" or a network error.</strong> Check the connection and download again.</p>
+<p><strong>A bundle cannot be installed.</strong> Install SAI and use <strong>Export…</strong>, as described above.</p>
+<p><strong>Asking for help.</strong> Include the version from <strong>Settings &gt; About</strong> and, if you can, a diagnostic
+export. Ask at <a href="https://github.com/rcshou/bbst-software/discussions">https://github.com/rcshou/bbst-software/discussions</a> or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+        </div>
+      </section>
+      <div class="art art-tail"><img src="assets/bluebonnet-footer.png" width="860" height="391" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+    </main>
+  </div>
+  <footer class="site-foot">
+    <div class="site-foot-inner">
+      <span>Bluebonnet Studios</span>
+      <span>Catalog updated 2026-09-16 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+    </div>
+  </footer>
+  <script src="theme.js"></script>
+</body>
+</html>

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project2Excel — Bluebonnet Studios</title>
-  <meta name="description" content="Convert Microsoft Project .mpp files into editable Excel workbooks — drawn Gantt chart, task data, resources, assignments and relations — on a machine that has never had Project installed." />
+  <title>vCard Cleaner — Bluebonnet Studios</title>
+  <meta name="description" content="A small desktop tool that searches vCard contact files and strips Outlook junk fields, embedded photos and unwanted values while leaving names and phone numbers alone." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -49,13 +49,13 @@
     <div class="page-head-inner">
       <div>
         <p class="eyebrow"><a href="business-tools.html">Business Tools</a></p>
-        <h1>Project2Excel</h1>
-        <p class="subtitle">Read a Microsoft Project schedule without Microsoft Project</p>
+        <h1>vCard Cleaner</h1>
+        <p class="subtitle">Contacts without the Outlook clutter</p>
         <div class="head-meta">
-          <span class="chip is-private">Private release</span>
-          <span class="ver">Version 1.0.12 &middot; Windows · macOS</span>
+          <span class="chip is-dev">In development</span>
+          <span class="ver">Version — &middot; macOS</span>
         </div>
-        <p>Opens a Microsoft Project <code>.mpp</code> file and writes a real Excel workbook — a drawn Gantt chart, the task data behind it, resources, assignments and relationships — on a machine that has never had Project installed.</p>
+        <p>Contacts exported from Outlook arrive carrying Exchange links, Microsoft-only fields and read-only notes that no other address book wants. This opens the <code>.vcf</code>, shows you what is in it, and removes the clutter while leaving names and phone numbers alone.</p>
       </div>
     </div>
   </div>
@@ -73,36 +73,27 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>What it is for</h2>
-<p>A Microsoft Project schedule is usually read by far more people than ever author one. The planner has Project; the engineers, the commercial team, the client and the subcontractors mostly do not, and buying each of them a licence to look at a Gantt chart is not a serious proposal. What those readers actually want is the schedule in the tool they already use all day.</p>
-<p>Project2Excel opens an <code>.mpp</code> file and writes a real Excel workbook — not a screenshot of a chart, and not a flat CSV dump that loses the hierarchy. The result is something a reader can filter, sort, comment on and paste into a report, on a machine that has never had Project installed.</p>
-
-<h2>What it produces</h2>
-<p>One workbook, with the schedule split across the sheets you would otherwise build by hand:</p>
+<h2>What it does</h2>
 <ul>
-  <li><strong>Gantt View</strong> — task hierarchy, durations, dates, progress and resources, with calendar-aware shading for nonworking days, milestone markers, critical-task highlighting, and thin FS/SS/FF/SF dependency connectors drawn behind the bars.</li>
-  <li><strong>Task Data</strong> — the filterable source data, with real task IDs, readable dependency notation, and baseline, actual, constraint and calendar fields.</li>
-  <li><strong>Resources</strong> — the project&rsquo;s resource catalog, with rate, calendar and contact fields.</li>
-  <li><strong>Assignments</strong> — task-to-resource assignments with resolved names, units, work and cost.</li>
-  <li><strong>Relations</strong> — one row per relationship, with endpoint IDs and names, type, lag and lag units.</li>
+  <li><strong>Search</strong> every field of every contact in a <code>.vcf</code> file, case-insensitively, with match counts.</li>
+  <li><strong>Clean Outlook Junk</strong> removes Microsoft- and Exchange-specific fields, Outlook links and read-only notes, and keeps Apple address-book fields by default.</li>
+  <li><strong>Remove Photos</strong> strips embedded contact pictures, which are often most of the size of a large export.</li>
+  <li><strong>Remove Lines With Term</strong> deletes matching values, but never touches names or phone numbers.</li>
+  <li><strong>Dry run and undo</strong> — preview a change before applying it, and step back through several.</li>
 </ul>
-<p>The Gantt is drawn with Excel&rsquo;s own primitives rather than pasted as a picture, so it stays legible when someone widens a column or changes the timescale.</p>
 
-<h2>How it reads the file</h2>
-<p>The <code>.mpp</code> format is not documented for outside use, so the conversion is done by MPXJ, a mature open-source Java library that reads Project files directly. That means a Java runtime is involved — but a trimmed one ships inside the application, along with the reader itself. There is no system-wide Java to install, no <code>JAVA_HOME</code> to set, and no version conflict with anything else on the machine.</p>
-
-<h2>Two ways to run it</h2>
-<p>A desktop application for Windows and macOS covers the ordinary case: pick a file, choose a timescale, write the workbook. A command-line interface covers the rest — batch conversion, scheduled jobs, or a pipeline step — with switches for output path, timescale and overwrite behaviour.</p>
-
-<h2>Installing it</h2>
-<p>The Windows installer defaults to a per-user install that needs no administrator rights, which matters on a locked-down corporate machine; an administrator can still choose an all-users install, and both modes can be driven unattended. On macOS the app is dragged out of its disk image in the usual way. The macOS build is checked at package time to confirm nothing in it links outside the bundle or the system frameworks.</p>
-
-<h2>What it does not do</h2>
+<h2>Your original stays put</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Being a Project editor.</strong> The conversion runs one way. Nothing you change in the workbook travels back to the <code>.mpp</code>, and the tool never modifies the file it read.</p>
-  <p><strong>Uploading your schedule to convert it.</strong> Everything happens on your machine, with a bundled reader and a bundled runtime. Project plans carry budgets, staffing and delivery dates; none of that needs to leave the desktop to become a spreadsheet.</p>
+  <p><strong>Saving over the file you opened.</strong> Save proposes a new, timestamped file name and refuses to write over the original. Choose some other existing file instead, and a backup copy of it is saved first.</p>
 </div>
+
+<h2>Status, stated plainly</h2>
+<p>An early utility written in Python with wxPython and used on macOS; Windows and Linux are
+   untested. It is licensed under Apache&nbsp;2.0 and has no version number yet. Actions apply straight away rather
+   than asking for confirmation, so use the dry run or undo. A contact that cannot be written back
+   is currently skipped without a warning, so compare contact counts before replacing an address
+   book with the result.</p>
         </div>
 
         <div class="tool-side">
@@ -111,24 +102,24 @@
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
-            <div><dt>Version</dt><dd>1.0.12</dd></div>
-            <div><dt>Status</dt><dd>Private release</dd></div>
-            <div><dt>Platform</dt><dd>Windows · macOS</dd></div>
+            <div><dt>Version</dt><dd>—</dd></div>
+            <div><dt>Status</dt><dd>In development</dd></div>
+            <div><dt>Platform</dt><dd>macOS</dd></div>
             <div><dt>Category</dt><dd><a href="business-tools.html">Business</a></dd></div>
             <div><dt>License</dt><dd>Apache-2.0</dd></div>
             <div><dt>Copyright</dt><dd>Bluebonnet Studios</dd></div>
             <div><dt>Updated</dt><dd>2026-09-16</dd></div>
           </dl>
           <div class="aside-act">
-            <a class="btn" href="index.html#access">Request</a>
-            <p>Built and versioned, distributed on request rather than published.</p>
-            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Project2Excel">Ask about Project2Excel</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+            <span class="btn" aria-disabled="true">Unreleased</span>
+            <p>Still being built. Nothing to download yet.</p>
+            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20vCard%20Cleaner">Ask about vCard Cleaner</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
 
         </div>
         </div>
-      <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+      <div class="art art-column"><img src="assets/bluebonnet-side-right.png" width="380" height="950" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>
       </div>
 

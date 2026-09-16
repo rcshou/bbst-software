@@ -4,6 +4,59 @@ All notable changes to the public catalog site are recorded here.
 
 ## [Unreleased]
 
+### Added
+- **Downloads.** `downloads.html` lists the newest public release of each catalogued tool
+  that has one, every file with its size, SHA-256 and a direct download, and each tool gets a
+  `download-<slug>.html` with its files, release notes, README and user guide. Builds for the
+  public live in the public repository `rcshou/bbst-downloads`, tagged `<slug>-v<version>`,
+  because the application repositories are private and GitHub answers 404 to visitors.
+  `fetch-downloads.sh` reads that repository into `downloads-cache.tsv` and `downloads-docs/`,
+  and refuses to replace them when the repository is private, a release lacks its files,
+  README, user guide or notes, a URL points elsewhere, or a file cannot be downloaded
+  anonymously. `build.sh --refresh` runs it. A Downloads link joins the top navigation, and a
+  tool with a published build gets a Download button pointing at its page. Offline tests:
+  `tests/fetch-downloads.test.sh`.
+- **APK Finder 0.21.5 is the first public download**, and APK Finder is now listed as
+  released. Its privacy section (verified against the v0.21.4 source on 2026-09-15) names the
+  repositories it contacts, which are on by default, and that APKPure searches send search
+  terms to apkpure.com.
+- **Six apps join the catalog:** PDF Processor for Embeddings (`pdf-processor`) and vCard
+  Cleaner (`vcard-cleaner`) under Business, and Find Similar Photos (`find-similar-photos`),
+  Photo Statistics (`photo-statistics`), Check Capture Year vs Folder (`capture-year-check`)
+  and Face Assistant (`face-assistant`) under Lightroom. Each page was written from the
+  repository's source, and each states its platform limits and, where they apply, the
+  licensing terms of bundled components or separately downloaded models: the GPL x265 codec
+  in Find Similar Photos and Photo Statistics, the Chandra OCR 2 model licence, and Face
+  Assistant's optional non-commercial backend.
+- The privacy policy covers the new apps. PDF Processor for Embeddings is the sixth that
+  contacts a network (setup downloads, and page images sent to the OCR server you configure),
+  and Face Assistant's locally stored face embeddings are described as biometric data. The
+  effective date moves to 16 September 2026.
+- The home page crown is the lettered "Bluebonnet Studios" arch, in a light and a dark copy
+  that follow the theme.
+- `tests/fetch-catalog.test.sh`, offline tests for how `fetch-catalog.sh` derives versions.
+
+### Changed
+- **The Lightroom entries follow the split of the archived `rcshou/LIghtroom_plugins`** into
+  `lr-similar-photos`, `lr-photo-stats`, `lr-datefix` and `lr-missphotos`. Restore Missing
+  Photos keeps its slug and now reads its version (1.23.3) from the new repository, and its
+  release box describes that version. The combined plugin's page,
+  `similars-and-statistics.html`, is deleted rather than redirected, so links to it now fail.
+- Business and Lightroom category introductions, home-page pitches and the About page
+  describe the larger catalog. About no longer says every network feature is off until
+  enabled (APK Finder's F-Droid source is on by default), and says update checks are shared
+  by the applications that have them rather than by all.
+- The issue and discussion tool dropdowns list all sixteen published tools.
+- `make-demo.sh` includes the downloads pages.
+
+### Fixed
+- **Project2Excel showed its version as `project2excel-v1.0.12`.** `fetch-catalog.sh`
+  removed only a bare leading `v` from a release tag; it now also removes a `<product>-v`
+  prefix, where a digit follows.
+- **`build.sh` would stop silently** whenever the last catalogued tool had no public download:
+  the loop collecting downloads ended on a false test, and `set -e` exited on the failed
+  substitution. It went unnoticed while the last tool happened to have one.
+
 ### Fixed
 - **The site no longer describes itself as desktop-only.** The home page led with "Desktop
   tools that do one job properly", and the About page claimed "every application in this

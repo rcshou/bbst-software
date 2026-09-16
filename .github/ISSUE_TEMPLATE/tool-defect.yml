@@ -18,9 +18,15 @@ body:
         - Project2Excel
         - PDF Classifier
         - Markdown Renderer
+        - PDF Processor for Embeddings
+        - vCard Cleaner
         - Bakmil Metro Schedule
-        - Similars and Photo Statistics
+        - APK Finder
+        - Find Similar Photos
+        - Photo Statistics
+        - Check Capture Year vs Folder
         - Restore Missing Photos
+        - Face Assistant
         - Location Caption Assistant
         - Geocrawler
         - SEG-Y Coordinate Security

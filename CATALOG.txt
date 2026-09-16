@@ -26,11 +26,11 @@
 #
 #   repo       owner/repo on GitHub. Read only for the version and the licence.
 #
-#   subpath    a folder, for a repository shipping more than one app — the
-#              Lightroom plugin bundles. Its presence means the version comes
-#              from that folder's Info.lua rather than a repository release tag,
-#              because one tag cannot version two plugins separately. Leave
-#              empty for everything else.
+#   subpath    the .lrplugin folder of a Lightroom plugin. Its presence means
+#              the version comes from that folder's Info.lua rather than a
+#              repository release tag: plugins are versioned there, and a
+#              repository holding several could not version them with one tag.
+#              Leave empty for everything else.
 #
 #   name       the display name, exactly as it should appear.
 #
@@ -66,13 +66,18 @@
 project2excel	rcshou/Project2Excel		Project2Excel	Business	Windows · macOS	private	Microsoft Project files into editable Excel workbooks
 pdf-classifier	rcshou/PDF_classifier		PDF Classifier	Business	Windows	private	Routes PDFs by text-layer quality before anyone pays for OCR
 markdown-renderer	rcshou/md-reader_tauri		Markdown Renderer	Business	Windows · macOS	private	Markdown preview, linting and export with real tables and math
+pdf-processor	rcshou/Chandra2_integration		PDF Processor for Embeddings	Business	Windows · GPU	dev	Sends only the PDF pages that need OCR to Chandra OCR 2, for embedding-ready output
+vcard-cleaner	rcshou/vCard_cleaner		vCard Cleaner	Business	macOS	dev	Strips Outlook junk, photos and stray fields from .vcf contact files
 bakmil-metro	rcshou/Bakmill_PWA		Bakmil Metro Schedule	Web & Mobile	Web	released	Next-departure times for the Bakmil metro shuttle in Baku
-similars-and-statistics	rcshou/LIghtroom_plugins	twoPlugins.lrplugin	Similars and Photo Statistics	Lightroom	Plugin · macOS	private	Groups visually similar photos, reports file-type statistics, and repairs wrong capture dates
-restore-missing-photos	rcshou/LIghtroom_plugins	MissPhotos.lrplugin	Restore Missing Photos	Lightroom	Plugin	private	Puts files that Lightroom reports as missing back where the catalog expects them
+find-similar-photos	rcshou/lr-similar-photos	SimilarPhotos.lrplugin	Find Similar Photos	Lightroom	Plugin · macOS	private	Groups visually similar photos in a selection into collections
+photo-statistics	rcshou/lr-photo-stats	PhotoStats.lrplugin	Photo Statistics	Lightroom	Plugin · macOS	private	Counts the file types in a selection and flags broken HEIC files
+capture-year-check	rcshou/lr-datefix	DateFix.lrplugin	Check Capture Year vs Folder	Lightroom	Plugin · macOS	private	Flags photos whose capture year does not match their year folder
+restore-missing-photos	rcshou/lr-missphotos	MissPhotos.lrplugin	Restore Missing Photos	Lightroom	Plugin	private	Puts files that Lightroom reports as missing back where the catalog expects them
+face-assistant	rcshou/lr-faces	FaceAssistant.lrplugin	Face Assistant	Lightroom	Plugin · macOS	beta	Offline face recognition that applies your own person keywords
 location-caption	rcshou/LR_location_caption		Location Caption Assistant	Lightroom	Plugin	beta	Suggests the landmark a GPS-tagged photo was actually taken at
 geocrawler	rcshou/geocrawler_ps		Geocrawler	Geoscience	Windows	private	Audits a subsurface data repository and tells you what is in it
 segy-coordinate-security	rcshou/seis_coord		SEG-Y Coordinate Security	Geoscience	Windows	private	Share seismic data without giving away where it was shot
-apk-finder	rcshou/apk_finder		APK Finder	Web & Mobile	Android	private	Finds, checks and installs Android apps on devices with no Google Play Services
+apk-finder	rcshou/apk_finder		APK Finder	Web & Mobile	Android	released	Finds, checks and installs Android apps on devices with no Google Play Services
 cassandra-risking	rcshou/cassandraV2		Cassandra Risking	Geoscience	Windows	private	New risking app
 
 # =============================================================================

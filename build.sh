@@ -3,7 +3,7 @@
 # Run from the repository root:  bash build.sh
 set -euo pipefail
 
-UPDATED="2026-08-29"
+UPDATED="2026-09-16"
 
 # Contact and Q&A routes. Discussions must be enabled on the repository for the
 # Q&A links to resolve; see README.
@@ -32,14 +32,20 @@ esc () { printf '%s' "$1" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&q
 #   bash build.sh --refresh   refresh versions and licences first, then build
 CATALOG_FILE="${CATALOG_FILE:-CATALOG.txt}"
 CACHE_FILE="${CACHE_FILE:-catalog-cache.tsv}"
+DOWNLOADS_CACHE="${DOWNLOADS_CACHE:-downloads-cache.tsv}"
 
 if [ "${1:-}" = "--refresh" ]; then
   bash fetch-catalog.sh || { echo "build: fetch failed; not building from a stale cache" >&2; exit 1; }
+  bash fetch-downloads.sh || { echo "build: downloads fetch failed; not building from a stale cache" >&2; exit 1; }
 fi
 
 [ -f "$CATALOG_FILE" ] || { echo "build: $CATALOG_FILE not found" >&2; exit 1; }
 if [ ! -f "$CACHE_FILE" ]; then
   echo "build: $CACHE_FILE not found — run 'bash fetch-catalog.sh' first" >&2
+  exit 1
+fi
+if [ ! -f "$DOWNLOADS_CACHE" ]; then
+  echo "build: $DOWNLOADS_CACHE not found — run 'bash fetch-downloads.sh' first" >&2
   exit 1
 fi
 
@@ -112,12 +118,31 @@ total_tools () { printf '%s\n' "$TOOLS" | wc -l | tr -d ' '; }
 cat_page () { printf '%s\n' "$CATEGORIES" | awk -F'|' -v c="$1" '$1==c{print $2; exit}'; }
 cat_label () { printf '%s\n' "$CATEGORIES" | awk -F'|' -v c="$1" '$1==c{print $3; exit}'; }
 
+# Downloads stay tab-separated: a checksum can be empty, and read would collapse
+# the adjacent tabs and shift every field after it. Empty when nothing is published.
+DOWNLOADS="$(awk -F'\t' '!/^#/ && NF>=10' "$DOWNLOADS_CACHE")"
+has_download () { printf '%s\n' "$DOWNLOADS" | awk -F'\t' -v s="$1" '$1==s{f=1} END{exit !f}'; }
+download_field () {  # slug | field-index, from the tool's first file row
+  printf '%s\n' "$DOWNLOADS" | awk -F'\t' -v s="$1" -v n="$2" '$1==s{print $n; exit}'
+}
+# Release notes, README and user guide, rendered by fetch-downloads.sh from
+# Markdown through GitHub's sanitising renderer. The fetch refuses a release
+# without all three, so a missing file here means the cache and the documents
+# came from different fetches.
+DOWNLOADS_DOCS="${DOWNLOADS_DOCS:-downloads-docs}"
+download_doc () {  # slug | notes|readme|guide
+  local f="$DOWNLOADS_DOCS/$1/$2.html"
+  [ -f "$f" ] || { echo "build: $f not found — run 'bash fetch-downloads.sh'" >&2; exit 1; }
+  cat "$f"
+}
+
 # --- shared shell ------------------------------------------------------------
 page_open () {  # title | description | nav-current
   local title="$1" desc="$2" navcur="${3:-}"
-  local catmark="" aboutmark=""
+  local catmark="" aboutmark="" dlmark=""
   [ "$navcur" = "catalog" ] && catmark=' aria-current="page"'
   [ "$navcur" = "about" ] && aboutmark=' aria-current="page"'
+  [ "$navcur" = "downloads" ] && dlmark=' aria-current="page"'
 cat <<HTML
 <!DOCTYPE html>
 <html lang="en">
@@ -153,6 +178,7 @@ cat <<HTML
       <div class="topbar-right">
         <nav class="mainnav" aria-label="Primary">
           <a href="index.html"$catmark>Catalog</a>
+          <a href="downloads.html"$dlmark>Downloads</a>
           <a href="about.html"$aboutmark>About</a>
           <a href="index.html#access">Access</a>
         </nav>
@@ -190,7 +216,7 @@ rail () {  # current-page-file | active-slug
   printf '%s\n' "$CATEGORIES" | while IFS='|' read -r c page label; do
     rail_link "$page" "$c" "$(count_in "$c")" "$cur" "$mode"
   done
-  printf '      <p class="rail-note">Binaries are distributed privately. This catalog publishes version and availability only.</p>\n'
+  printf '      <p class="rail-note">Published builds are listed under Downloads. Everything else is distributed on request.</p>\n'
   printf '    </nav>\n'
 }
 
@@ -213,12 +239,12 @@ rail_link () {  # href | label | count | current-file | mode
 # an empty alt and are hidden from assistive technology.
 art_file () {  # page key -> path|width|height
   case "$1" in
-    index)                      printf 'assets/bluebonnet-header.png|1280|435' ;;
-    about|privacy|geoscience-tools)
+    index)                      printf 'assets/bluebonnet-header-wordmark-light.png|1280|435' ;;
+    about|privacy|downloads|download-*|geoscience-tools)
                                 printf 'assets/bluebonnet-footer.png|860|391' ;;
     business-tools|lightroom-plugins|web-apps)
                                 printf 'assets/bluebonnet-header.png|1280|435' ;;
-    project2excel|markdown-renderer|bakmil-metro|restore-missing-photos|geocrawler|cassandra-risking)
+    project2excel|pdf-processor|markdown-renderer|bakmil-metro|photo-statistics|restore-missing-photos|geocrawler|cassandra-risking)
                                 printf 'assets/bluebonnet-side-left.png|380|824' ;;
     *)                          printf 'assets/bluebonnet-side-right.png|380|950' ;;
   esac
@@ -230,8 +256,19 @@ art () {  # page key | kind (crown | tail | column)
   file="${spec%%|*}"; spec="${spec#*|}"; w="${spec%%|*}"; h="${spec#*|}"
   local lazy=' loading="lazy"'
   [ "$2" = "crown" ] && lazy=''
-  printf '      <div class="art art-%s"><img src="%s" width="%s" height="%s" alt="" aria-hidden="true" decoding="async"%s /></div>\n' \
-    "$2" "$file" "$w" "$h" "$lazy"
+  case "$file" in
+    *-light.png)
+      # Art with lettering in it cannot follow the theme's colours, so it ships
+      # a light and a dark copy and the stylesheet's theme tokens pick one.
+      # Both are lazy so the browser can skip the hidden copy: display:none
+      # gives it no box to scroll into view, while the one shown sits at the
+      # top of the page and loads straight away.
+      printf '      <div class="art art-%s"><img class="art-on-light" src="%s" width="%s" height="%s" alt="" aria-hidden="true" decoding="async" loading="lazy" /><img class="art-on-dark" src="%s" width="%s" height="%s" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>\n' \
+        "$2" "$file" "$w" "$h" "${file%-light.png}-dark.png" "$w" "$h" ;;
+    *)
+      printf '      <div class="art art-%s"><img src="%s" width="%s" height="%s" alt="" aria-hidden="true" decoding="async"%s /></div>\n' \
+        "$2" "$file" "$w" "$h" "$lazy" ;;
+  esac
 }
 
 # --- status vocabulary -------------------------------------------------------
@@ -243,11 +280,30 @@ status_chip () {
     *)        printf '<span class="chip is-dev">In development</span>' ;;
   esac
 }
-status_action () {  # status | access-href
+status_action () {  # status | access-href | slug
+  # A published file is a fact the status topic may not have caught up with,
+  # so it wins; fetch-downloads.sh warns about the mismatch. A web app is opened,
+  # not downloaded. "Download" appears only where there is something to download.
+  if [ -n "${3:-}" ] && has_download "$3"; then
+    printf '<a class="btn" href="download-%s.html">Download</a>' "$3"; return
+  fi
+  local url
+  url="$(tool_url "${3:-}")"
+  if [ -n "$url" ]; then
+    printf '<a class="btn" href="%s">Open app</a>' "$url"; return
+  fi
   case "$1" in
-    released|beta) printf '<a class="btn" href="%s">Download</a>' "$2" ;;
-    private)       printf '<a class="btn" href="%s">Request</a>' "$2" ;;
-    *)             printf '<span class="btn" aria-disabled="true">Unreleased</span>' ;;
+    released|beta|private) printf '<a class="btn" href="%s">Request</a>' "$2" ;;
+    *)                     printf '<span class="btn" aria-disabled="true">Unreleased</span>' ;;
+  esac
+}
+
+# Where a tool that runs in the browser is served. Kept here, beside the page
+# copy, because nothing on GitHub records it: the app is uploaded to its host by
+# hand. Check the address still loads when changing it.
+tool_url () {
+  case "$1" in
+    bakmil-metro) printf 'https://bbst.us/testweb/' ;;
   esac
 }
 
@@ -276,7 +332,7 @@ roster () {  # access-href | category-filter (empty = all)
     printf '              <td class="num" data-label="Version">%s</td>\n' "$ver"
     printf '              <td class="num" data-label="Platform">%s</td>\n' "$plat"
     printf '              <td data-label="Status">%s</td>\n' "$(status_chip "$stat")"
-    printf '              <td class="act" data-label="Get">%s</td>\n' "$(status_action "$stat" "$access")"
+    printf '              <td class="act" data-label="Get">%s</td>\n' "$(status_action "$stat" "$access" "$slug")"
     printf '            </tr>\n'
   done
   printf '          </tbody>\n        </table>\n      </div>\n'
@@ -288,8 +344,9 @@ cat <<HTML
         <p class="section-label">Access and releases</p>
         <div class="access-box">
           <p>Bluebonnet Studios builds and releases from private repositories. This catalog is the
-             public record: it publishes each tool&rsquo;s version, platform and availability, while the
-             binaries themselves ship through their own channels. <strong>Nothing here is a
+             public record: it publishes each tool&rsquo;s version, platform and availability. Builds
+             released to the public are on the <a href="downloads.html">downloads page</a>; everything
+             else ships through its own channels. <strong>Nothing here is a
              subscription, and nothing here phones home.</strong></p>
           <p>Questions are answered in the open. Ask on GitHub Discussions and the answer stays
              searchable for whoever asks the same thing next; email is there for release requests
@@ -400,8 +457,8 @@ cat <<HTML
             <div><dt>Updated</dt><dd>$UPDATED</dd></div>
           </dl>
           <div class="aside-act">
-            $(status_action "$stat" "index.html#access")
-            <p>$(access_note "$stat")</p>
+            $(status_action "$stat" "index.html#access" "$slug")
+            <p>$(access_note "$stat" "$slug")</p>
             <p class="aside-ask"><a href="$REPO/discussions/new?category=q-a&amp;title=$(urlenc "Question about $name")">Ask about $name</a> on GitHub Discussions, or email <a href="mailto:$CONTACT_EMAIL">$CONTACT_EMAIL</a>.</p>
           </div>
         </aside>
@@ -432,9 +489,15 @@ status_word () {
     *) printf 'In development' ;;
   esac
 }
-access_note () {
+access_note () {  # status | slug
+  if [ -n "${2:-}" ] && has_download "$2"; then
+    printf 'Published build. Its download page lists every file with its SHA-256 checksum, the release notes, the README and the user guide.'; return
+  fi
+  if [ -n "$(tool_url "${2:-}")" ]; then
+    printf 'Runs in your browser. Nothing to download or install.'; return
+  fi
   case "$1" in
-    released|beta) printf 'Published build. Version and release notes are listed above.' ;;
+    released|beta) printf 'No public download yet; distributed on request.' ;;
     private) printf 'Built and versioned, distributed on request rather than published.' ;;
     *) printf 'Still being built. Nothing to download yet.' ;;
   esac
@@ -455,7 +518,12 @@ tool_subtitle () {
     markdown-renderer)        printf 'See what your Markdown will look like everywhere else' ;;
     bakmil-metro)             printf 'When the next Bakmil shuttle leaves' ;;
     apk-finder)               printf 'Android apps for the devices Google left out' ;;
-    similars-and-statistics)  printf 'Four catalog chores, one plugin' ;;
+    pdf-processor)            printf 'OCR only the pages that need it' ;;
+    vcard-cleaner)            printf 'Contacts without the Outlook clutter' ;;
+    find-similar-photos)      printf 'The photographs you already have twice' ;;
+    photo-statistics)         printf 'What your selection actually holds' ;;
+    capture-year-check)       printf 'When the folder and the capture date disagree' ;;
+    face-assistant)           printf 'Name the people in your photographs, on your own Mac' ;;
     restore-missing-photos)   printf 'Put the files Lightroom lost back where the catalog expects them' ;;
     location-caption)         printf 'The temple, not the province' ;;
     geocrawler)               printf 'Find out what is actually in your data repository' ;;
@@ -494,18 +562,12 @@ HTML
           </ul>
 HTML
     ;;
-    similars-and-statistics) cat <<'HTML'
-          <ul>
-            <li><b>Fix invalid capture date no longer fails part-way through.</b> The tool could abort with a Lightroom context error before it finished; the operation now holds its context open for the whole run.</li>
-            <li><b>One similar-photo tool instead of two.</b> The separate structural-comparison item is gone &mdash; the main histogram search already applies the same structural check, so the second menu entry only offered a slower route to the same answer.</li>
-          </ul>
-HTML
-    ;;
     restore-missing-photos) cat <<'HTML'
           <ul>
-            <li><b>Scanning the same folder twice is now instant.</b> Each source folder&rsquo;s index is kept for the rest of the Lightroom session, so a second pass over a large NAS share reuses it instead of walking the whole tree again.</li>
-            <li><b>Every match is re-checked before it is offered.</b> A cached index can describe a folder as it was earlier, so a file that has since moved is verified on disk first, dropped from the index if gone, and counted in the results.</li>
-            <li><b>A failed scan is now reported as a failure.</b> A disconnected disk or NAS share during indexing raises an explicit error instead of quietly producing &ldquo;not found&rdquo; results.</li>
+            <li><b>Virtual copies are handled once.</b> Selected virtual copies that share one file are processed together, so nothing is restored twice and the totals are right.</li>
+            <li><b>Windows network paths are recognised consistently</b>, including network paths written with forward slashes.</li>
+            <li><b>A failed copy names every file it affected</b>, with a clear next step when an incomplete destination blocks a retry.</li>
+            <li><b>Reports never replace an existing file silently</b>, and folders skipped by the depth safety limit are listed.</li>
           </ul>
 HTML
     ;;
@@ -528,7 +590,12 @@ tool_meta_desc () {
     markdown-renderer) printf 'A desktop Markdown viewer with accurate tables, KaTeX maths, a full portability check, non-destructive cleanup and self-contained HTML export.' ;;
     bakmil-metro) printf 'Next-departure times for the Bakmil to Nərimanov metro shuttle in Baku, in a web app that opens instantly and needs no account.' ;;
     apk-finder) printf 'Find, compatibility-check and install Android apps on devices with no Google Play Services — built for Chinese-market car head units, degoogled phones and custom ROMs.' ;;
-    similars-and-statistics) printf 'A Lightroom Classic plugin that groups visually similar photographs, reports file-type statistics, flags corrupt HEIC files and fixes wrong capture dates.' ;;
+    find-similar-photos) printf 'A Lightroom Classic plugin that groups visually similar photographs in a selection into collections, comparing colour histograms checked against coarse image structure.' ;;
+    photo-statistics) printf 'A Lightroom Classic plugin that counts the file types in a selection and can flag HEIC files that no longer open as valid HEIC containers.' ;;
+    capture-year-check) printf 'A Lightroom Classic plugin that checks capture dates against the year or decade folders photographs are filed in, and collects every mismatch for review without changing a date.' ;;
+    face-assistant) printf 'An offline face-recognition plugin for Lightroom Classic on Apple Silicon Macs that learns people from faces you confirm and applies your existing person keywords only when you say so.' ;;
+    pdf-processor) printf 'A Windows desktop application that uses PDF Classifier&rsquo;s page-by-page routing to send only the pages that need it to Chandra OCR 2, and merges the result into embedding-ready canonical JSON.' ;;
+    vcard-cleaner) printf 'A small desktop tool that searches vCard contact files and strips Outlook junk fields, embedded photos and unwanted values while leaving names and phone numbers alone.' ;;
     restore-missing-photos) printf 'A Lightroom Classic plugin that finds files matching photos the catalog reports as missing and puts them back where the catalog expects them.' ;;
     location-caption) printf 'A Lightroom Classic plugin that suggests the actual landmark a GPS-tagged photo was taken at, from OpenStreetMap data, and writes nothing until you approve it.' ;;
     geocrawler) printf 'Audit a subsurface data repository: catalog SEG-Y and LAS files, read their headers, detect coordinate systems, find duplicates, and export the result to Excel.' ;;
@@ -544,7 +611,12 @@ tool_lede () {
     markdown-renderer) printf 'A Markdown viewer that renders what you will actually publish — real tables, KaTeX maths, GFM alerts — and then tells you which parts of your document are likely to break somewhere else.' ;;
     bakmil-metro) printf 'Tells you when the next shuttle leaves, and nothing else. No account, no install, no tracking — open it at the platform and the answer is already on screen.' ;;
     apk-finder) printf 'Most APK finders assume Google Play Services exist. This one assumes nothing: it detects what your device actually has, then tells you honestly whether an app will work on it and what you would lose if it does not.' ;;
-    similars-and-statistics) printf 'Four jobs a large Lightroom catalog eventually needs doing, in one plugin: find the photographs you already have twice, count what file types you are actually holding, catch HEIC files that have gone bad, and fix capture dates that disagree with the folder they sit in.' ;;
+    find-similar-photos) printf 'Finds the photographs you already have twice — the burst frames, the re-export at a different size, the re-edit — by comparing what the images look like rather than the bytes they contain, and gathers each group into a collection.' ;;
+    photo-statistics) printf 'Tells you what a selection actually holds — how many RAW files, how many HEIC, how many in formats the rest of your workflow cannot read — and can check the HEIC files among them for ones that no longer open as HEIC at all.' ;;
+    capture-year-check) printf 'If your photographs live in folders named by year, the folder is a second opinion on when each one was taken. This compares the two and gathers every disagreement into collections, without changing a single capture date.' ;;
+    face-assistant) printf 'Finds faces in the photographs you select, learns who people are only from the faces you confirm, and applies the person keywords you already use — on your own Mac, with no cloud service, and nothing written until you press apply.' ;;
+    pdf-processor) printf 'Most pages in most PDFs do not need a vision model to read them. This asks PDF Classifier which ones do, sends only those to Chandra OCR 2, extracts the rest natively, and assembles every page into one clean document for a retrieval pipeline.' ;;
+    vcard-cleaner) printf 'Contacts exported from Outlook arrive carrying Exchange links, Microsoft-only fields and read-only notes that no other address book wants. This opens the <code>.vcf</code>, shows you what is in it, and removes the clutter while leaving names and phone numbers alone.' ;;
     restore-missing-photos) printf 'Lightroom marks a photo as missing when the file moves out from under it. This searches the folders you point it at for files matching those photos and puts them back at the paths the catalog still expects.' ;;
     location-caption) printf 'City names are rarely the answer. This reads a photograph&rsquo;s GPS position, asks OpenStreetMap what is actually there, and proposes the specific landmark — the temple, not the province — for you to approve before anything is written.' ;;
     geocrawler) printf 'Crawls a folder tree of subsurface data and tells you what is in it: which files are seismic, which are well logs, what their headers claim, which are duplicates, and which claims should not be trusted.' ;;
@@ -715,35 +787,217 @@ pdf-classifier) cat <<'HTML'
 </div>
 HTML
 ;;
-similars-and-statistics) cat <<'HTML'
-<h2>What it is for</h2>
-<p>A photo library that has been running for years accumulates a specific set of problems. The same shot exists three times because it was imported from three cards. Nobody knows how much of the catalog is JPEG and how much is raw. A batch of HEIC files copied off a phone has gone quietly bad. And a folder of pictures from 2019 has capture dates in 1970 because a camera lost its battery.</p>
-<p>None of these is hard to fix once you can see it. All of them are invisible until something surfaces them. This plugin adds four tools to Lightroom Classic that do exactly that, under <strong>Library &rsaquo; Plug-in Extras</strong>.</p>
+find-similar-photos) cat <<'HTML'
+<h2>What it does</h2>
+<p>Select photographs in the Library and run <strong>Library &gt; Plug-in Extras &gt; Find Similar
+   photos (histograms)</strong>. Enter a similarity threshold — 0.7 to 0.9 suits most catalogs, and
+   1.0 finds near-exact duplicates — and each group of similar photographs is placed in its own
+   collection inside a <strong>Similars</strong> collection set. Files in a format the comparison
+   cannot read are listed first, and you decide whether to continue without them.</p>
+<p>Every pair of photographs inside a group meets the threshold. Two pictures are not grouped just
+   because each resembles a third one in a different way, which is how similarity grouping
+   usually drifts into nonsense on a large selection.</p>
 
-<h2>Find similar photographs</h2>
-<p>Groups visually similar images in the current selection using HSV colour-histogram comparison with a structural-correlation check on top. That combination matters: a histogram alone will happily group two unrelated sunsets, and structure alone is slow and brittle. Together they find the burst of near-identical frames you meant to cull, and the same photograph imported twice at different sizes.</p>
-<p>Results are offered back as Lightroom collections, so you review and delete inside Lightroom with everything you normally have to hand — you are never asked to make deletion decisions inside a plugin dialog.</p>
-
-<h2>File-type statistics</h2>
-<p>Reports what the selection actually contains, by file type. Useful before a migration, before buying storage, or when deciding whether a raw-to-DNG conversion is worth the afternoon it will cost.</p>
-
-<h2>Corrupt HEIC detection</h2>
-<p>HEIC files fail in a particularly unhelpful way: the catalog still shows a thumbnail, and the underlying file is unreadable. The plugin validates HEIC containers directly and flags the ones that have gone bad, so you find out while the originals may still exist elsewhere rather than years later.</p>
-
-<h2>Capture-date repair</h2>
-<p>Flags photographs whose capture year disagrees with the folder they are filed in — the usual signature of a camera clock that reset. You tell the plugin what your library&rsquo;s root folder is called, and it works out each photo&rsquo;s expected year from its path.</p>
-
-<h2>How it runs</h2>
-<p>The comparison work is done by small native helpers bundled inside the plugin, not in Lua — image comparison across thousands of files is not something a scripting layer should attempt. The libraries they depend on ship inside the plugin folder with their load paths rewritten, so there is nothing to install alongside it and no Homebrew dependency on the machine that runs it.</p>
-
-<h2>What it does not do</h2>
+<h2>Similar, not identical</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Deleting anything.</strong> Every tool reports and organises. Removing a photograph stays a decision you make in Lightroom, with the photographs in front of you.</p>
-  <p><strong>Scanning your whole catalog uninvited.</strong> All four tools work on the current selection and nothing else.</p>
+  <p><strong>Matching checksums and calling it duplicate detection.</strong> A checksum finds byte-identical files, which is the easy half of the problem and rarely the half you have. Two exports at different sizes, a re-edit, the same frame from a burst — none of those match on bytes, and all of them are what you actually want grouped. Comparing colour histograms, then rejecting pairs whose coarse structure does not agree, finds them without grouping every photograph that merely shares a colour cast.</p>
 </div>
+
+<h2>What it changes</h2>
+<p>Collections, and nothing else. It never writes photo metadata and never modifies an image file.
+   Running it again offers to replace the previous <strong>Similars</strong> set.</p>
+
+<h2>Status, stated plainly</h2>
+<p>The comparison runs in a native helper bundled inside the plugin, built from C++ against
+   OpenCV, libheif and LibRaw, because pixel comparison across a large selection is not work for
+   Lightroom&rsquo;s scripting runtime. That helper is currently built for <strong>Apple Silicon
+   Macs only</strong>, and it still loads part of its image-library stack from Homebrew at run
+   time: it works on a Mac with Homebrew&rsquo;s <code>opencv</code>, <code>libheif</code> and
+   <code>libraw</code> installed, and is expected to fail on one without them.</p>
+<p>Tested in Lightroom Classic on a Mac. The progress bar is an estimate, and cancelling does not
+   stop a comparison already under way.</p>
+
+<h2>Licensing</h2>
+<p>The plugin&rsquo;s own code is licensed under Apache&nbsp;2.0. For HEIC and RAW support it bundles
+   libheif and libde265, which are LGPL, LibRaw, which is LGPL or CDDL, and the x265 encoder, which is
+   <strong>GPL&nbsp;2.0</strong>. The GPL is not compatible with Apache&nbsp;2.0 for redistribution as
+   one combined work, and each bundled library keeps its own licence in any copy you receive.</p>
 HTML
 ;;
+
+photo-statistics) cat <<'HTML'
+<h2>What it reports</h2>
+<p>Run <strong>Library &gt; Plug-in Extras &gt; File type statistics on selection</strong>. A
+   dialog counts the selection by kind — total, RAW, HEIC, the formats the similar-photo
+   comparison can read, and everything else — and lists the extensions it found. The counts come
+   from file extensions, so they describe what the files say they are.</p>
+
+<h2>The HEIC check</h2>
+<p>Tick <strong>Check for corrupted HEIC files</strong> and every selected <code>.heic</code> or
+   <code>.heif</code> file is opened with libheif and asked for its primary image. Files that fail
+   are added to a collection named <strong>CorruptedHIEC</strong>. Later runs add to that collection
+   rather than replacing it, and the plugin writes nothing else to the catalog or to the files.</p>
+<div class="compare">
+  <p class="compare-label">Instead of</p>
+  <p><strong>Promising to find every damaged file.</strong> The check catches files that are no longer valid HEIC containers. A file whose header survived but whose image data was cut short still passes — that was tested against a real truncated file — so a clean result means the container is intact, not that every pixel is.</p>
+</div>
+
+<h2>Status, stated plainly</h2>
+<p>The HEIC check uses a native helper built for <strong>Apple Silicon Macs</strong>, and the
+   plugin is Mac-only. It has been tested in Lightroom Classic on a Mac.</p>
+
+<h2>Licensing</h2>
+<p>The plugin&rsquo;s own code is licensed under Apache&nbsp;2.0. Its HEIC helper bundles libheif and
+   libde265, which are LGPL, and the x265 encoder, which is <strong>GPL&nbsp;2.0</strong>. The GPL is
+   not compatible with Apache&nbsp;2.0 for redistribution as one combined work, and each bundled
+   library keeps its own licence in any copy you receive.</p>
+HTML
+;;
+
+capture-year-check) cat <<'HTML'
+<h2>What it checks</h2>
+<p>Select photographs and run <strong>Library &gt; Plug-in Extras &gt; Check Capture Year vs
+   Folder</strong>. Each photograph&rsquo;s capture year is compared with the folder it sits in,
+   below a root you choose: a folder named <code>Photos</code> by default, or an exact path.
+   <code>Photos/1993</code>, <code>Photos/1990s</code> and <code>Photos/1990s/1993</code> are all
+   recognised, and optionally folders such as <code>1993 Vacation</code>. A month check for
+   <code>YYYY-MM</code> folders and a tolerance of up to a week around New Year are both
+   available.</p>
+<p>Results go into one collection set the plugin owns: a collection for each kind of mismatch,
+   such as <em>Folder 1993 – Metadata 1995</em>, and others for photographs with no capture date,
+   outside the root, or in a folder it could not interpret.</p>
+
+<h2>Careful about scope</h2>
+<div class="compare">
+  <p class="compare-label">Instead of</p>
+  <p><strong>Treating no selection as the whole catalog.</strong> When nothing is selected, Lightroom hands a plugin every photograph in the filmstrip. This one notices and stops, and it asks you to confirm the count before it starts.</p>
+  <p><strong>Updating results as it goes.</strong> Results change only after a complete scan, in one catalog operation; cancel, or hit an error, and they stay exactly as they were. Photographs from earlier scans keep their results, so a large library can be worked through a folder at a time.</p>
+</div>
+
+<h2>What it never changes</h2>
+<p>Capture dates, or any other metadata. Dates are read from the raw metadata fields, never parsed
+   from locale-formatted display strings, and the only things written are the plugin&rsquo;s own
+   collections. A collection set with the same name that the plugin did not create is left
+   alone.</p>
+
+<h2>Status, stated plainly</h2>
+<p>Pure Lua with no native helper, written for Lightroom Classic on both macOS and Windows against
+   SDK 12 with a minimum of SDK 10. It has been tested in Lightroom Classic on a Mac, and its logic
+   is also covered by automated tests that run outside Lightroom. It has <strong>not yet been
+   tested on Windows</strong>.</p>
+HTML
+;;
+
+face-assistant) cat <<'HTML'
+<h2>How it works</h2>
+<p>One menu item, <strong>Library &gt; Plug-in Extras &gt; Face Assistant…</strong>, opens a
+   console that stays beside the Library and follows your selection. From there you find faces in
+   the selected photographs, import the person keywords your catalog already carries as a starting
+   point, review unnamed faces — one known person at a time, ranked by resemblance, or in
+   similarity groups you can name together — and apply the confirmed names.</p>
+<ul>
+  <li><strong>No selection, no scan.</strong> There is no background pass over the whole catalog.</li>
+  <li><strong>It learns only from faces you confirm.</strong> A group action applies to exactly the faces ticked when you press it, and the last one can be undone.</li>
+  <li><strong>Names are compared sensibly.</strong> Accents and case are folded for Latin letters, so <em>Zoe</em> and <em>Zoë</em> are one person — but not for Cyrillic, where the mark is what separates two different letters.</li>
+  <li><strong>A read-only keyword check</strong> reports person keywords that look like duplicates of each other.</li>
+</ul>
+
+<h2>Your keywords stay yours</h2>
+<div class="compare">
+  <p class="compare-label">Instead of</p>
+  <p><strong>Inventing its own names and hierarchy.</strong> It works with the person keywords already in Lightroom&rsquo;s Keyword List, and never creates, renames or deletes one. Names reach your photographs only when you press <strong>Apply confirmed names</strong>, and only as keywords you chose. Taking a wrongly imported name off a photograph is a separate action that asks first.</p>
+</div>
+
+<h2>Where the data lives</h2>
+<p>Everything runs on your Mac. The plugin makes no network requests: the model download buttons
+   open the model pages in your browser, and you place the files yourself. The people it knows and
+   their face data are kept in a local database in your user Library folder, shared across your
+   catalogs, with backups beside it. That database holds face embeddings — biometric data about
+   the people in your photographs — so treat an export of it as carefully as the photographs
+   themselves.</p>
+
+<h2>Status, stated plainly</h2>
+<p>Version 0.3 is an early release for Lightroom Classic 15 and later, on <strong>Apple Silicon
+   Macs only</strong>, running on the CPU, and it has been tested in Lightroom Classic on a Mac. Its
+   matching thresholds have not been measured against a benchmark set, so treat every proposed
+   match as a suggestion to review. It is not yet signed or notarised.</p>
+<h2>Licensing</h2>
+<p>The plugin is licensed under Apache&nbsp;2.0. No model weights are included: the default models
+   are published under the MIT and Apache&nbsp;2.0 licences, and an optional alternative backend uses
+   weights released <strong>for non-commercial research only</strong>, which you would be bound by if
+   you chose it.</p>
+HTML
+;;
+
+pdf-processor) cat <<'HTML'
+<h2>Why selective OCR</h2>
+<p>OCR is the slowest, most expensive and most error-prone step in a document pipeline. Running it
+   on every page means paying for — and risking invented text on — pages whose text layer was
+   already fine. <a href="pdf-classifier.html">PDF Classifier</a> decides page by page; Chandra OCR 2
+   only ever sees the pages it is told to read, and every page still ends up in the output, read by
+   one route or the other.</p>
+
+<h2>What it does</h2>
+<ul>
+  <li><strong>Batch in, decisions first.</strong> Add PDFs and images, preview each routing decision before anything runs, then watch per-page progress.</li>
+  <li><strong>Originals are left alone.</strong> A PDF with no classification yet is classified on a temporary copy.</li>
+  <li><strong>Doubt stops the line.</strong> A document the classifier marks for manual review is held back rather than read end to end by OCR. A manual page range, and a launcher for PDF Classifier&rsquo;s own page review, are there when you need them.</li>
+  <li><strong>Choice of engine.</strong> Chandra runs on a local GPU or through a vLLM server; MinerU and a native-text-only mode that needs no GPU are alternatives.</li>
+  <li><strong>Output for retrieval.</strong> Canonical JSON, embedding-ready JSONL and a QC report per document, optionally Markdown and HTML, in a folder tree that mirrors the input.</li>
+  <li><strong>Language per element.</strong> English, Russian and Azerbaijani are detected paragraph by paragraph, not once per document.</li>
+</ul>
+
+<h2>Nothing is overwritten</h2>
+<div class="compare">
+  <p class="compare-label">Instead of</p>
+  <p><strong>Replacing the last run&rsquo;s output with this one&rsquo;s.</strong> Every processing pass is written as a new revision, staged and moved into place only when complete. Earlier revisions are kept up to a retention count you set, and removing a document from the list never removes it from disk.</p>
+</div>
+
+<h2>Status, stated plainly</h2>
+<p>Under active development and run from source on Windows; the installer has not been built yet,
+   and macOS is unverified. Chandra OCR needs an NVIDIA GPU with at least 12&nbsp;GiB of free
+   memory, and the application refuses to start it — and says why — when that is not available.
+   Reading order on multi-column native pages is not yet reliable.</p>
+<p>The vLLM server address can be changed: pointed at a machine other than your own, page images
+   are sent to it.</p>
+
+<h2>Licensing</h2>
+<p>The application is licensed under Apache&nbsp;2.0 and includes the Chandra inference code,
+   also Apache&nbsp;2.0, unchanged. The Chandra OCR 2 <strong>model weights are not included</strong>
+   and carry their own licence, a modified OpenRAIL-M. It <strong>does not permit use</strong> by an
+   organisation with more than US$2&nbsp;million in annual revenue or in funding raised, or by one
+   offering a product that competes with the model&rsquo;s publisher, Datalab; personal and research
+   use are exempt. It also asks for attribution and extends its terms to the model&rsquo;s output.
+   Check those terms before using the model for work.</p>
+HTML
+;;
+
+vcard-cleaner) cat <<'HTML'
+<h2>What it does</h2>
+<ul>
+  <li><strong>Search</strong> every field of every contact in a <code>.vcf</code> file, case-insensitively, with match counts.</li>
+  <li><strong>Clean Outlook Junk</strong> removes Microsoft- and Exchange-specific fields, Outlook links and read-only notes, and keeps Apple address-book fields by default.</li>
+  <li><strong>Remove Photos</strong> strips embedded contact pictures, which are often most of the size of a large export.</li>
+  <li><strong>Remove Lines With Term</strong> deletes matching values, but never touches names or phone numbers.</li>
+  <li><strong>Dry run and undo</strong> — preview a change before applying it, and step back through several.</li>
+</ul>
+
+<h2>Your original stays put</h2>
+<div class="compare">
+  <p class="compare-label">Instead of</p>
+  <p><strong>Saving over the file you opened.</strong> Save proposes a new, timestamped file name and refuses to write over the original. Choose some other existing file instead, and a backup copy of it is saved first.</p>
+</div>
+
+<h2>Status, stated plainly</h2>
+<p>An early utility written in Python with wxPython and used on macOS; Windows and Linux are
+   untested. It is licensed under Apache&nbsp;2.0 and has no version number yet. Actions apply straight away rather
+   than asking for confirmation, so use the dry run or undo. A contact that cannot be written back
+   is currently skipped without a warning, so compare contact counts before replacing an address
+   book with the result.</p>
+HTML
+;;
+
 restore-missing-photos) cat <<'HTML'
 <h2>What it is for</h2>
 <p>Lightroom records where every photograph lives. Move the files with Finder, restore from a backup to a different path, or swap a drive letter, and the catalog is left pointing at places nothing exists — every affected photo marked missing, all its edits and metadata intact but detached from any actual pixels.</p>
@@ -899,9 +1153,9 @@ esac
 # --- category page copy ------------------------------------------------------
 cat_head () {  # category -> "h1|intro|meta"
 case "$1" in
-  Business) printf '%s' 'Reporting and document work, <span class="hl">without the busywork.</span>|Three applications for the repetitive middle of office work: getting a schedule out of the tool that authored it, deciding which documents need expensive processing, and reading long technical Markdown without surprises.|Project2Excel, PDF Classifier and Markdown Renderer: schedule conversion, PDF routing and Markdown tooling from Bluebonnet Studios.' ;;
+  Business) printf '%s' 'Reporting and document work, <span class="hl">without the busywork.</span>|Applications for the repetitive middle of office work: getting a schedule out of the tool that authored it, deciding which documents need expensive processing and sending only those to OCR, reading long technical Markdown without surprises, and cleaning up exported contacts.|Project2Excel, PDF Classifier, PDF Processor for Embeddings, Markdown Renderer and vCard Cleaner: schedule conversion, PDF routing, selective OCR, Markdown tooling and contact cleanup from Bluebonnet Studios.' ;;
   "Web &amp; Mobile") printf '%s' 'Away from the desk, <span class="hl">and asking nothing of you.</span>|Two applications for hardware a desktop tool never reaches — a phone at a metro platform, and an Android head unit with no Google Play Services. Both answer their question without an account, and neither reports anything back.|Bakmil Metro Schedule and APK Finder: a Baku metro shuttle web app, and a Google-independent Android app finder for car head units.' ;;
-  Lightroom) printf '%s' 'The catalog chores <span class="hl">nobody wants to do twice.</span>|Three plugins for Lightroom Classic that take on the unglamorous work of a large library: finding the photographs you already have twice, putting missing files back where the catalog expects them, and naming the place a photograph was actually taken.|Lightroom Classic plugins for similar-photo detection, restoring missing files, and landmark-accurate location captions.' ;;
+  Lightroom) printf '%s' 'The catalog chores <span class="hl">nobody wants to do twice.</span>|Plugins for Lightroom Classic that take on the unglamorous work of a large library: finding the photographs you already have twice, counting what you actually hold, checking capture dates against their folders, putting missing files back where the catalog expects them, and naming the people in a photograph and the place it was taken.|Lightroom Classic plugins for similar-photo detection, file statistics, capture-date checks, restoring missing files, offline face recognition and landmark-accurate location captions.' ;;
   Geoscience) printf '%s' 'Subsurface data, <span class="hl">audited and honest.</span>|Three tools for exploration work, sharing one habit: they say what they know, mark what they inferred, and refuse to turn a guess into a fact.|Geocrawler, SEG-Y Coordinate Security and Cassandra Risking: subsurface data audit, seismic sanitization and prospect risking.' ;;
 esac
 }
@@ -978,7 +1232,10 @@ HTML
 
 # --- privacy policy ----------------------------------------------------------
 # Published because the Microsoft Store listing needs a policy at a public URL.
-# Every claim below was verified against the application sources on 2026-08-30;
+# Every claim below was verified against the application sources on 2026-08-30,
+# the APK Finder claims against its v0.21.4 source on 2026-09-15, and the claims
+# for the split Lightroom plugins, Face Assistant, PDF Processor for Embeddings
+# and vCard Cleaner against their sources on 2026-09-15;
 # the per-application network table is the part that must stay true.
 privacy_page () {
   page_open "Privacy — Bluebonnet Studios" \
@@ -990,7 +1247,7 @@ cat <<'HTML'
       <div>
         <p class="eyebrow">Privacy policy</p>
         <h1>What stays on your machine, <span class="hl">and what does not.</span></h1>
-        <p>Effective 30 August 2026. This policy covers every application listed in this
+        <p>Effective 16 September 2026. This policy covers every application listed in this
            catalog and this website itself.</p>
       </div>
     </div>
@@ -1006,14 +1263,16 @@ cat <<'HTML'
         <p>Bluebonnet Studios software has <strong>no user accounts, no sign-in, no advertising,
            no analytics and no telemetry.</strong> The publisher receives nothing from any
            application. Your documents, photographs and data are read on your own device and are
-           never uploaded.</p>
+           never uploaded, with one exception you would have to set up yourself: PDF Processor for
+           Embeddings sends page images to whichever OCR server you point it at, which is your own
+           machine unless you change it.</p>
         <p><strong>No application in this catalog uses your location.</strong> None of them asks
            your device where you are, and none contains any code capable of it. Where coordinates
            appear at all, they are values already stored inside the files you chose to process —
            the position a camera recorded in a photograph, or the survey geometry inside a seismic
            file — never a reading of where you are.</p>
-        <p>Four of the ten applications do contact a network, for reasons named below. None of
-           them sends your file contents anywhere, and each is listed rather than glossed over.</p>
+        <p>Six of the sixteen applications do contact a network, for reasons named below. Each is
+           listed rather than glossed over.</p>
 
         <h2>What each application does with the network</h2>
         <table>
@@ -1021,14 +1280,20 @@ cat <<'HTML'
           <tbody>
             <tr><td>Project2Excel</td><td><strong>None.</strong> Runs fully offline</td></tr>
             <tr><td>Markdown Renderer</td><td><strong>None.</strong> Runs fully offline</td></tr>
-            <tr><td>Similars and Photo Statistics</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>vCard Cleaner</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Find Similar Photos</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Photo Statistics</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Check Capture Year vs Folder</td><td><strong>None.</strong> Runs fully offline</td></tr>
             <tr><td>Restore Missing Photos</td><td><strong>None.</strong> Runs fully offline</td></tr>
+            <tr><td>Face Assistant</td><td><strong>None.</strong> Runs fully offline; face data stays on your Mac</td></tr>
             <tr><td>Cassandra Risking</td><td><strong>None.</strong> Runs fully offline</td></tr>
             <tr><td>PDF Classifier</td><td>Checks for application updates only</td></tr>
             <tr><td>Geocrawler</td><td>Checks for application updates only</td></tr>
             <tr><td>SEG-Y Coordinate Security</td><td>Optional map tiles, off until you enable them</td></tr>
             <tr><td>Location Caption Assistant</td><td>Looks up place names for coordinates already stored in your photographs</td></tr>
             <tr><td>Bakmil Metro Schedule</td><td>A website; loads and caches its own timetable</td></tr>
+            <tr><td>APK Finder</td><td>Searches and downloads from the app repositories you enable</td></tr>
+            <tr><td>PDF Processor for Embeddings</td><td>Downloads models during setup; sends page images to the OCR server you configure</td></tr>
           </tbody>
         </table>
 
@@ -1065,7 +1330,7 @@ cat <<'HTML'
            under Microsoft's own privacy practices; the publisher receives only the aggregate
            acquisition statistics the Store provides.</p>
 
-        <h2>The four applications that contact a network</h2>
+        <h2>The six applications that contact a network</h2>
         <h3>PDF Classifier and Geocrawler — update checks</h3>
         <p>Both can check whether a newer version exists, against a local network share first and
            a public release channel second. The check sends nothing about you or your documents.
@@ -1096,6 +1361,43 @@ cat <<'HTML'
            policies require. Nominatim and Overpass are operated by the OpenStreetMap Foundation
            under their own privacy terms. Nothing is written to your catalog until you approve
            each suggestion, and photographs with no stored coordinate are skipped entirely.</p>
+
+        <h3>PDF Processor for Embeddings — models and the OCR server</h3>
+        <p>Setting it up downloads Python packages and the Chandra OCR 2 model weights from
+           Hugging Face; the supplied launchers then run it with model downloads switched off. The
+           optional MinerU engine downloads its own models the first time it is used, and the
+           optional vLLM backend downloads a container image, after asking.</p>
+        <p>With the vLLM backend, <strong>page images are sent to the server address in
+           Settings</strong>. That address is your own machine by default. If you change it to
+           another computer, the pages it is asked to read go to that computer. It sends nothing
+           to the publisher, has no update check and no telemetry.</p>
+
+        <h3>APK Finder — the app repositories you enable</h3>
+        <p>APK Finder searches app repositories and downloads apps from them, so it has to contact
+           them. Requests go to the repositories switched on in its settings: F-Droid, which is on
+           by default, and IzzyOnDroid and APKPure, which are off until you enable them. Like any
+           web request, each one reveals your IP address and which apps you look at or download.</p>
+        <p>F-Droid and IzzyOnDroid searches run against a catalogue downloaded to your device, so
+           <strong>your search terms stay on the device</strong>. APKPure publishes no such
+           catalogue: <strong>when APKPure is enabled, your search terms are sent to
+           apkpure.com.</strong> App icons are loaded from the addresses the repositories list; turn
+           off &ldquo;Allow repository icons/images&rdquo; and no image requests are made. The
+           one-tap download of the SAI installer always comes from F-Droid, even if F-Droid is
+           switched off for searching.</p>
+        <p>Device profiling, compatibility checks and inspection of downloaded apps all run on the
+           device. Your device profile, download history and diagnostic log never leave it unless
+           you export them yourself. It contains no analytics, advertising or Google services
+           libraries, and it does not ask for your location.</p>
+
+        <h2>Face Assistant — face data</h2>
+        <p>Face Assistant makes no network requests. To recognise people it stores, on your Mac,
+           the names you confirm and <strong>face embeddings</strong> — numerical descriptions of
+           faces, which are biometric data about the people in your photographs — together with
+           face positions, your review decisions and the keywords you linked. They are kept in a
+           database readable only by your user account, in your Library folder, with backups
+           beside it, and are shared across your Lightroom catalogs. Its log records operations
+           and outcomes, not names, paths or images. An export you create contains names and
+           embeddings wherever you save it, so handle it as carefully as the photographs.</p>
 
         <h2>This website</h2>
         <p>This site sets no cookies and runs no analytics. Three things are worth naming:</p>
@@ -1155,15 +1457,15 @@ cat <<'HTML'
     <main class="content" id="main">
       <div class="prose">
         <h2>How the tools are built</h2>
-        <p>Most of this catalog is native desktop software — five PySide6 applications on
-           Windows and macOS, and one built on Tauri. The rest goes where a desktop program
-           cannot: three Lightroom Classic plugins, a web app that installs nothing, and an
+        <p>Most of this catalog is native desktop software — six PySide6 applications on
+           Windows and macOS, one built on Tauri and one on wxPython. The rest goes where a desktop
+           program cannot: six Lightroom Classic plugins, a web app that installs nothing, and an
            Android app for car head units with no Play Store. Whatever the platform, they open
-           fast, they work offline, and they keep their data on your machine.</p>
+           fast and keep their data on your machine.</p>
         <ul>
           <li><strong>Nothing phones home.</strong> No telemetry, no account, no licence server.
-              Where a tool touches the network at all — a map tile, an update check — it is off
-              until you turn it on, and it says so.</li>
+              Where a tool touches the network at all, it says what it contacts and why, and the
+              <a href="privacy.html">privacy policy</a> names each one.</li>
           <li><strong>One version number per application</strong>, held in a single source and read
               back at runtime, so the number in the About dialog is the number that was built.</li>
           <li><strong>Uncertainty is reported, not resolved.</strong> Several of these tools work on
@@ -1174,18 +1476,21 @@ cat <<'HTML'
         </ul>
 
         <h2>Releases and updates</h2>
-        <p>The applications share a common update mechanism that checks a local network share first
-           and a public release channel second. A package is never executed before its checksum has
+        <p>The desktop applications that check for updates share one mechanism, which tries a
+           local network share first and a public release channel second. A package is never executed before its checksum has
            been verified, and nothing installs without explicit confirmation. No credentials are
            embedded in any shipped application.</p>
-        <p>This site is the public record of what exists. Binaries themselves stay in private
-           distribution — see <a href="index.html#access">Access and releases</a> for what each
-           status means and how to ask about a build.</p>
+        <p>This site is the public record of what exists. Builds released to the public are on the
+           <a href="downloads.html">downloads page</a>, each file with its SHA-256 checksum; the rest
+           stay in private distribution — see <a href="index.html#access">Access and releases</a> for
+           what each status means and how to ask about a build.</p>
 
         <h2>Licensing</h2>
         <p>Most of the catalog is released under the Apache License 2.0, copyright Bluebonnet
-           Studios. Each tool page states the licence that applies to it. Where a licence has not
-           been declared yet, the page says &ldquo;Not stated&rdquo; rather than implying one.</p>
+           Studios. Each tool page states the licence that applies to it, and names any bundled
+           component or separately downloaded model whose own licence restricts how it may be used or
+           redistributed. Where a licence has not been declared yet, the page says &ldquo;Not
+           stated&rdquo; rather than implying one.</p>
 
         <h2>Where the name comes from</h2>
         <p>Lupinus texensis, the Texas bluebonnet: royal-cobalt petals, a pale banner spot that
@@ -1206,6 +1511,213 @@ HTML
   page_close
 }
 
+# --- downloads pages ---------------------------------------------------------
+# downloads.html lists each catalogued tool that has a published release in the
+# downloads repository, in catalog order; download-<slug>.html is that tool's own
+# page, with its files, release notes, README and user guide. Visitors are never
+# sent to the GitHub release page, which always shows source archives and a tag.
+# File names and URLs come from GitHub release data, so they are escaped before
+# they reach the page.
+
+download_files () {  # slug -> the file table for that tool's release
+  printf '%s\n' "$DOWNLOADS" | awk -F'\t' -v s="$1" '
+    function esc(x) { gsub(/&/, "\\&amp;", x); gsub(/</, "\\&lt;", x); gsub(/>/, "\\&gt;", x); gsub(/"/, "\\&quot;", x); return x }
+    function human(b,   u, i) {
+      split("B KB MB GB", u, " "); i = 1
+      while (b >= 1024 && i < 4) { b /= 1024; i++ }
+      return i == 1 ? sprintf("%d %s", b, u[i]) : sprintf("%.1f %s", b, u[i])
+    }
+    $1 != s { next }
+    !open {
+      open = 1
+      printf "            <div class=\"tablewrap\">\n              <table class=\"roster downloads\">\n"
+      printf "                <thead>\n                  <tr>\n"
+      printf "                    <th scope=\"col\">File</th>\n"
+      printf "                    <th scope=\"col\">Size</th>\n"
+      printf "                    <th scope=\"col\">SHA-256</th>\n"
+      printf "                    <th scope=\"col\"><span class=\"visually-hidden\">Download</span></th>\n"
+      printf "                  </tr>\n                </thead>\n                <tbody>\n"
+    }
+    {
+      sha = ($9 == "" ? "Not provided" : "<code>" esc($9) "</code>")
+      printf "                  <tr>\n"
+      printf "                    <td class=\"file\" data-label=\"File\">%s</td>\n", esc($7)
+      printf "                    <td class=\"num\" data-label=\"Size\">%s</td>\n", human($8)
+      printf "                    <td class=\"hash\" data-label=\"SHA-256\">%s</td>\n", sha
+      printf "                    <td class=\"act\" data-label=\"Get\"><a class=\"btn\" href=\"%s\">Download<span class=\"visually-hidden\"> %s</span></a></td>\n", esc($10), esc($7)
+      printf "                  </tr>\n"
+    }
+    END { if (open) printf "                </tbody>\n              </table>\n            </div>\n" }'
+}
+
+checksum_help () {
+cat <<'HTML'
+      <section>
+        <p class="section-label">Checking a download</p>
+        <div class="prose">
+          <p>Compare the checksum of the file you downloaded with the one listed above. They must match
+             exactly; if they do not, delete the file and download it again.</p>
+          <ul>
+            <li><strong>Windows</strong> — in PowerShell, <code>Get-FileHash .\file-name</code></li>
+            <li><strong>macOS and Linux</strong> — in Terminal, <code>shasum -a 256 file-name</code></li>
+          </ul>
+        </div>
+      </section>
+HTML
+}
+
+downloads_page () {
+  local n_tools n_files
+  n_tools="$(printf '%s\n' "$DOWNLOADS" | awk -F'\t' 'NF>=10 && !seen[$1]++ {n++} END{print n+0}')"
+  n_files="$(printf '%s\n' "$DOWNLOADS" | awk -F'\t' 'NF>=10 {n++} END{print n+0}')"
+
+  page_open "Downloads — Bluebonnet Studios" \
+    "Published builds of Bluebonnet Studios software, with the SHA-256 checksum of every file." \
+    "downloads"
+cat <<HTML
+  <div class="page-head">
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow">Downloads</p>
+        <h1>Published builds, <span class="hl">checksums included.</span></h1>
+        <p>The newest public release of each tool that has one. Every file is listed with its SHA-256
+           checksum, so you can confirm that what arrived is what was published, and each release
+           comes with its notes, a README and a user guide. Tools not listed here are distributed
+           on request.</p>
+      </div>
+      <div class="stats">
+        <div><b>$n_tools</b><span>Tools</span></div>
+        <div><b>$n_files</b><span>Files</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+HTML
+  rail "downloads.html"
+cat <<HTML
+    <main class="content" id="main">
+HTML
+  if [ "$n_files" = "0" ]; then
+cat <<HTML
+      <section>
+        <p class="section-label">Nothing published yet</p>
+        <div class="prose">
+          <p>No builds are published for download yet. Every tool in the catalog is currently
+             distributed on request — see <a href="index.html#access">Access and releases</a> for how
+             to ask for one.</p>
+        </div>
+      </section>
+HTML
+  else
+cat <<HTML
+      <section>
+        <p class="section-label">Published builds</p>
+        <div class="details">
+HTML
+    printf '%s\n' "$TOOLS" | while IFS=$'\t' read -r name slug rest; do
+      [ -n "$slug" ] && has_download "$slug" || continue
+      local page="download-$slug.html" chip=""
+      [ "$(download_field "$slug" 4)" = "true" ] && chip='<span class="chip is-beta">Prerelease</span>'
+cat <<HTML
+          <article class="detail" id="$slug">
+            <div class="detail-head">
+              <h3><a href="$page">$name</a></h3>
+              $chip
+            </div>
+            <p>Version $(download_field "$slug" 2) &middot; published $(download_field "$slug" 5) &middot;
+               <a href="$page#notes">Release notes</a> &middot; <a href="$page#readme">README</a> &middot;
+               <a href="$page#guide">User guide</a></p>
+HTML
+      download_files "$slug"
+      printf '          </article>\n'
+    done
+cat <<'HTML'
+        </div>
+      </section>
+
+HTML
+    checksum_help
+  fi
+  art downloads tail
+cat <<HTML
+    </main>
+  </div>
+HTML
+  page_close
+}
+
+download_page () {  # slug
+  local slug="$1" name ver pub chip=""
+  name="$(tool_field "$slug" 1)"
+  ver="$(download_field "$slug" 2)"; pub="$(download_field "$slug" 5)"
+  [ "$(download_field "$slug" 4)" = "true" ] && chip='<span class="chip is-beta">Prerelease</span>'
+
+  page_open "Download $name $ver — Bluebonnet Studios" \
+    "Download $name $ver: files with SHA-256 checksums, release notes, README and user guide." \
+    "downloads"
+cat <<HTML
+  <div class="page-head">
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow"><a href="downloads.html">Downloads</a></p>
+        <h1>$name <span class="hl">$ver</span></h1>
+        <div class="head-meta">
+          $chip
+          <span class="ver">Published $pub</span>
+        </div>
+        <p><a href="#files">Files</a> &middot; <a href="#notes">Release notes</a> &middot;
+           <a href="#readme">README</a> &middot; <a href="#guide">User guide</a> &middot;
+           <a href="$slug.html">About $name</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+HTML
+  rail "downloads.html"
+cat <<HTML
+    <main class="content" id="main">
+      <section id="files">
+        <p class="section-label">Files</p>
+HTML
+  download_files "$slug"
+cat <<HTML
+      </section>
+
+HTML
+  checksum_help
+cat <<HTML
+
+      <section id="notes">
+        <p class="section-label">Release notes</p>
+        <div class="prose doc">
+$(download_doc "$slug" notes)
+        </div>
+      </section>
+
+      <section id="readme">
+        <p class="section-label">README</p>
+        <div class="prose doc">
+$(download_doc "$slug" readme)
+        </div>
+      </section>
+
+      <section id="guide">
+        <p class="section-label">User guide</p>
+        <div class="prose doc">
+$(download_doc "$slug" guide)
+        </div>
+      </section>
+HTML
+  art "download-$slug" tail
+cat <<HTML
+    </main>
+  </div>
+HTML
+  page_close
+}
+
 # --- index page --------------------------------------------------------------
 # --- home page category panels ----------------------------------------------
 # The home page names the four categories and what each is for; the roster
@@ -1213,9 +1725,9 @@ HTML
 # pitch is cat_head, which the category page uses.
 cat_pitch () {
   case "$1" in
-    Business)   printf 'The repetitive middle of office work: getting a schedule out of the tool that authored it, deciding what needs expensive processing, and reading long technical documents without surprises.' ;;
+    Business)   printf 'The repetitive middle of office work: getting a schedule out of the tool that authored it, deciding what needs expensive processing, reading long technical documents without surprises, and tidying exported contacts.' ;;
     "Web &amp; Mobile") printf 'Hardware a desktop tool never reaches: a phone on a metro platform, and an Android head unit in a car that has no Play Store. Neither asks who you are.' ;;
-    Lightroom)  printf 'The unglamorous work of a large photo library: the photographs you already have twice, the files the catalog has lost, and the place a picture was actually taken.' ;;
+    Lightroom)  printf 'The unglamorous work of a large photo library: the photographs you already have twice, capture dates that disagree with their folders, the files the catalog has lost, and the people and places in a picture.' ;;
     Geoscience) printf 'Exploration data handled by tools that share one habit — they say what they know, mark what they inferred, and refuse to turn a guess into a fact.' ;;
   esac
 }
@@ -1326,9 +1838,24 @@ check_copy () {
 # --- drive -------------------------------------------------------------------
 check_copy
 
+# Tools that have a download, in catalog order. Every one must have its three
+# documents before any page is written, so a half-fetched state fails the build
+# rather than publishing a download page with an empty section.
+# An if, not a && chain: a chain that ends false on the last tool would make the
+# whole substitution fail, and set -e would stop the build without a word.
+DOWNLOAD_SLUGS="$(printf '%s\n' "$TOOLS" | while IFS=$'\t' read -r name slug rest; do
+  if [ -n "$slug" ] && has_download "$slug"; then printf '%s\n' "$slug"; fi; done)"
+for slug in $DOWNLOAD_SLUGS; do
+  for kind in notes readme guide; do
+    [ -f "$DOWNLOADS_DOCS/$slug/$kind.html" ] || {
+      echo "build: $DOWNLOADS_DOCS/$slug/$kind.html not found — run 'bash fetch-downloads.sh'" >&2; exit 1; }
+  done
+done
+
 index_page > index.html
 about_page > about.html
 privacy_page > privacy.html
+downloads_page > downloads.html
 printf '%s\n' "$CATEGORIES" | while IFS='|' read -r c page label; do
   category_page "$c" > "$page"
 done
@@ -1336,4 +1863,17 @@ printf '%s\n' "$TOOLS" | while IFS=$'\t' read -r name slug rest; do
   [ -n "$slug" ] || continue
   tool_page "$slug" > "$slug.html"
 done
-echo "built: index, about, privacy, $(printf '%s\n' "$CATEGORIES" | wc -l | tr -d ' ') categories, $(total_tools) tool pages — $(ls -1 *.html | wc -l | tr -d ' ') files"
+for slug in $DOWNLOAD_SLUGS; do
+  download_page "$slug" > "download-$slug.html"
+done
+# A download page whose tool no longer has a download would keep offering a
+# withdrawn release, so it goes. Only pages this build generates are touched.
+for f in download-*.html; do
+  [ -e "$f" ] || continue
+  s="${f#download-}"; s="${s%.html}"
+  case " $(printf '%s ' $DOWNLOAD_SLUGS)" in
+    *" $s "*) ;;
+    *) rm -f -- "$f"; echo "build: removed $f — $s no longer has a download" ;;
+  esac
+done
+echo "built: index, about, privacy, downloads, $(printf '%s\n' "$DOWNLOAD_SLUGS" | grep -c .) download pages, $(printf '%s\n' "$CATEGORIES" | wc -l | tr -d ' ') categories, $(total_tools) tool pages — $(ls -1 *.html | wc -l | tr -d ' ') files"

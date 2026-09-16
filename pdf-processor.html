@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Project2Excel — Bluebonnet Studios</title>
-  <meta name="description" content="Convert Microsoft Project .mpp files into editable Excel workbooks — drawn Gantt chart, task data, resources, assignments and relations — on a machine that has never had Project installed." />
+  <title>PDF Processor for Embeddings — Bluebonnet Studios</title>
+  <meta name="description" content="A Windows desktop application that uses PDF Classifier&rsquo;s page-by-page routing to send only the pages that need it to Chandra OCR 2, and merges the result into embedding-ready canonical JSON." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -49,13 +49,13 @@
     <div class="page-head-inner">
       <div>
         <p class="eyebrow"><a href="business-tools.html">Business Tools</a></p>
-        <h1>Project2Excel</h1>
-        <p class="subtitle">Read a Microsoft Project schedule without Microsoft Project</p>
+        <h1>PDF Processor for Embeddings</h1>
+        <p class="subtitle">OCR only the pages that need it</p>
         <div class="head-meta">
-          <span class="chip is-private">Private release</span>
-          <span class="ver">Version 1.0.12 &middot; Windows · macOS</span>
+          <span class="chip is-dev">In development</span>
+          <span class="ver">Version — &middot; Windows · GPU</span>
         </div>
-        <p>Opens a Microsoft Project <code>.mpp</code> file and writes a real Excel workbook — a drawn Gantt chart, the task data behind it, resources, assignments and relationships — on a machine that has never had Project installed.</p>
+        <p>Most pages in most PDFs do not need a vision model to read them. This asks PDF Classifier which ones do, sends only those to Chandra OCR 2, extracts the rest natively, and assembles every page into one clean document for a retrieval pipeline.</p>
       </div>
     </div>
   </div>
@@ -73,36 +73,45 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>What it is for</h2>
-<p>A Microsoft Project schedule is usually read by far more people than ever author one. The planner has Project; the engineers, the commercial team, the client and the subcontractors mostly do not, and buying each of them a licence to look at a Gantt chart is not a serious proposal. What those readers actually want is the schedule in the tool they already use all day.</p>
-<p>Project2Excel opens an <code>.mpp</code> file and writes a real Excel workbook — not a screenshot of a chart, and not a flat CSV dump that loses the hierarchy. The result is something a reader can filter, sort, comment on and paste into a report, on a machine that has never had Project installed.</p>
+<h2>Why selective OCR</h2>
+<p>OCR is the slowest, most expensive and most error-prone step in a document pipeline. Running it
+   on every page means paying for — and risking invented text on — pages whose text layer was
+   already fine. <a href="pdf-classifier.html">PDF Classifier</a> decides page by page; Chandra OCR 2
+   only ever sees the pages it is told to read, and every page still ends up in the output, read by
+   one route or the other.</p>
 
-<h2>What it produces</h2>
-<p>One workbook, with the schedule split across the sheets you would otherwise build by hand:</p>
+<h2>What it does</h2>
 <ul>
-  <li><strong>Gantt View</strong> — task hierarchy, durations, dates, progress and resources, with calendar-aware shading for nonworking days, milestone markers, critical-task highlighting, and thin FS/SS/FF/SF dependency connectors drawn behind the bars.</li>
-  <li><strong>Task Data</strong> — the filterable source data, with real task IDs, readable dependency notation, and baseline, actual, constraint and calendar fields.</li>
-  <li><strong>Resources</strong> — the project&rsquo;s resource catalog, with rate, calendar and contact fields.</li>
-  <li><strong>Assignments</strong> — task-to-resource assignments with resolved names, units, work and cost.</li>
-  <li><strong>Relations</strong> — one row per relationship, with endpoint IDs and names, type, lag and lag units.</li>
+  <li><strong>Batch in, decisions first.</strong> Add PDFs and images, preview each routing decision before anything runs, then watch per-page progress.</li>
+  <li><strong>Originals are left alone.</strong> A PDF with no classification yet is classified on a temporary copy.</li>
+  <li><strong>Doubt stops the line.</strong> A document the classifier marks for manual review is held back rather than read end to end by OCR. A manual page range, and a launcher for PDF Classifier&rsquo;s own page review, are there when you need them.</li>
+  <li><strong>Choice of engine.</strong> Chandra runs on a local GPU or through a vLLM server; MinerU and a native-text-only mode that needs no GPU are alternatives.</li>
+  <li><strong>Output for retrieval.</strong> Canonical JSON, embedding-ready JSONL and a QC report per document, optionally Markdown and HTML, in a folder tree that mirrors the input.</li>
+  <li><strong>Language per element.</strong> English, Russian and Azerbaijani are detected paragraph by paragraph, not once per document.</li>
 </ul>
-<p>The Gantt is drawn with Excel&rsquo;s own primitives rather than pasted as a picture, so it stays legible when someone widens a column or changes the timescale.</p>
 
-<h2>How it reads the file</h2>
-<p>The <code>.mpp</code> format is not documented for outside use, so the conversion is done by MPXJ, a mature open-source Java library that reads Project files directly. That means a Java runtime is involved — but a trimmed one ships inside the application, along with the reader itself. There is no system-wide Java to install, no <code>JAVA_HOME</code> to set, and no version conflict with anything else on the machine.</p>
-
-<h2>Two ways to run it</h2>
-<p>A desktop application for Windows and macOS covers the ordinary case: pick a file, choose a timescale, write the workbook. A command-line interface covers the rest — batch conversion, scheduled jobs, or a pipeline step — with switches for output path, timescale and overwrite behaviour.</p>
-
-<h2>Installing it</h2>
-<p>The Windows installer defaults to a per-user install that needs no administrator rights, which matters on a locked-down corporate machine; an administrator can still choose an all-users install, and both modes can be driven unattended. On macOS the app is dragged out of its disk image in the usual way. The macOS build is checked at package time to confirm nothing in it links outside the bundle or the system frameworks.</p>
-
-<h2>What it does not do</h2>
+<h2>Nothing is overwritten</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Being a Project editor.</strong> The conversion runs one way. Nothing you change in the workbook travels back to the <code>.mpp</code>, and the tool never modifies the file it read.</p>
-  <p><strong>Uploading your schedule to convert it.</strong> Everything happens on your machine, with a bundled reader and a bundled runtime. Project plans carry budgets, staffing and delivery dates; none of that needs to leave the desktop to become a spreadsheet.</p>
+  <p><strong>Replacing the last run&rsquo;s output with this one&rsquo;s.</strong> Every processing pass is written as a new revision, staged and moved into place only when complete. Earlier revisions are kept up to a retention count you set, and removing a document from the list never removes it from disk.</p>
 </div>
+
+<h2>Status, stated plainly</h2>
+<p>Under active development and run from source on Windows; the installer has not been built yet,
+   and macOS is unverified. Chandra OCR needs an NVIDIA GPU with at least 12&nbsp;GiB of free
+   memory, and the application refuses to start it — and says why — when that is not available.
+   Reading order on multi-column native pages is not yet reliable.</p>
+<p>The vLLM server address can be changed: pointed at a machine other than your own, page images
+   are sent to it.</p>
+
+<h2>Licensing</h2>
+<p>The application is licensed under Apache&nbsp;2.0 and includes the Chandra inference code,
+   also Apache&nbsp;2.0, unchanged. The Chandra OCR 2 <strong>model weights are not included</strong>
+   and carry their own licence, a modified OpenRAIL-M. It <strong>does not permit use</strong> by an
+   organisation with more than US$2&nbsp;million in annual revenue or in funding raised, or by one
+   offering a product that competes with the model&rsquo;s publisher, Datalab; personal and research
+   use are exempt. It also asks for attribution and extends its terms to the model&rsquo;s output.
+   Check those terms before using the model for work.</p>
         </div>
 
         <div class="tool-side">
@@ -111,18 +120,18 @@
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
-            <div><dt>Version</dt><dd>1.0.12</dd></div>
-            <div><dt>Status</dt><dd>Private release</dd></div>
-            <div><dt>Platform</dt><dd>Windows · macOS</dd></div>
+            <div><dt>Version</dt><dd>—</dd></div>
+            <div><dt>Status</dt><dd>In development</dd></div>
+            <div><dt>Platform</dt><dd>Windows · GPU</dd></div>
             <div><dt>Category</dt><dd><a href="business-tools.html">Business</a></dd></div>
             <div><dt>License</dt><dd>Apache-2.0</dd></div>
             <div><dt>Copyright</dt><dd>Bluebonnet Studios</dd></div>
             <div><dt>Updated</dt><dd>2026-09-16</dd></div>
           </dl>
           <div class="aside-act">
-            <a class="btn" href="index.html#access">Request</a>
-            <p>Built and versioned, distributed on request rather than published.</p>
-            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Project2Excel">Ask about Project2Excel</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+            <span class="btn" aria-disabled="true">Unreleased</span>
+            <p>Still being built. Nothing to download yet.</p>
+            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20PDF%20Processor%20for%20Embeddings">Ask about PDF Processor for Embeddings</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
 

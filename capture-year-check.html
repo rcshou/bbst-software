@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Restore Missing Photos — Bluebonnet Studios</title>
-  <meta name="description" content="A Lightroom Classic plugin that finds files matching photos the catalog reports as missing and puts them back where the catalog expects them." />
+  <title>Check Capture Year vs Folder — Bluebonnet Studios</title>
+  <meta name="description" content="A Lightroom Classic plugin that checks capture dates against the year or decade folders photographs are filed in, and collects every mismatch for review without changing a date." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -49,13 +49,13 @@
     <div class="page-head-inner">
       <div>
         <p class="eyebrow"><a href="lightroom-plugins.html">Lightroom Plugins</a></p>
-        <h1>Restore Missing Photos</h1>
-        <p class="subtitle">Put the files Lightroom lost back where the catalog expects them</p>
+        <h1>Check Capture Year vs Folder</h1>
+        <p class="subtitle">When the folder and the capture date disagree</p>
         <div class="head-meta">
           <span class="chip is-private">Private release</span>
-          <span class="ver">Version 1.23.3 &middot; Plugin</span>
+          <span class="ver">Version 2.1.0 &middot; Plugin · macOS</span>
         </div>
-        <p>Lightroom marks a photo as missing when the file moves out from under it. This searches the folders you point it at for files matching those photos and puts them back at the paths the catalog still expects.</p>
+        <p>If your photographs live in folders named by year, the folder is a second opinion on when each one was taken. This compares the two and gathers every disagreement into collections, without changing a single capture date.</p>
       </div>
     </div>
   </div>
@@ -73,31 +73,36 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>What it is for</h2>
-<p>Lightroom records where every photograph lives. Move the files with Finder, restore from a backup to a different path, or swap a drive letter, and the catalog is left pointing at places nothing exists — every affected photo marked missing, all its edits and metadata intact but detached from any actual pixels.</p>
-<p>The files usually still exist. They are on the backup drive, or the NAS, or the old disk in a drawer. What is missing is the correspondence between the catalog&rsquo;s expected path and where the file actually sits now. This plugin rebuilds that correspondence and, if you want, copies the files back to the paths the catalog already expects — so no relinking is needed afterwards.</p>
+<h2>What it checks</h2>
+<p>Select photographs and run <strong>Library &gt; Plug-in Extras &gt; Check Capture Year vs
+   Folder</strong>. Each photograph&rsquo;s capture year is compared with the folder it sits in,
+   below a root you choose: a folder named <code>Photos</code> by default, or an exact path.
+   <code>Photos/1993</code>, <code>Photos/1990s</code> and <code>Photos/1990s/1993</code> are all
+   recognised, and optionally folders such as <code>1993 Vacation</code>. A month check for
+   <code>YYYY-MM</code> folders and a tolerance of up to a week around New Year are both
+   available.</p>
+<p>Results go into one collection set the plugin owns: a collection for each kind of mismatch,
+   such as <em>Folder 1993 – Metadata 1995</em>, and others for photographs with no capture date,
+   outside the root, or in a folder it could not interpret.</p>
 
-<h2>The workflow</h2>
-<p>Use Lightroom&rsquo;s own <strong>Find All Missing Photos</strong>, select what you want to recover, and run the plugin. It shows the paths the catalog is expecting, and optionally saves them to a text file for reference. Then you point it at a folder that might contain replacements — a backup drive, a NAS share, an old export — and it scans.</p>
-<p>The selection is captured when the workflow starts and held for its whole duration, so it survives you clicking around in Lightroom mid-scan. It is discarded when the workflow ends.</p>
-
-<h2>Indexing, and why it counts rather than estimates</h2>
-<p>Indexing walks the chosen folder once. There is deliberately no preliminary counting pass, because counting the tree takes about as long as indexing it and would nearly double the wait for a progress bar. So the dialog shows a running count — <em>Indexing files… (1,250 indexed)</em> — rather than a percentage it would have to invent. It can be cancelled, and a cancelled index is discarded rather than half-used.</p>
-<p>Each folder&rsquo;s index is kept in memory for the rest of the Lightroom session. Scanning the same share again — including on a later <em>Search Another Folder</em> pass — reuses it instead of walking the tree a second time. Nothing is written to disk, and a plugin reload or a Lightroom restart always forces a fresh scan.</p>
-<p>Because a reused index describes the folder as it was earlier, every match is verified to still exist immediately before it is accepted. One that has since moved is dropped from the index so it is not offered again, and the results report how many were caught that way.</p>
-
-<h2>When something goes wrong</h2>
-<p>If the source disk or NAS share disconnects part-way through, you get an explicit <strong>Indexing Failed</strong> error with a path to the error log — not a generic Lightroom task failure, and not a results screen full of &ldquo;not found&rdquo; that looks like a completed scan. An incomplete index is never treated as a finished one. That distinction is the difference between retrying a scan and wrongly concluding your backup does not have the files.</p>
-
-<h2>Duplicates</h2>
-<p>When several files match one missing photo, you choose how it behaves: <strong>manual review</strong>, where you decide each case, or <strong>first match</strong>, where it takes the first and keeps moving. The active mode is shown in the folder-picker title before every scan, so it is never a surprise, and it can be changed from the plugin&rsquo;s menu or from Plug-in Manager — both read and write the same setting.</p>
-
-<h2>What it does not do</h2>
+<h2>Careful about scope</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Touching your catalog.</strong> The plugin copies files into place. It does not rewrite catalog paths, edit metadata, or modify the originals it finds.</p>
-  <p><strong>Searching anything you did not point it at.</strong> It reads the folders you choose and the photos you selected, and nothing else.</p>
+  <p><strong>Treating no selection as the whole catalog.</strong> When nothing is selected, Lightroom hands a plugin every photograph in the filmstrip. This one notices and stops, and it asks you to confirm the count before it starts.</p>
+  <p><strong>Updating results as it goes.</strong> Results change only after a complete scan, in one catalog operation; cancel, or hit an error, and they stay exactly as they were. Photographs from earlier scans keep their results, so a large library can be worked through a folder at a time.</p>
 </div>
+
+<h2>What it never changes</h2>
+<p>Capture dates, or any other metadata. Dates are read from the raw metadata fields, never parsed
+   from locale-formatted display strings, and the only things written are the plugin&rsquo;s own
+   collections. A collection set with the same name that the plugin did not create is left
+   alone.</p>
+
+<h2>Status, stated plainly</h2>
+<p>Pure Lua with no native helper, written for Lightroom Classic on both macOS and Windows against
+   SDK 12 with a minimum of SDK 10. It has been tested in Lightroom Classic on a Mac, and its logic
+   is also covered by automated tests that run outside Lightroom. It has <strong>not yet been
+   tested on Windows</strong>.</p>
         </div>
 
         <div class="tool-side">
@@ -106,9 +111,9 @@
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
-            <div><dt>Version</dt><dd>1.23.3</dd></div>
+            <div><dt>Version</dt><dd>2.1.0</dd></div>
             <div><dt>Status</dt><dd>Private release</dd></div>
-            <div><dt>Platform</dt><dd>Plugin</dd></div>
+            <div><dt>Platform</dt><dd>Plugin · macOS</dd></div>
             <div><dt>Category</dt><dd><a href="lightroom-plugins.html">Lightroom</a></dd></div>
             <div><dt>License</dt><dd>Apache-2.0</dd></div>
             <div><dt>Copyright</dt><dd>Bluebonnet Studios</dd></div>
@@ -117,21 +122,13 @@
           <div class="aside-act">
             <a class="btn" href="index.html#access">Request</a>
             <p>Built and versioned, distributed on request rather than published.</p>
-            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Restore%20Missing%20Photos">Ask about Restore Missing Photos</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Check%20Capture%20Year%20vs%20Folder">Ask about Check Capture Year vs Folder</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
-        <aside class="release-box" aria-labelledby="rel-restore-missing-photos">
-          <p class="release-kicker" id="rel-restore-missing-photos">New in 1.23.3</p>
-          <ul>
-            <li><b>Virtual copies are handled once.</b> Selected virtual copies that share one file are processed together, so nothing is restored twice and the totals are right.</li>
-            <li><b>Windows network paths are recognised consistently</b>, including network paths written with forward slashes.</li>
-            <li><b>A failed copy names every file it affected</b>, with a clear next step when an incomplete destination blocks a retry.</li>
-            <li><b>Reports never replace an existing file silently</b>, and folders skipped by the depth safety limit are listed.</li>
-          </ul>
-        </aside>
+
         </div>
         </div>
-      <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+      <div class="art art-column"><img src="assets/bluebonnet-side-right.png" width="380" height="950" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>
       </div>
 

@@ -53,11 +53,12 @@ CSS
 # The tool pages follow the catalog, so a newly listed app appears in the preview
 # without anyone remembering to edit a list here. The fixed pages lead, in reading
 # order; the tool pages follow in catalog order.
-PAGES="index.html about.html privacy.html business-tools.html web-apps.html lightroom-plugins.html geoscience-tools.html"
+PAGES="index.html about.html privacy.html downloads.html business-tools.html web-apps.html lightroom-plugins.html geoscience-tools.html"
 while IFS=$'\t\r' read -r slug _rest; do
   case "$slug" in ''|\#*) continue ;; esac
   PAGES="$PAGES $slug.html"
 done < CATALOG.txt
+for f in download-*.html; do [ -e "$f" ] && PAGES="$PAGES $f"; done
 
 first=1
 for f in $PAGES; do
@@ -73,6 +74,7 @@ for f in $PAGES; do
         -e "s@href=\"\([A-Za-z0-9_-]*\)\.html#\([^\"]*\)\"@href=\"#go:\1:\1__\2\"@g" \
         -e "s@href=\"\([A-Za-z0-9_-]*\)\.html\"@href=\"#go:\1:\"@g" \
         -e "s@id=\"\([^\"]*\)\"@id=\"${slug}__\1\"@g" \
+        -e "s@class=\"\([^\"]*\)\" src=\"assets/\([a-z-]*\)\.png\"@class=\"\1 a-\2\" src=\"$PIXEL\"@g" \
         -e "s@src=\"assets/\([a-z-]*\)\.png\"@src=\"$PIXEL\" class=\"a-\1\"@g" \
     >> "$OUT"
   printf '</div>\n' >> "$OUT"

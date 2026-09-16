@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Downloads — Bluebonnet Studios</title>
+  <meta name="description" content="Published builds of Bluebonnet Studios software, with the SHA-256 checksum of every file." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    /* Apply the stored theme before first paint so the page never flashes. */
+    (function(){try{var t=localStorage.getItem("bbst-theme");
+    if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="index.html">
+        <svg class="mark" width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" focusable="false">
+          <rect class="stem" x="6.3" y="7" width="1.4" height="9" rx="0.7" />
+          <circle class="petal" cx="7" cy="3.6" r="3.6" />
+          <circle class="spot" cx="7" cy="2.6" r="1.15" />
+        </svg>
+        Bluebonnet Studios
+      </a>
+      <div class="topbar-right">
+        <nav class="mainnav" aria-label="Primary">
+          <a href="index.html">Catalog</a>
+          <a href="downloads.html" aria-current="page">Downloads</a>
+          <a href="about.html">About</a>
+          <a href="index.html#access">Access</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch color theme">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" stroke-width="1.4" />
+            <path d="M8 1.5A6.5 6.5 0 0 1 8 14.5Z" fill="currentColor" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="page-head">
+    <div class="page-head-inner">
+      <div>
+        <p class="eyebrow">Downloads</p>
+        <h1>Published builds, <span class="hl">checksums included.</span></h1>
+        <p>The newest public release of each tool that has one. Every file is listed with its SHA-256
+           checksum, so you can confirm that what arrived is what was published, and each release
+           comes with its notes, a README and a user guide. Tools not listed here are distributed
+           on request.</p>
+      </div>
+      <div class="stats">
+        <div><b>1</b><span>Tools</span></div>
+        <div><b>1</b><span>Files</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <nav class="rail" aria-label="Categories">
+      <h2>Categories</h2>
+      <a href="index.html">All tools <em>16</em></a>
+      <a href="business-tools.html">Business <em>5</em></a>
+      <a href="web-apps.html">Web &amp; Mobile <em>2</em></a>
+      <a href="lightroom-plugins.html">Lightroom <em>6</em></a>
+      <a href="geoscience-tools.html">Geoscience <em>3</em></a>
+      <p class="rail-note">Published builds are listed under Downloads. Everything else is distributed on request.</p>
+    </nav>
+    <main class="content" id="main">
+      <section>
+        <p class="section-label">Published builds</p>
+        <div class="details">
+          <article class="detail" id="apk-finder">
+            <div class="detail-head">
+              <h3><a href="download-apk-finder.html">APK Finder</a></h3>
+              
+            </div>
+            <p>Version 0.21.5 &middot; published 2026-09-15 &middot;
+               <a href="download-apk-finder.html#notes">Release notes</a> &middot; <a href="download-apk-finder.html#readme">README</a> &middot;
+               <a href="download-apk-finder.html#guide">User guide</a></p>
+            <div class="tablewrap">
+              <table class="roster downloads">
+                <thead>
+                  <tr>
+                    <th scope="col">File</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">SHA-256</th>
+                    <th scope="col"><span class="visually-hidden">Download</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="file" data-label="File">APKFinder-0.21.5-release.apk</td>
+                    <td class="num" data-label="Size">14.1 MB</td>
+                    <td class="hash" data-label="SHA-256"><code>41c623cea96865a5eb4ac2157a4a81919f3f472fa6f9f998718ba2869d52dd00</code></td>
+                    <td class="act" data-label="Get"><a class="btn" href="https://github.com/rcshou/bbst-downloads/releases/download/apk-finder-v0.21.5/APKFinder-0.21.5-release.apk">Download<span class="visually-hidden"> APKFinder-0.21.5-release.apk</span></a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section>
+        <p class="section-label">Checking a download</p>
+        <div class="prose">
+          <p>Compare the checksum of the file you downloaded with the one listed above. They must match
+             exactly; if they do not, delete the file and download it again.</p>
+          <ul>
+            <li><strong>Windows</strong> — in PowerShell, <code>Get-FileHash .\file-name</code></li>
+            <li><strong>macOS and Linux</strong> — in Terminal, <code>shasum -a 256 file-name</code></li>
+          </ul>
+        </div>
+      </section>
+      <div class="art art-tail"><img src="assets/bluebonnet-footer.png" width="860" height="391" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+    </main>
+  </div>
+  <footer class="site-foot">
+    <div class="site-foot-inner">
+      <span>Bluebonnet Studios</span>
+      <span>Catalog updated 2026-09-16 &middot; <a href="index.html#access">Access</a> &middot; <a href="privacy.html">Privacy</a> &middot; <a href="mailto:dev@bbst.us">dev@bbst.us</a></span>
+    </div>
+  </footer>
+  <script src="theme.js"></script>
+</body>
+</html>

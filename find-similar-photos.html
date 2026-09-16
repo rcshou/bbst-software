@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Restore Missing Photos — Bluebonnet Studios</title>
-  <meta name="description" content="A Lightroom Classic plugin that finds files matching photos the catalog reports as missing and puts them back where the catalog expects them." />
+  <title>Find Similar Photos — Bluebonnet Studios</title>
+  <meta name="description" content="A Lightroom Classic plugin that groups visually similar photographs in a selection into collections, comparing colour histograms checked against coarse image structure." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -49,13 +49,13 @@
     <div class="page-head-inner">
       <div>
         <p class="eyebrow"><a href="lightroom-plugins.html">Lightroom Plugins</a></p>
-        <h1>Restore Missing Photos</h1>
-        <p class="subtitle">Put the files Lightroom lost back where the catalog expects them</p>
+        <h1>Find Similar Photos</h1>
+        <p class="subtitle">The photographs you already have twice</p>
         <div class="head-meta">
           <span class="chip is-private">Private release</span>
-          <span class="ver">Version 1.23.3 &middot; Plugin</span>
+          <span class="ver">Version 2.0.0 &middot; Plugin · macOS</span>
         </div>
-        <p>Lightroom marks a photo as missing when the file moves out from under it. This searches the folders you point it at for files matching those photos and puts them back at the paths the catalog still expects.</p>
+        <p>Finds the photographs you already have twice — the burst frames, the re-export at a different size, the re-edit — by comparing what the images look like rather than the bytes they contain, and gathers each group into a collection.</p>
       </div>
     </div>
   </div>
@@ -73,31 +73,41 @@
     <main class="content" id="main">
       <div class="tool-body">
         <div class="prose">
-<h2>What it is for</h2>
-<p>Lightroom records where every photograph lives. Move the files with Finder, restore from a backup to a different path, or swap a drive letter, and the catalog is left pointing at places nothing exists — every affected photo marked missing, all its edits and metadata intact but detached from any actual pixels.</p>
-<p>The files usually still exist. They are on the backup drive, or the NAS, or the old disk in a drawer. What is missing is the correspondence between the catalog&rsquo;s expected path and where the file actually sits now. This plugin rebuilds that correspondence and, if you want, copies the files back to the paths the catalog already expects — so no relinking is needed afterwards.</p>
+<h2>What it does</h2>
+<p>Select photographs in the Library and run <strong>Library &gt; Plug-in Extras &gt; Find Similar
+   photos (histograms)</strong>. Enter a similarity threshold — 0.7 to 0.9 suits most catalogs, and
+   1.0 finds near-exact duplicates — and each group of similar photographs is placed in its own
+   collection inside a <strong>Similars</strong> collection set. Files in a format the comparison
+   cannot read are listed first, and you decide whether to continue without them.</p>
+<p>Every pair of photographs inside a group meets the threshold. Two pictures are not grouped just
+   because each resembles a third one in a different way, which is how similarity grouping
+   usually drifts into nonsense on a large selection.</p>
 
-<h2>The workflow</h2>
-<p>Use Lightroom&rsquo;s own <strong>Find All Missing Photos</strong>, select what you want to recover, and run the plugin. It shows the paths the catalog is expecting, and optionally saves them to a text file for reference. Then you point it at a folder that might contain replacements — a backup drive, a NAS share, an old export — and it scans.</p>
-<p>The selection is captured when the workflow starts and held for its whole duration, so it survives you clicking around in Lightroom mid-scan. It is discarded when the workflow ends.</p>
-
-<h2>Indexing, and why it counts rather than estimates</h2>
-<p>Indexing walks the chosen folder once. There is deliberately no preliminary counting pass, because counting the tree takes about as long as indexing it and would nearly double the wait for a progress bar. So the dialog shows a running count — <em>Indexing files… (1,250 indexed)</em> — rather than a percentage it would have to invent. It can be cancelled, and a cancelled index is discarded rather than half-used.</p>
-<p>Each folder&rsquo;s index is kept in memory for the rest of the Lightroom session. Scanning the same share again — including on a later <em>Search Another Folder</em> pass — reuses it instead of walking the tree a second time. Nothing is written to disk, and a plugin reload or a Lightroom restart always forces a fresh scan.</p>
-<p>Because a reused index describes the folder as it was earlier, every match is verified to still exist immediately before it is accepted. One that has since moved is dropped from the index so it is not offered again, and the results report how many were caught that way.</p>
-
-<h2>When something goes wrong</h2>
-<p>If the source disk or NAS share disconnects part-way through, you get an explicit <strong>Indexing Failed</strong> error with a path to the error log — not a generic Lightroom task failure, and not a results screen full of &ldquo;not found&rdquo; that looks like a completed scan. An incomplete index is never treated as a finished one. That distinction is the difference between retrying a scan and wrongly concluding your backup does not have the files.</p>
-
-<h2>Duplicates</h2>
-<p>When several files match one missing photo, you choose how it behaves: <strong>manual review</strong>, where you decide each case, or <strong>first match</strong>, where it takes the first and keeps moving. The active mode is shown in the folder-picker title before every scan, so it is never a surprise, and it can be changed from the plugin&rsquo;s menu or from Plug-in Manager — both read and write the same setting.</p>
-
-<h2>What it does not do</h2>
+<h2>Similar, not identical</h2>
 <div class="compare">
   <p class="compare-label">Instead of</p>
-  <p><strong>Touching your catalog.</strong> The plugin copies files into place. It does not rewrite catalog paths, edit metadata, or modify the originals it finds.</p>
-  <p><strong>Searching anything you did not point it at.</strong> It reads the folders you choose and the photos you selected, and nothing else.</p>
+  <p><strong>Matching checksums and calling it duplicate detection.</strong> A checksum finds byte-identical files, which is the easy half of the problem and rarely the half you have. Two exports at different sizes, a re-edit, the same frame from a burst — none of those match on bytes, and all of them are what you actually want grouped. Comparing colour histograms, then rejecting pairs whose coarse structure does not agree, finds them without grouping every photograph that merely shares a colour cast.</p>
 </div>
+
+<h2>What it changes</h2>
+<p>Collections, and nothing else. It never writes photo metadata and never modifies an image file.
+   Running it again offers to replace the previous <strong>Similars</strong> set.</p>
+
+<h2>Status, stated plainly</h2>
+<p>The comparison runs in a native helper bundled inside the plugin, built from C++ against
+   OpenCV, libheif and LibRaw, because pixel comparison across a large selection is not work for
+   Lightroom&rsquo;s scripting runtime. That helper is currently built for <strong>Apple Silicon
+   Macs only</strong>, and it still loads part of its image-library stack from Homebrew at run
+   time: it works on a Mac with Homebrew&rsquo;s <code>opencv</code>, <code>libheif</code> and
+   <code>libraw</code> installed, and is expected to fail on one without them.</p>
+<p>Tested in Lightroom Classic on a Mac. The progress bar is an estimate, and cancelling does not
+   stop a comparison already under way.</p>
+
+<h2>Licensing</h2>
+<p>The plugin&rsquo;s own code is licensed under Apache&nbsp;2.0. For HEIC and RAW support it bundles
+   libheif and libde265, which are LGPL, LibRaw, which is LGPL or CDDL, and the x265 encoder, which is
+   <strong>GPL&nbsp;2.0</strong>. The GPL is not compatible with Apache&nbsp;2.0 for redistribution as
+   one combined work, and each bundled library keeps its own licence in any copy you receive.</p>
         </div>
 
         <div class="tool-side">
@@ -106,9 +116,9 @@
         <aside class="aside">
           <h2>At a glance</h2>
           <dl>
-            <div><dt>Version</dt><dd>1.23.3</dd></div>
+            <div><dt>Version</dt><dd>2.0.0</dd></div>
             <div><dt>Status</dt><dd>Private release</dd></div>
-            <div><dt>Platform</dt><dd>Plugin</dd></div>
+            <div><dt>Platform</dt><dd>Plugin · macOS</dd></div>
             <div><dt>Category</dt><dd><a href="lightroom-plugins.html">Lightroom</a></dd></div>
             <div><dt>License</dt><dd>Apache-2.0</dd></div>
             <div><dt>Copyright</dt><dd>Bluebonnet Studios</dd></div>
@@ -117,21 +127,13 @@
           <div class="aside-act">
             <a class="btn" href="index.html#access">Request</a>
             <p>Built and versioned, distributed on request rather than published.</p>
-            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Restore%20Missing%20Photos">Ask about Restore Missing Photos</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
+            <p class="aside-ask"><a href="https://github.com/rcshou/bbst-software/discussions/new?category=q-a&amp;title=Question%20about%20Find%20Similar%20Photos">Ask about Find Similar Photos</a> on GitHub Discussions, or email <a href="mailto:dev@bbst.us">dev@bbst.us</a>.</p>
           </div>
         </aside>
-        <aside class="release-box" aria-labelledby="rel-restore-missing-photos">
-          <p class="release-kicker" id="rel-restore-missing-photos">New in 1.23.3</p>
-          <ul>
-            <li><b>Virtual copies are handled once.</b> Selected virtual copies that share one file are processed together, so nothing is restored twice and the totals are right.</li>
-            <li><b>Windows network paths are recognised consistently</b>, including network paths written with forward slashes.</li>
-            <li><b>A failed copy names every file it affected</b>, with a clear next step when an incomplete destination blocks a retry.</li>
-            <li><b>Reports never replace an existing file silently</b>, and folders skipped by the depth safety limit are listed.</li>
-          </ul>
-        </aside>
+
         </div>
         </div>
-      <div class="art art-column"><img src="assets/bluebonnet-side-left.png" width="380" height="824" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
+      <div class="art art-column"><img src="assets/bluebonnet-side-right.png" width="380" height="950" alt="" aria-hidden="true" decoding="async" loading="lazy" /></div>
         </div>
       </div>
 

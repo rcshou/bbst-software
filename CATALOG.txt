@@ -81,7 +81,7 @@ photo-statistics	rcshou/lr-photo-stats	PhotoStats.lrplugin	Photo Statistics	Ligh
 capture-year-check	rcshou/lr-datefix	DateFix.lrplugin	Check Capture Year vs Folder	Lightroom	Plugin · macOS	private	Flags photos whose capture year does not match their year folder
 restore-missing-photos	rcshou/lr-missphotos	MissPhotos.lrplugin	Restore Missing Photos	Lightroom	Plugin	private	Puts files that Lightroom reports as missing back where the catalog expects them
 face-assistant	rcshou/lr-faces	FaceAssistant.lrplugin	Face Assistant	Lightroom	Plugin · macOS	beta	Offline face recognition that applies your own person keywords
-location-caption	rcshou/LR_location_caption		Location Caption Assistant	Lightroom	Plugin	beta	Suggests the landmark a GPS-tagged photo was actually taken at
+location-caption	rcshou/LR_location_caption	LocationCaptionAssistant.lrplugin	Location Caption Assistant	Lightroom	Plugin	beta	Suggests the landmark a GPS-tagged photo was actually taken at
 geocrawler	rcshou/geocrawler_ps		Geocrawler	Geoscience	Windows	private	Audits a subsurface data repository and tells you what is in it
 segy-coordinate-security	rcshou/seis_coord		SEG-Y Coordinate Security	Geoscience	Windows	private	Share seismic data without giving away where it was shot
 apk-finder	rcshou/apk_finder		APK Finder	Web & Mobile	Android	released	Finds, checks and installs Android apps on devices with no Google Play Services

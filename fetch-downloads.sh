@@ -178,6 +178,20 @@ while IFS= read -r line; do
 done < "$rows"
 [ "$fail" = "0" ] || { echo "downloads: cache not replaced" >&2; exit 1; }
 
+# Apply a sed expression to a file in place, on either sed.
+#
+# GNU sed takes the suffix `-i` uses attached (`-i.bak`) and treats a bare
+# `-i` as "no backup"; BSD sed always reads the suffix as the next argument,
+# so `sed -i -E 'expr' file` quietly takes "-E" as the suffix and then runs
+# the expression without extended regular expressions -- every capture group
+# becomes a literal parenthesis and the substitution fails with "\1 not
+# defined in the RE". Writing to a sibling file and renaming avoids the
+# incompatibility, and the rename is atomic.
+edit_in_place () {  # sed-expression | file
+  local rewritten="$2.rewritten"
+  sed -E "$1" "$2" > "$rewritten" && mv "$rewritten" "$2"
+}
+
 # Render each release's notes, README and user guide into page fragments. GitHub's
 # own Markdown renderer does the work, in document mode (the way it renders a
 # README, not a comment), and it escapes scripts and drops event handlers and
@@ -189,7 +203,7 @@ render () {  # markdown-file | html-file | label
   if ! gh api markdown -F text=@"$1" -f mode=markdown > "$2" 2>"$err"; then
     echo "downloads: could not render $3: $(head -1 "$err")" >&2; return 1
   fi
-  sed -i -E 's#<div class="markdown-heading">(<h[1-6][^>]*>.*</h[1-6]>)<a id="user-content-[^"]*" class="anchor"[^>]*>.*</a></div>#\1#' "$2"
+  edit_in_place 's#<div class="markdown-heading">(<h[1-6][^>]*>.*</h[1-6]>)<a id="user-content-[^"]*" class="anchor"[^>]*>.*</a></div>#\1#' "$2"
   if grep -qi '<img' "$2"; then
     echo "downloads: $3 contains an image; images are not supported in release documents" >&2; return 1
   fi
@@ -198,7 +212,7 @@ render () {  # markdown-file | html-file | label
   if [ -n "$bad" ]; then
     echo "downloads: $3 has a relative link ($bad); use an absolute URL or a #anchor" >&2; return 1
   fi
-  sed -i -E 's#<(/?)h[456]([ >])#<\1h6\2#g; s#<(/?)h3([ >])#<\1h5\2#g; s#<(/?)h2([ >])#<\1h4\2#g; s#<(/?)h1([ >])#<\1h3\2#g' "$2"
+  edit_in_place 's#<(/?)h[456]([ >])#<\1h6\2#g; s#<(/?)h3([ >])#<\1h5\2#g; s#<(/?)h2([ >])#<\1h4\2#g; s#<(/?)h1([ >])#<\1h3\2#g' "$2"
 }
 
 stage="$(mktemp -d "${DOWNLOADS_DOCS%/}.staging.XXXXXX")" || die "cannot create a staging directory beside $DOWNLOADS_DOCS"

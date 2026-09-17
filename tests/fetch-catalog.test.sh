@@ -24,7 +24,9 @@ case "$target" in
   */releases/latest) f="$FAKE_REPOS/${target%/releases/latest}/release"; [ -f "$f" ] || exit 1; cat "$f" ;;
   */tags*)           f="$FAKE_REPOS/${target%%/tags*}/tags"; [ -f "$f" ] && cat "$f"; exit 0 ;;
   */contents/*)      f="$FAKE_REPOS/${target%%/contents/*}/${target#*/contents/}"
-                     [ -f "$f" ] || exit 1; base64 -w0 "$f" ;;
+                     # `base64 -w0` is GNU-only; BSD base64 wraps by default and
+                     # has no -w, so fold the newlines out instead.
+                     [ -f "$f" ] || exit 1; base64 < "$f" | tr -d '\n' ;;
   *)                 d="$FAKE_REPOS/$target"; [ -d "$d" ] || exit 1
                      case "$jq" in .name) basename "$d" ;; *) cat "$d/license" ;; esac ;;
 esac

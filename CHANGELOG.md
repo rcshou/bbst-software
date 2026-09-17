@@ -29,6 +29,21 @@ All notable changes to the public catalog site are recorded here.
   screen-reader users. They look the same.
 
 ### Fixed
+- **Neither `bash build.sh --refresh` nor the catalog tests could run on macOS.**
+  `fetch-downloads.sh` called `sed -i -E`: GNU sed reads a bare `-i` as "no backup", but BSD
+  sed always takes the suffix from the next argument, so it swallowed `-E`, ran without
+  extended regular expressions, and every capture group failed with `\1 not defined in the
+  RE`. The downloads fetch then failed and the build refused to publish from a stale cache —
+  correctly — which left the whole site unbuildable on a Mac. Both calls now write to a
+  sibling file and rename, which behaves the same on either sed. Separately, the `gh` stub in
+  `tests/fetch-catalog.test.sh` used GNU-only `base64 -w0`, so the "plugin version from
+  Info.lua" check failed on macOS; it now folds the newlines out instead. All three suites
+  pass on macOS: catalog 10, build 10, downloads all.
+- **Location Caption Assistant was stuck at 0.1.10.** Its `CATALOG.txt` row had no `subpath`,
+  so `fetch-catalog.sh` looked for a release or tag, found neither, and kept the last cached
+  value. With `LocationCaptionAssistant.lrplugin` in the column its version comes from the
+  plug-in's own `Info.lua`, the way the other Lightroom entries work, and the page now reads
+  0.3.1. The other Lightroom pages changed only because each carries the category roster.
 - **The header overflowed at 320px** (WCAG 1.4.10, reflow), and the theme toggle was squeezed
   to 17px wide at phone widths, below the 24px minimum target size. At 640px and below the
   navigation now takes its own full-width row under the brand and the toggle, and the toggle

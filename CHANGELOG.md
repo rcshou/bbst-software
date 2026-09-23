@@ -5,6 +5,17 @@ All notable changes to the public catalog site are recorded here.
 ## [Unreleased]
 
 ### Changed
+- **The release box no longer names a version.** Its heading was `New in <version>`,
+  where the version came from GitHub while the notes beneath it are authored here by
+  hand - so the two drift apart silently the moment a release ships without this file
+  being updated. PDF Classifier's 1.0.6 notes had ended up under a "New in 1.2.3"
+  heading that way. The heading now reads "What's new" on every tool page, which
+  claims less and therefore cannot go stale.
+- **PDF Classifier now lists 1.2.3** (was 1.0.9), with release notes rewritten for its
+  newest changes: the setting for how long per-scan logs are kept, and the fixed log
+  view. One release is announced rather than everything since 1.0.9.
+  **It stays a private release** - `private` in `CATALOG.txt`, distributed on request,
+  nothing published to the downloads repository and no download link on the page.
 - **APK Finder 0.22.0 replaces 0.21.5 as the public download** (released 2026-09-23), with
   its new file, checksum, release notes, README and user guide; the catalog lists 0.22.0.
 

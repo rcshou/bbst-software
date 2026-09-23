@@ -551,12 +551,17 @@ tool_subtitle () {
 # The latest release, in the reader's terms. Written from each project's own
 # user-facing release notes where it keeps them, not from its engineering
 # changelog: the point is what a person would notice, not what the diff touched.
+# The heading names no version on purpose. These notes are authored here, by
+# hand, while the version beside them is fetched from GitHub - so the two drift
+# apart silently the moment a release ships without this file being updated.
+# That is exactly what happened to PDF Classifier, whose 1.0.6 notes sat under a
+# "New in 1.2.3" heading. A heading that claims less cannot be wrong.
 # A tool with no release notes for the version on show simply has no box.
-tool_release () {  # slug | version
+tool_release () {  # slug | version (unused: see the note below)
   local body; body="$(tool_release_notes "$1")"
   [ -n "$body" ] || return 0
   printf '        <aside class="release-box" aria-labelledby="rel-%s">\n' "$1"
-  printf '          <p class="release-kicker" id="rel-%s">New in %s</p>\n' "$1" "$2"
+  printf '          <p class="release-kicker" id="rel-%s">What&rsquo;s new</p>\n' "$1"
   printf '%s\n' "$body"
   printf '        </aside>\n'
 }
@@ -565,9 +570,8 @@ tool_release_notes () {
   case "$1" in
     pdf-classifier) cat <<'HTML'
           <ul>
-            <li><b>Text in the Mac app is readable again.</b> It now uses the size macOS itself uses for interface text, matching the Windows app.</li>
-            <li><b>The page picture follows the page you are on.</b> Previously the arrows and the page box moved the extracted text while the picture stayed put.</li>
-            <li><b>The &ldquo;Follow page selection&rdquo; tick box no longer collides</b> with the one beside it on macOS.</li>
+            <li><b>You choose how long per-scan logs are kept</b> &mdash; the last ten runs by default, or a number of days. Only the logs are tidied away; your results and reports are never touched.</li>
+            <li><b>The log view works properly.</b> <b>Clear</b> now clears and stays cleared, and the list no longer jumps back to the top while you are reading it. It opens at the newest entries and keeps up with them.</li>
           </ul>
 HTML
     ;;

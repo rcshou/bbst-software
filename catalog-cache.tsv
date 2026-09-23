@@ -2,7 +2,7 @@
 # Version and licence only. Everything else the site says lives in CATALOG.txt.
 # slug	version	license
 project2excel	1.0.12	Apache-2.0
-pdf-classifier	1.0.9	Apache-2.0
+pdf-classifier	1.2.3	Apache-2.0
 markdown-renderer	1.9.6	Apache-2.0
 pdf-processor	—	Apache-2.0
 vcard-cleaner	—	Apache-2.0

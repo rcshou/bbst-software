@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Download APK Finder 0.21.5 — Bluebonnet Studios</title>
-  <meta name="description" content="Download APK Finder 0.21.5: files with SHA-256 checksums, release notes, README and user guide." />
+  <title>Download APK Finder 0.22.0 — Bluebonnet Studios</title>
+  <meta name="description" content="Download APK Finder 0.22.0: files with SHA-256 checksums, release notes, README and user guide." />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
   <script src="theme-init.js"></script>
@@ -43,10 +43,10 @@
     <div class="page-head-inner">
       <div>
         <p class="eyebrow"><a href="downloads.html">Downloads</a></p>
-        <h1>APK Finder <span class="hl">0.21.5</span></h1>
+        <h1>APK Finder <span class="hl">0.22.0</span></h1>
         <div class="head-meta">
           
-          <span class="ver">Published 2026-09-15</span>
+          <span class="ver">Published 2026-09-23</span>
         </div>
         <p><a href="#files">Files</a> &middot; <a href="#notes">Release notes</a> &middot;
            <a href="#readme">README</a> &middot; <a href="#guide">User guide</a> &middot;
@@ -80,10 +80,10 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="file" data-label="File">APKFinder-0.21.5-release.apk</td>
-                    <td class="num" data-label="Size">14.1 MB</td>
-                    <td class="hash" data-label="SHA-256"><code>41c623cea96865a5eb4ac2157a4a81919f3f472fa6f9f998718ba2869d52dd00</code></td>
-                    <td class="act" data-label="Get"><a class="btn" href="https://github.com/rcshou/bbst-downloads/releases/download/apk-finder-v0.21.5/APKFinder-0.21.5-release.apk">Download<span class="visually-hidden"> APKFinder-0.21.5-release.apk</span></a></td>
+                    <td class="file" data-label="File">APKFinder-0.22.0-release.apk</td>
+                    <td class="num" data-label="Size">14.2 MB</td>
+                    <td class="hash" data-label="SHA-256"><code>98099e37e64c5aa7150b9911243d5f6021ec83175df29961b8502491f13ad6b0</code></td>
+                    <td class="act" data-label="Get"><a class="btn" href="https://github.com/rcshou/bbst-downloads/releases/download/apk-finder-v0.22.0/APKFinder-0.22.0-release.apk">Download<span class="visually-hidden"> APKFinder-0.22.0-release.apk</span></a></td>
                   </tr>
                 </tbody>
               </table>
@@ -105,25 +105,20 @@
       <section id="notes">
         <h2 class="section-label">Release notes</h2>
         <div class="prose doc">
-<h5 class="heading-element">Installing</h5>
+<h5 class="heading-element">New</h5>
 <ul>
 <li>
-<p>Every Install button now checks the file before installing. Before, only Install straight after a download (with <strong>Inspect APK after download</strong> on) or on the <strong>Details</strong> screen checked the signature and compatibility. The Install button in Downloads, and on a download you came back to later, checked only the checksum. Now:</p>
-<ul>
-<li>it warns you and asks you to confirm if the app is signed by someone else or may not work fully on your device;</li>
-<li>it refuses a file Android can't install on this device, and says why.</li>
+<strong>Check for updates</strong>, in <strong>Settings &gt; About</strong>. It asks the download site whether a newer version of APK Finder is published and, if there is one, offers to open the download page. It only ever checks when you tap it, and it never downloads or installs anything by itself.</li>
 </ul>
-<p>The check can take a few seconds for a large app; the button shows <em>Checking…</em> meanwhile.</p>
-</li>
+<h5 class="heading-element">Easier to use in a car</h5>
+<ul>
+<li>Tapping anywhere on a search result now opens that app, not only the small repository line. If an app is in more than one repository, tapping a repository line still opens that one.</li>
+</ul>
+<h5 class="heading-element">Settings</h5>
+<ul>
 <li>
-<p><strong>Open installer automatically</strong> now waits for the inspection. With <strong>Inspect APK after download</strong> off, it no longer opens the installer on the checksum alone; tap Install instead.</p>
-</li>
-</ul>
-<h5 class="heading-element">Good to know</h5>
-<ul>
-<li>The privacy description now mentions that <strong>Download and install SAI</strong> always contacts F-Droid, even when F-Droid is switched off for searching.</li>
-<li>The warning on search results now says the repository flags the app for non-free dependencies <em>or tracking</em>, because it appears for both. Before, an app flagged only for tracking was described as depending on a non-free service.</li>
-<li>Settings text is more precise about where downloads are stored and about touch targets, which are larger on every screen, not only wide ones.</li>
+<strong>All three repositories are now on when you install the app</strong>: F-Droid, IzzyOnDroid and APKPure. Before, only F-Droid was. If you already have APK Finder, your own settings are kept as they are.</li>
+<li>While APKPure is on, your search terms are sent to apkpure.com. Turn it off in <strong>Settings &gt; Repositories</strong> if you would rather they were not.</li>
 </ul>
         </div>
       </section>
@@ -148,7 +143,7 @@ for you.</li>
 </ul>
 <h4 class="heading-element">Installing APK Finder</h4>
 <ol>
-<li>Download <code>APKFinder-0.21.5-release.apk</code>.</li>
+<li>Download <code>APKFinder-0.22.0-release.apk</code>.</li>
 <li>Optionally, check the file: its SHA-256 checksum is listed on the download page. It must
 match exactly.</li>
 <li>Open the file on the device and allow the install when Android asks.</li>
@@ -159,9 +154,8 @@ uninstalling deletes its settings and download history.</p>
 <h4 class="heading-element">First steps</h4>
 <ol>
 <li>Open APK Finder, type an app name into <strong>Search apps…</strong> and tap <strong>Search</strong>.</li>
-<li>In a result, tap one of the repository lines to open the app's details, with its versions
-and a first compatibility estimate. APK Finder profiles your device the first time it needs
-to.</li>
+<li>Tap the result to open the app's details, with its versions and a first compatibility
+estimate. APK Finder profiles your device the first time it needs to.</li>
 <li>Tap <strong>Download</strong>. When the file arrives, it is checked against the repository's checksum
 (where the repository publishes one) and inspected, and the result shows what was found.</li>
 <li>Tap <strong>Install</strong>. If anything needs your attention, the button reads <strong>Install…</strong> and lists
@@ -173,9 +167,11 @@ inspected yet is checked first.</li>
 <ul>
 <li>No account, no telemetry, no analytics, no advertising.</li>
 <li>Compatibility checks, device profiling and file inspection run on the device.</li>
-<li>It contacts the app repositories you enable. F-Droid is on by default; IzzyOnDroid and
-APKPure are off. With APKPure enabled, your search terms are sent to apkpure.com. The one
-exception: installing the SAI bundle installer from settings always contacts F-Droid.</li>
+<li>It contacts the app repositories you enable. All three — F-Droid, IzzyOnDroid and APKPure —
+are on when you install it, and each can be turned off in Settings. While APKPure is on, your
+search terms are sent to apkpure.com. Two requests do not follow those settings: installing the
+SAI bundle installer always contacts F-Droid, and <strong>Check for updates</strong> asks GitHub which
+version of APK Finder is published.</li>
 </ul>
 <p>The full privacy policy is at <a href="https://dev.bbst.us/privacy.html" rel="nofollow">https://dev.bbst.us/privacy.html</a></p>
 <h4 class="heading-element">Tested on</h4>
@@ -192,7 +188,7 @@ tested on Android 14 or on a BYD head unit.</p>
         <h2 class="section-label">User guide</h2>
         <div class="prose doc">
 <h3 class="heading-element">APK Finder user guide</h3>
-<p>For APK Finder 0.21.5.</p>
+<p>For APK Finder 0.22.0.</p>
 <h4 class="heading-element">How it works</h4>
 <p>APK Finder searches app repositories, estimates whether an app suits your device, downloads
 the file, checks the downloaded file, and then hands it to Android's own installer. It never
@@ -215,8 +211,9 @@ app's details.</p>
 time, and results for the same app from different repositories are merged into one entry. If a
 repository cannot be reached, a line above the results says so for that repository, and results
 from the others are still shown.</p>
-<p>Each result lists the repositories that have the app. Tap one of those lines to open the app's
-details from that repository.</p>
+<p>Tap anywhere on a result to open the app's details. Each result also lists the repositories that
+have the app: tapping the card uses the first one listed, and tapping a repository line opens that
+repository's copy instead.</p>
 <p>Recent searches appear under the search field as shortcuts. You can clear them in
 <strong>Settings &gt; Privacy &amp; Storage</strong>.</p>
 <p>A result marked <em>⚠ The repository flags this app for non-free dependencies or tracking (often
@@ -420,13 +417,13 @@ for confirmation, then removes the file and its history entry.</p>
 </tr>
 <tr>
 <td>IzzyOnDroid</td>
-<td>Off</td>
+<td>On</td>
 <td>A larger F-Droid-compatible catalogue, including some copies of proprietary apps. Review what you install from here.</td>
 </tr>
 <tr>
 <td>APKPure</td>
-<td>Off</td>
-<td>A third-party copy of Play Store apps, mostly proprietary. APK Finder reads its public pages the way a browser would. If APKPure blocks automated requests, it shows as unavailable; APK Finder does not try to get around that.</td>
+<td>On</td>
+<td>A third-party copy of Play Store apps, mostly proprietary. APK Finder reads its public pages the way a browser would, so while it is on your search terms are sent to apkpure.com. If APKPure blocks automated requests, it shows as unavailable; APK Finder does not try to get around that.</td>
 </tr>
 </tbody>
 </table>
@@ -533,7 +530,12 @@ next search downloads them again.</li>
 <strong>Manage downloaded APKs</strong> — opens Downloads.</li>
 </ul>
 <h5 class="heading-element">About</h5>
-<p>Shows the version, the licence and third-party licences. <strong>Export diagnostics</strong> saves the app
+<p>Shows the version, the licence and third-party licences.</p>
+<p><strong>Check for updates</strong> asks the download site whether a newer APK Finder is published. It checks
+only when you tap it, never on its own. If there is a newer version, <strong>Open the download page</strong>
+takes you to it; APK Finder does not download or install its own updates. If the site cannot be
+reached, the reason is shown.</p>
+<p><strong>Export diagnostics</strong> saves the app
 version, the time of the export, the device profile and APK Finder's local log to a file you
 choose. Search terms are not logged, and nothing is sent anywhere.</p>
 <h4 class="heading-element">Troubleshooting</h4>

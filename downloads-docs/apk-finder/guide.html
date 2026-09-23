@@ -1,5 +1,5 @@
 <h3 class="heading-element">APK Finder user guide</h3>
-<p>For APK Finder 0.21.5.</p>
+<p>For APK Finder 0.22.0.</p>
 <h4 class="heading-element">How it works</h4>
 <p>APK Finder searches app repositories, estimates whether an app suits your device, downloads
 the file, checks the downloaded file, and then hands it to Android's own installer. It never
@@ -22,8 +22,9 @@ app's details.</p>
 time, and results for the same app from different repositories are merged into one entry. If a
 repository cannot be reached, a line above the results says so for that repository, and results
 from the others are still shown.</p>
-<p>Each result lists the repositories that have the app. Tap one of those lines to open the app's
-details from that repository.</p>
+<p>Tap anywhere on a result to open the app's details. Each result also lists the repositories that
+have the app: tapping the card uses the first one listed, and tapping a repository line opens that
+repository's copy instead.</p>
 <p>Recent searches appear under the search field as shortcuts. You can clear them in
 <strong>Settings &gt; Privacy &amp; Storage</strong>.</p>
 <p>A result marked <em>⚠ The repository flags this app for non-free dependencies or tracking (often
@@ -227,13 +228,13 @@ for confirmation, then removes the file and its history entry.</p>
 </tr>
 <tr>
 <td>IzzyOnDroid</td>
-<td>Off</td>
+<td>On</td>
 <td>A larger F-Droid-compatible catalogue, including some copies of proprietary apps. Review what you install from here.</td>
 </tr>
 <tr>
 <td>APKPure</td>
-<td>Off</td>
-<td>A third-party copy of Play Store apps, mostly proprietary. APK Finder reads its public pages the way a browser would. If APKPure blocks automated requests, it shows as unavailable; APK Finder does not try to get around that.</td>
+<td>On</td>
+<td>A third-party copy of Play Store apps, mostly proprietary. APK Finder reads its public pages the way a browser would, so while it is on your search terms are sent to apkpure.com. If APKPure blocks automated requests, it shows as unavailable; APK Finder does not try to get around that.</td>
 </tr>
 </tbody>
 </table>
@@ -340,7 +341,12 @@ next search downloads them again.</li>
 <strong>Manage downloaded APKs</strong> — opens Downloads.</li>
 </ul>
 <h5 class="heading-element">About</h5>
-<p>Shows the version, the licence and third-party licences. <strong>Export diagnostics</strong> saves the app
+<p>Shows the version, the licence and third-party licences.</p>
+<p><strong>Check for updates</strong> asks the download site whether a newer APK Finder is published. It checks
+only when you tap it, never on its own. If there is a newer version, <strong>Open the download page</strong>
+takes you to it; APK Finder does not download or install its own updates. If the site cannot be
+reached, the reason is shown.</p>
+<p><strong>Export diagnostics</strong> saves the app
 version, the time of the export, the device profile and APK Finder's local log to a file you
 choose. Search terms are not logged, and nothing is sent anywhere.</p>
 <h4 class="heading-element">Troubleshooting</h4>

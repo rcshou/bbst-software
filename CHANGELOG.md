@@ -4,6 +4,10 @@ All notable changes to the public catalog site are recorded here.
 
 ## [Unreleased]
 
+### Changed
+- **APK Finder 0.22.0 replaces 0.21.5 as the public download** (released 2026-09-23), with
+  its new file, checksum, release notes, README and user guide; the catalog lists 0.22.0.
+
 ### Added
 - **A Content-Security-Policy on every page**, as a `<meta>` tag since GitHub Pages cannot
   send headers. Styles, fonts, images and scripts may come only from the site itself, and no

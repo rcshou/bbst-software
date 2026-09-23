@@ -15,7 +15,7 @@ for you.</li>
 </ul>
 <h4 class="heading-element">Installing APK Finder</h4>
 <ol>
-<li>Download <code>APKFinder-0.21.5-release.apk</code>.</li>
+<li>Download <code>APKFinder-0.22.0-release.apk</code>.</li>
 <li>Optionally, check the file: its SHA-256 checksum is listed on the download page. It must
 match exactly.</li>
 <li>Open the file on the device and allow the install when Android asks.</li>
@@ -26,9 +26,8 @@ uninstalling deletes its settings and download history.</p>
 <h4 class="heading-element">First steps</h4>
 <ol>
 <li>Open APK Finder, type an app name into <strong>Search apps…</strong> and tap <strong>Search</strong>.</li>
-<li>In a result, tap one of the repository lines to open the app's details, with its versions
-and a first compatibility estimate. APK Finder profiles your device the first time it needs
-to.</li>
+<li>Tap the result to open the app's details, with its versions and a first compatibility
+estimate. APK Finder profiles your device the first time it needs to.</li>
 <li>Tap <strong>Download</strong>. When the file arrives, it is checked against the repository's checksum
 (where the repository publishes one) and inspected, and the result shows what was found.</li>
 <li>Tap <strong>Install</strong>. If anything needs your attention, the button reads <strong>Install…</strong> and lists
@@ -40,9 +39,11 @@ inspected yet is checked first.</li>
 <ul>
 <li>No account, no telemetry, no analytics, no advertising.</li>
 <li>Compatibility checks, device profiling and file inspection run on the device.</li>
-<li>It contacts the app repositories you enable. F-Droid is on by default; IzzyOnDroid and
-APKPure are off. With APKPure enabled, your search terms are sent to apkpure.com. The one
-exception: installing the SAI bundle installer from settings always contacts F-Droid.</li>
+<li>It contacts the app repositories you enable. All three — F-Droid, IzzyOnDroid and APKPure —
+are on when you install it, and each can be turned off in Settings. While APKPure is on, your
+search terms are sent to apkpure.com. Two requests do not follow those settings: installing the
+SAI bundle installer always contacts F-Droid, and <strong>Check for updates</strong> asks GitHub which
+version of APK Finder is published.</li>
 </ul>
 <p>The full privacy policy is at <a href="https://dev.bbst.us/privacy.html" rel="nofollow">https://dev.bbst.us/privacy.html</a></p>
 <h4 class="heading-element">Tested on</h4>

@@ -19,9 +19,14 @@ This is the result to trust.</li>
 app's details.</p>
 <h4 class="heading-element">Searching</h4>
 <p>Type into <strong>Search apps…</strong> and tap <strong>Search</strong>. Every enabled repository is searched at the same
-time, and results for the same app from different repositories are merged into one entry. If a
-repository cannot be reached, a line above the results says so for that repository, and results
-from the others are still shown.</p>
+time, and results for the same app from different repositories are merged into one entry. Each
+repository's results appear as soon as it answers, and <em>Still searching: …</em> above the results
+names the ones that have not answered yet — the first F-Droid search on a new device downloads the
+whole catalogue, which can take a while. If a repository cannot be reached, a line above the
+results says so for that repository, and results from the others are still shown.</p>
+<p>Results are ordered by how well they match what you typed — an exact name first, then names that
+start with it, then names that contain it, then matches on the package or developer name or the
+summary — whichever repository they come from.</p>
 <p>Tap anywhere on a result to open the app's details. Each result also lists the repositories that
 have the app: tapping the card uses the first one listed, and tapping a repository line opens that
 repository's copy instead.</p>
@@ -31,6 +36,10 @@ repository's copy instead.</p>
 Google Play Services or analytics; unconfirmed until downloaded)</em> is one that F-Droid or
 IzzyOnDroid has flagged as depending on non-free components or as tracking its users. APKPure
 results are never flagged.</p>
+<p>A repository line may show a user rating such as <em>★ 7.9/10</em>. Only APKPure publishes ratings, on
+its own 10-point scale, and APK Finder shows them as published. F-Droid and IzzyOnDroid have no
+ratings, so a missing rating says nothing about an app's quality. The app's details repeat the
+rating with the number of ratings behind it, for example <em>★ 7.9/10 from 5,902 ratings on APKPure</em>.</p>
 <p>On some BYD head units, APK Finder may detect the vehicle model and DiLink version and show them
 under the app name at the top of the search screen. Detection is best-effort; nothing is shown
 if they cannot be detected.</p>
@@ -40,8 +49,11 @@ compatibility, where it comes from and its package format (a standard APK, or a 
 XAPK), its minimum and target Android versions (SDK) and its size, and its CPU architectures
 (ABIs) when the repository lists them.</p>
 <p>By default only the newest version that passes your filters is shown, and versions that are
-incompatible or uncertain are hidden. When versions are hidden, the screen says how many;
-<strong>Settings &gt; Search &amp; Compatibility</strong> controls this.</p>
+incompatible or uncertain are hidden. When versions are hidden, the screen says how many, and
+<strong>Show all versions</strong> lists them for this app without changing your settings;
+<strong>Settings &gt; Search &amp; Compatibility</strong> controls the defaults.</p>
+<p>If the app's details cannot be loaded, <strong>Retry</strong> tries again, and for APKPure <strong>Open in browser</strong>
+opens the app's page instead.</p>
 <h4 class="heading-element">Compatibility results</h4>
 <p>Each check gets one of these results:</p>
 <table>
@@ -99,14 +111,17 @@ missing, Android refuses to install the app.</li>
 <h5 class="heading-element">Google services</h5>
 <p>After download, APK Finder checks the app's manifest for references to Google Play Services and
 Firebase. The app's details show the overall result, such as <em>Google dependency: Some features
-may not work</em>. The <strong>Details</strong> screen names each finding — for example Google Maps, Google
-Sign-In, Play Integrity, Play Billing, push messaging, Google location or Google Cast — with its
+may not work</em>. The <strong>Inspect</strong> screen names each finding — for example Google Maps, Google
+Sign-In, Play Integrity, Play asset or feature delivery, Play Billing, push messaging, Google
+location or Google Cast — with its
 likely effect on a device without Google services, rated low, medium or high impact. Some
 examples:</p>
 <ul>
 <li>Maps may fail or show a blank map.</li>
 <li>Sign-in may fail if it is the app's only way to log in.</li>
 <li>The app may be blocked at startup or login if it requires Play Integrity.</li>
+<li>A game that downloads its data through Play asset delivery may not start: without the Play
+Store, that data never arrives.</li>
 <li>In-app purchases may fail while the rest of the app works.</li>
 <li>Apps that only use Google analytics or advertising are not expected to lose anything.</li>
 </ul>
@@ -131,6 +146,9 @@ tampered with;</li>
 <li>
 <em>Not verified: verification is off in Settings</em>.</li>
 </ul>
+<p>A download stops with a message instead of being saved when the device does not have enough free
+storage for it (this is checked before the transfer starts), or when the server sends something
+that is not an app package, such as an error page.</p>
 <p>For a standard APK, and as long as <strong>Inspect APK after download</strong> is on, it then inspects the
 file straight away:</p>
 <ol>
@@ -156,8 +174,15 @@ cannot be installed on this device.</li>
 <strong>Install anyway</strong> to continue, or <strong>Cancel</strong>.</li>
 <li>
 <strong>No install button</strong> — a check found the app incompatible, and the reason is shown instead;
-or the automatic inspection failed, and <strong>Details</strong> retries it. The Downloads list also shows
+or the automatic inspection failed, and <strong>Inspect</strong> retries it. The Downloads list also shows
 no Install button once that version is installed or its file is gone.</li>
+</ul>
+<p>Install is also refused, with the reason, when:</p>
+<ul>
+<li>the file is a different app than the one you chose — the repository served the wrong file;</li>
+<li>a newer version of the app is already installed. Android cannot install an older version over
+a newer one; you would have to uninstall the app first, which deletes its data;</li>
+<li>the file has changed since it was downloaded. Delete it and download it again.</li>
 <li>
 <strong>Export…</strong> — the file is a split-APK bundle (see below), or a file whose format APK Finder
 does not recognize.</li>
@@ -165,6 +190,7 @@ does not recognize.</li>
 <p>The warnings are:</p>
 <ul>
 <li>the checksum does not match what the repository published;</li>
+<li>the file is a different version of the app than the one you chose;</li>
 <li>the app is signed with a different certificate than the repository lists;</li>
 <li>the app is signed differently from the version already installed. Android will refuse this
 update unless you uninstall the existing app first, <strong>which deletes that app's data</strong>;</li>
@@ -172,7 +198,7 @@ update unless you uninstall the existing app first, <strong>which deletes that a
 missing feature.</li>
 </ul>
 <p>No setting turns these warnings off, and they are the same wherever you tap Install: on the
-app's details, in the Downloads list, or on the <strong>Details</strong> screen. The signing and compatibility
+app's details, in the Downloads list, or on the <strong>Inspect</strong> screen. The signing and compatibility
 checks look at the device as it is when you tap. One exception: with <strong>Verify downloads</strong> off,
 the checksum is not compared, so the checksum warning cannot appear.</p>
 <p>If APK Finder is not yet allowed to install apps, tapping Install opens the system screen where
@@ -207,8 +233,13 @@ if you cancelled the installer, it stays as it is. If another version of the app
 device, the older- or newer-version line is shown instead while you wait.</li>
 <li><em>Not installed</em></li>
 </ul>
-<p><strong>Details</strong> (standard APKs whose file is still there) inspects the file again and shows every
-finding. <strong>Delete</strong> asks
+<p>A version counts as installed only when the installed app has the same version and the same
+signing certificate as the downloaded file. The same version from another repository, signed
+differently, is refused by Android, so it is not shown as installed, and <strong>Delete APK after
+successful install</strong> keeps that file. That setting also keeps split-APK bundles, whose signing
+APK Finder cannot compare.</p>
+<p><strong>Inspect</strong> (standard APKs whose file is still there) inspects the file again and shows every
+finding; it checks again when you come back from Android's installer. <strong>Delete</strong> asks
 for confirmation, then removes the file and its history entry.</p>
 <h4 class="heading-element">Settings</h4>
 <h5 class="heading-element">Repositories</h5>
@@ -253,7 +284,7 @@ faster and work without a connection. Adding other repositories is not supported
 <tr>
 <td>Prefer Google-free apps</td>
 <td>On</td>
-<td>Lists apps the repository flags for non-free dependencies or tracking after the rest.</td>
+<td>Lists apps the repository flags for non-free dependencies or tracking after the rest. Among equally good matches, apps a repository says are free come before apps nothing is known about, such as APKPure's.</td>
 </tr>
 <tr>
 <td>Compatible with this device only</td>
@@ -290,7 +321,7 @@ faster and work without a connection. Adding other repositories is not supported
 <tr>
 <td>Inspect APK after download</td>
 <td>On</td>
-<td>Runs the checks right after each download. When off, the same checks run when you tap Install, or on <strong>Details</strong>.</td>
+<td>Runs the checks right after each download. When off, the same checks run when you tap Install, or on <strong>Inspect</strong>.</td>
 </tr>
 <tr>
 <td>Open installer automatically</td>

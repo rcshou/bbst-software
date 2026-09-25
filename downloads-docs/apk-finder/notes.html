@@ -1,15 +1,40 @@
+<p>Everything since 0.22.0.</p>
 <h5 class="heading-element">New</h5>
 <ul>
 <li>
-<strong>Check for updates</strong>, in <strong>Settings &gt; About</strong>. It asks the download site whether a newer version of APK Finder is published and, if there is one, offers to open the download page. It only ever checks when you tap it, and it never downloads or installs anything by itself.</li>
+<strong>Ratings.</strong> Apps from APKPure show APKPure's user rating, such as <em>★ 7.9/10</em>, on their search result, and the app's page adds how many ratings it is based on. F-Droid and IzzyOnDroid publish no ratings, so a missing rating says nothing about an app's quality.</li>
+<li>
+<strong>Faster-feeling search.</strong> Each repository's results appear as soon as it answers, and a line above them says which repositories are still searching. Before, nothing appeared until the slowest one finished — on a new device, the first F-Droid search downloads the whole catalogue.</li>
+<li>
+<strong>Better order.</strong> Results are ordered by how well they match what you typed, whichever repository they come from. An exact match from APKPure no longer sits below dozens of loose F-Droid matches, and APKPure's own best match for your search comes before copies that merely use the same name.</li>
+</ul>
+<h5 class="heading-element">Safer installs</h5>
+<ul>
+<li>APK Finder now checks that a downloaded file really is the app and version you chose. It refuses a file that turns out to be a different app, and asks you to confirm a different version of the right app.</li>
+<li>It refuses to install an older version over a newer one and says why, instead of Android's unhelpful "App not installed".</li>
+<li>It refuses a file that has changed since it was downloaded; download it again.</li>
+<li>Games that download their data through the Play Store are now flagged as depending on Google: without the Play Store, that data never arrives.</li>
+<li>An app is shown as installed only if the installed copy is signed like the downloaded file. A same-version copy from another repository, which Android refuses, is no longer shown as installed, and <strong>Delete APK after successful install</strong> keeps it. That setting now also keeps split-APK bundles.</li>
+</ul>
+<h5 class="heading-element">Downloads</h5>
+<ul>
+<li>A download stops at once with a clear message when the device does not have enough free storage, instead of failing at the end as a "network error".</li>
+<li>A download that turns out to be an error page rather than an app is refused instead of being saved as a package.</li>
+<li>Leftover partial files from an interrupted download, for example when the car was switched off, are cleaned up.</li>
 </ul>
 <h5 class="heading-element">Easier to use in a car</h5>
 <ul>
-<li>Tapping anywhere on a search result now opens that app, not only the small repository line. If an app is in more than one repository, tapping a repository line still opens that one.</li>
+<li>Larger touch targets for the top-bar buttons, the buttons in dialogs (including <strong>Install anyway</strong>), and the Device Profile and SAI buttons.</li>
+<li>A quick double tap on the back arrow no longer skips a screen or leaves a blank one.</li>
+<li>An app's page keeps the app's own icon. Before, apps from APKPure showed a screenshot in its place.</li>
+<li>An app's page has <strong>Retry</strong> when it cannot be loaded, <strong>Show all versions</strong> when your settings hide some (for that app only), and names the repository ("F-Droid") instead of an internal id.</li>
+<li>The <strong>Details</strong> button is now called <strong>Inspect</strong>, like the screen it opens, and that screen updates by itself when you come back from Android's installer.</li>
+<li>Colours are consistent in light and dark mode; cards and dialogs no longer take on a purple tint.</li>
 </ul>
-<h5 class="heading-element">Settings</h5>
+<h5 class="heading-element">Good to know</h5>
 <ul>
 <li>
-<strong>All three repositories are now on when you install the app</strong>: F-Droid, IzzyOnDroid and APKPure. Before, only F-Droid was. If you already have APK Finder, your own settings are kept as they are.</li>
-<li>While APKPure is on, your search terms are sent to apkpure.com. Turn it off in <strong>Settings &gt; Repositories</strong> if you would rather they were not.</li>
+<strong>Prefer Google-free apps</strong> now treats an app nothing is known about, such as one from APKPure, as unknown rather than free: among equally good matches, apps a repository says are free come first.</li>
+<li>If APKPure is blocking requests, rate-limiting them or no longer lists an app, the message now says which.</li>
+<li>Diagnostic logs and downloaded APKs are no longer included in Android backups.</li>
 </ul>
